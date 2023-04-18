@@ -1,0 +1,527 @@
+GAS LISTING C:\Users\Aluno\AppData\Local\Temp\ccHE6K94.s 			page 1
+
+
+   1               		.file	"SevenSegments.c"
+   2               	__SP_H__ = 0x3e
+   3               	__SP_L__ = 0x3d
+   4               	__SREG__ = 0x3f
+   5               	__tmp_reg__ = 0
+   6               	__zero_reg__ = 1
+   7               		.text
+   8               	.Ltext0:
+   9               		.cfi_sections	.debug_frame
+  10               		.file 0 "E:\\Projects\\projectC" "SevenSegments.c"
+  11               		.section	.text.hex2SevenSegments,"ax",@progbits
+  12               	.global	hex2SevenSegments
+  14               	hex2SevenSegments:
+  15               	.LVL0:
+  16               	.LFB0:
+  17               		.file 1 "SevenSegments.c"
+   1:SevenSegments.c **** /* -----------------------------------------------------------------------------
+   2:SevenSegments.c ****  * Project:			GPDSE AVR8 Library
+   3:SevenSegments.c ****  * File:			sevenSegments.c
+   4:SevenSegments.c ****  * Module:			Seven segments display controller
+   5:SevenSegments.c ****  * Author:			Leandro Schwarz
+   6:SevenSegments.c ****  * Version:			1.2
+   7:SevenSegments.c ****  * Last edition:	2016-01-15
+   8:SevenSegments.c ****  * Purpose:			Seven segments display controller with support to common
+   9:SevenSegments.c ****  *					anode and common cathode displays. Special characters dash
+  10:SevenSegments.c ****  *					(0xFD), U (0xFE) and display off (0xFF) were also implented
+  11:SevenSegments.c ****  * -------------------------------------------------------------------------- */
+  12:SevenSegments.c **** 
+  13:SevenSegments.c **** // -----------------------------------------------------------------------------
+  14:SevenSegments.c **** // Header files ----------------------------------------------------------------
+  15:SevenSegments.c **** 
+  16:SevenSegments.c **** #include "sevenSegments.h"
+  17:SevenSegments.c **** #if __SEVENSEGMENTS_H != 12
+  18:SevenSegments.c **** #error Error 101 - Version mismatch on header and source code files (sevenSegments).
+  19:SevenSegments.c **** #endif
+  20:SevenSegments.c **** 
+  21:SevenSegments.c **** /* -----------------------------------------------------------------------------
+  22:SevenSegments.c ****  * Function:	hex2SevenSegments
+  23:SevenSegments.c ****  * Purpose:		Seven segments display decoder
+  24:SevenSegments.c ****  * Arguments:	hexValue		hex number or special character value
+  25:SevenSegments.c ****  *				displayType		Display type (use enumerations at displayType_t)
+  26:SevenSegments.c ****  *				point			ON or OFF
+  27:SevenSegments.c ****  * Returns:		decoded data value
+  28:SevenSegments.c ****  * -------------------------------------------------------------------------- */
+  29:SevenSegments.c **** 
+  30:SevenSegments.c **** uint8_t hex2SevenSegments(uint8_t hexValue, displayType_t displayType, uint8_t point)
+  31:SevenSegments.c **** {
+  18               		.loc 1 31 1 view -0
+  19               		.cfi_startproc
+  20               	/* prologue: function */
+  21               	/* frame size = 0 */
+  22               	/* stack size = 0 */
+  23               	.L__stack_usage = 0
+  24               		.loc 1 31 1 is_stmt 0 view .LVU1
+  25 0000 262F      		mov r18,r22
+  26 0002 372F      		mov r19,r23
+  32:SevenSegments.c ****     uint8_t data = 0;
+GAS LISTING C:\Users\Aluno\AppData\Local\Temp\ccHE6K94.s 			page 2
+
+
+  27               		.loc 1 32 5 is_stmt 1 view .LVU2
+  28               	.LVL1:
+  33:SevenSegments.c **** 
+  34:SevenSegments.c ****     switch(hexValue) { // PGFEDCBA
+  29               		.loc 1 34 5 view .LVU3
+  30 0004 8031      		cpi r24,lo8(16)
+  31 0006 00F4      		brsh .L2
+  32 0008 8031      		cpi r24,lo8(16)
+  33 000a 00F4      		brsh .L3
+  34 000c E82F      		mov r30,r24
+  35 000e F0E0      		ldi r31,0
+  36 0010 E050      		subi r30,lo8(-(gs(.L5)))
+  37 0012 F040      		sbci r31,hi8(-(gs(.L5)))
+  38 0014 0C94 0000 		jmp __tablejump2__
+  39               		.section	.jumptables.gcc.hex2SevenSegments,"a",@progbits
+  40               		.p2align	1
+  41               	.L5:
+  42 0000 0000      		.word gs(.L23)
+  43 0002 0000      		.word gs(.L19)
+  44 0004 0000      		.word gs(.L18)
+  45 0006 0000      		.word gs(.L17)
+  46 0008 0000      		.word gs(.L16)
+  47 000a 0000      		.word gs(.L15)
+  48 000c 0000      		.word gs(.L14)
+  49 000e 0000      		.word gs(.L20)
+  50 0010 0000      		.word gs(.L12)
+  51 0012 0000      		.word gs(.L11)
+  52 0014 0000      		.word gs(.L10)
+  53 0016 0000      		.word gs(.L9)
+  54 0018 0000      		.word gs(.L8)
+  55 001a 0000      		.word gs(.L7)
+  56 001c 0000      		.word gs(.L6)
+  57 001e 0000      		.word gs(.L4)
+  58               		.section	.text.hex2SevenSegments
+  59               	.L3:
+  60 0018 80E0      		ldi r24,0
+  61               	.LVL2:
+  62               		.loc 1 34 5 is_stmt 0 view .LVU4
+  63 001a 00C0      		rjmp .L20
+  64               	.LVL3:
+  65               	.L2:
+  66               		.loc 1 34 5 view .LVU5
+  67 001c 8D3F      		cpi r24,lo8(-3)
+  68 001e 01F0      		breq .L24
+  69 0020 8E3F      		cpi r24,lo8(-2)
+  70 0022 01F4      		brne .L25
+  35:SevenSegments.c ****     case 0x00:	data = 0b00111111;	break;
+  36:SevenSegments.c ****     case 0x01:	data = 0b00000110;	break;
+  37:SevenSegments.c ****     case 0x02:	data = 0b01011011;	break;
+  38:SevenSegments.c ****     case 0x03:	data = 0b01001111;	break;
+  39:SevenSegments.c ****     case 0x04:	data = 0b01100110;	break;
+  40:SevenSegments.c ****     case 0x05:	data = 0b01101101;	break;
+  41:SevenSegments.c ****     case 0x06:	data = 0b01111101;	break;
+  42:SevenSegments.c ****     case 0x07:	data = 0b00000111;	break;
+  43:SevenSegments.c ****     case 0x08:	data = 0b01111111;	break;
+  44:SevenSegments.c ****     case 0x09:	data = 0b01101111;	break;
+  45:SevenSegments.c ****     case 0x0A:	data = 0b01110111;	break;
+GAS LISTING C:\Users\Aluno\AppData\Local\Temp\ccHE6K94.s 			page 3
+
+
+  46:SevenSegments.c ****     case 0x0B:	data = 0b01111100;	break;
+  47:SevenSegments.c ****     case 0x0C:	data = 0b00111001;	break;
+  48:SevenSegments.c ****     case 0x0D:	data = 0b01011110;	break;
+  49:SevenSegments.c ****     case 0x0E:	data = 0b01111001;	break;
+  50:SevenSegments.c ****     case 0x0F:	data = 0b01110001;	break;
+  51:SevenSegments.c ****     case DISPLAY_DASH:	data = 0b01000000;	break;	// Dash
+  52:SevenSegments.c ****     case DISPLAY_U:		data = 0b00111110;	break;	// U
+  71               		.loc 1 52 27 view .LVU6
+  72 0024 8EE3      		ldi r24,lo8(62)
+  73               	.LVL4:
+  74               	.L20:
+  53:SevenSegments.c ****     case DISPLAY_OFF:	data = 0b00000000;	break;	// OFF
+  54:SevenSegments.c ****     }
+  55:SevenSegments.c ****     if(point) {
+  75               		.loc 1 55 5 is_stmt 1 view .LVU7
+  76               		.loc 1 55 7 is_stmt 0 view .LVU8
+  77 0026 4111      		cpse r20,__zero_reg__
+  56:SevenSegments.c ****         data |= (1 << 7);
+  78               		.loc 1 56 9 is_stmt 1 view .LVU9
+  79               		.loc 1 56 14 is_stmt 0 view .LVU10
+  80 0028 8068      		ori r24,lo8(-128)
+  81               	.LVL5:
+  82               	.L21:
+  57:SevenSegments.c ****     }
+  58:SevenSegments.c ****     data = (displayType == DISPLAY_COMMON_CATHODE) ? data : (~data);
+  83               		.loc 1 58 5 is_stmt 1 view .LVU11
+  84               		.loc 1 58 10 is_stmt 0 view .LVU12
+  85 002a 2130      		cpi r18,1
+  86 002c 3105      		cpc r19,__zero_reg__
+  87 002e 01F0      		breq .L1
+  88               		.loc 1 58 10 discriminator 1 view .LVU13
+  89 0030 8095      		com r24
+  90               	.LVL6:
+  59:SevenSegments.c **** 
+  60:SevenSegments.c ****     return data;
+  91               		.loc 1 60 5 is_stmt 1 discriminator 1 view .LVU14
+  92               	.L1:
+  93               	/* epilogue start */
+  61:SevenSegments.c **** }
+  94               		.loc 1 61 1 is_stmt 0 view .LVU15
+  95 0032 0895      		ret
+  96               	.LVL7:
+  97               	.L19:
+  36:SevenSegments.c ****     case 0x02:	data = 0b01011011;	break;
+  98               		.loc 1 36 16 is_stmt 1 view .LVU16
+  36:SevenSegments.c ****     case 0x02:	data = 0b01011011;	break;
+  99               		.loc 1 36 35 view .LVU17
+  36:SevenSegments.c ****     case 0x02:	data = 0b01011011;	break;
+ 100               		.loc 1 36 21 is_stmt 0 view .LVU18
+ 101 0034 86E0      		ldi r24,lo8(6)
+ 102               	.LVL8:
+  36:SevenSegments.c ****     case 0x02:	data = 0b01011011;	break;
+ 103               		.loc 1 36 35 view .LVU19
+ 104 0036 00C0      		rjmp .L20
+ 105               	.LVL9:
+ 106               	.L18:
+  37:SevenSegments.c ****     case 0x03:	data = 0b01001111;	break;
+GAS LISTING C:\Users\Aluno\AppData\Local\Temp\ccHE6K94.s 			page 4
+
+
+ 107               		.loc 1 37 16 is_stmt 1 view .LVU20
+  37:SevenSegments.c ****     case 0x03:	data = 0b01001111;	break;
+ 108               		.loc 1 37 35 view .LVU21
+  37:SevenSegments.c ****     case 0x03:	data = 0b01001111;	break;
+ 109               		.loc 1 37 21 is_stmt 0 view .LVU22
+ 110 0038 8BE5      		ldi r24,lo8(91)
+ 111               	.LVL10:
+  37:SevenSegments.c ****     case 0x03:	data = 0b01001111;	break;
+ 112               		.loc 1 37 35 view .LVU23
+ 113 003a 00C0      		rjmp .L20
+ 114               	.LVL11:
+ 115               	.L17:
+  38:SevenSegments.c ****     case 0x04:	data = 0b01100110;	break;
+ 116               		.loc 1 38 16 is_stmt 1 view .LVU24
+  38:SevenSegments.c ****     case 0x04:	data = 0b01100110;	break;
+ 117               		.loc 1 38 35 view .LVU25
+  38:SevenSegments.c ****     case 0x04:	data = 0b01100110;	break;
+ 118               		.loc 1 38 21 is_stmt 0 view .LVU26
+ 119 003c 8FE4      		ldi r24,lo8(79)
+ 120               	.LVL12:
+  38:SevenSegments.c ****     case 0x04:	data = 0b01100110;	break;
+ 121               		.loc 1 38 35 view .LVU27
+ 122 003e 00C0      		rjmp .L20
+ 123               	.LVL13:
+ 124               	.L16:
+  39:SevenSegments.c ****     case 0x05:	data = 0b01101101;	break;
+ 125               		.loc 1 39 16 is_stmt 1 view .LVU28
+  39:SevenSegments.c ****     case 0x05:	data = 0b01101101;	break;
+ 126               		.loc 1 39 35 view .LVU29
+  39:SevenSegments.c ****     case 0x05:	data = 0b01101101;	break;
+ 127               		.loc 1 39 21 is_stmt 0 view .LVU30
+ 128 0040 86E6      		ldi r24,lo8(102)
+ 129               	.LVL14:
+  39:SevenSegments.c ****     case 0x05:	data = 0b01101101;	break;
+ 130               		.loc 1 39 35 view .LVU31
+ 131 0042 00C0      		rjmp .L20
+ 132               	.LVL15:
+ 133               	.L15:
+  40:SevenSegments.c ****     case 0x06:	data = 0b01111101;	break;
+ 134               		.loc 1 40 16 is_stmt 1 view .LVU32
+  40:SevenSegments.c ****     case 0x06:	data = 0b01111101;	break;
+ 135               		.loc 1 40 35 view .LVU33
+  40:SevenSegments.c ****     case 0x06:	data = 0b01111101;	break;
+ 136               		.loc 1 40 21 is_stmt 0 view .LVU34
+ 137 0044 8DE6      		ldi r24,lo8(109)
+ 138               	.LVL16:
+  40:SevenSegments.c ****     case 0x06:	data = 0b01111101;	break;
+ 139               		.loc 1 40 35 view .LVU35
+ 140 0046 00C0      		rjmp .L20
+ 141               	.LVL17:
+ 142               	.L14:
+  41:SevenSegments.c ****     case 0x07:	data = 0b00000111;	break;
+ 143               		.loc 1 41 16 is_stmt 1 view .LVU36
+  41:SevenSegments.c ****     case 0x07:	data = 0b00000111;	break;
+ 144               		.loc 1 41 35 view .LVU37
+  41:SevenSegments.c ****     case 0x07:	data = 0b00000111;	break;
+ 145               		.loc 1 41 21 is_stmt 0 view .LVU38
+GAS LISTING C:\Users\Aluno\AppData\Local\Temp\ccHE6K94.s 			page 5
+
+
+ 146 0048 8DE7      		ldi r24,lo8(125)
+ 147               	.LVL18:
+  41:SevenSegments.c ****     case 0x07:	data = 0b00000111;	break;
+ 148               		.loc 1 41 35 view .LVU39
+ 149 004a 00C0      		rjmp .L20
+ 150               	.LVL19:
+ 151               	.L12:
+  43:SevenSegments.c ****     case 0x09:	data = 0b01101111;	break;
+ 152               		.loc 1 43 16 is_stmt 1 view .LVU40
+  43:SevenSegments.c ****     case 0x09:	data = 0b01101111;	break;
+ 153               		.loc 1 43 35 view .LVU41
+  43:SevenSegments.c ****     case 0x09:	data = 0b01101111;	break;
+ 154               		.loc 1 43 21 is_stmt 0 view .LVU42
+ 155 004c 8FE7      		ldi r24,lo8(127)
+ 156               	.LVL20:
+  43:SevenSegments.c ****     case 0x09:	data = 0b01101111;	break;
+ 157               		.loc 1 43 35 view .LVU43
+ 158 004e 00C0      		rjmp .L20
+ 159               	.LVL21:
+ 160               	.L11:
+  44:SevenSegments.c ****     case 0x0A:	data = 0b01110111;	break;
+ 161               		.loc 1 44 16 is_stmt 1 view .LVU44
+  44:SevenSegments.c ****     case 0x0A:	data = 0b01110111;	break;
+ 162               		.loc 1 44 35 view .LVU45
+  44:SevenSegments.c ****     case 0x0A:	data = 0b01110111;	break;
+ 163               		.loc 1 44 21 is_stmt 0 view .LVU46
+ 164 0050 8FE6      		ldi r24,lo8(111)
+ 165               	.LVL22:
+  44:SevenSegments.c ****     case 0x0A:	data = 0b01110111;	break;
+ 166               		.loc 1 44 35 view .LVU47
+ 167 0052 00C0      		rjmp .L20
+ 168               	.LVL23:
+ 169               	.L10:
+  45:SevenSegments.c ****     case 0x0B:	data = 0b01111100;	break;
+ 170               		.loc 1 45 16 is_stmt 1 view .LVU48
+  45:SevenSegments.c ****     case 0x0B:	data = 0b01111100;	break;
+ 171               		.loc 1 45 35 view .LVU49
+  45:SevenSegments.c ****     case 0x0B:	data = 0b01111100;	break;
+ 172               		.loc 1 45 21 is_stmt 0 view .LVU50
+ 173 0054 87E7      		ldi r24,lo8(119)
+ 174               	.LVL24:
+  45:SevenSegments.c ****     case 0x0B:	data = 0b01111100;	break;
+ 175               		.loc 1 45 35 view .LVU51
+ 176 0056 00C0      		rjmp .L20
+ 177               	.LVL25:
+ 178               	.L9:
+  46:SevenSegments.c ****     case 0x0C:	data = 0b00111001;	break;
+ 179               		.loc 1 46 16 is_stmt 1 view .LVU52
+  46:SevenSegments.c ****     case 0x0C:	data = 0b00111001;	break;
+ 180               		.loc 1 46 35 view .LVU53
+  46:SevenSegments.c ****     case 0x0C:	data = 0b00111001;	break;
+ 181               		.loc 1 46 21 is_stmt 0 view .LVU54
+ 182 0058 8CE7      		ldi r24,lo8(124)
+ 183               	.LVL26:
+  46:SevenSegments.c ****     case 0x0C:	data = 0b00111001;	break;
+ 184               		.loc 1 46 35 view .LVU55
+ 185 005a 00C0      		rjmp .L20
+GAS LISTING C:\Users\Aluno\AppData\Local\Temp\ccHE6K94.s 			page 6
+
+
+ 186               	.LVL27:
+ 187               	.L8:
+  47:SevenSegments.c ****     case 0x0D:	data = 0b01011110;	break;
+ 188               		.loc 1 47 16 is_stmt 1 view .LVU56
+  47:SevenSegments.c ****     case 0x0D:	data = 0b01011110;	break;
+ 189               		.loc 1 47 35 view .LVU57
+  47:SevenSegments.c ****     case 0x0D:	data = 0b01011110;	break;
+ 190               		.loc 1 47 21 is_stmt 0 view .LVU58
+ 191 005c 89E3      		ldi r24,lo8(57)
+ 192               	.LVL28:
+  47:SevenSegments.c ****     case 0x0D:	data = 0b01011110;	break;
+ 193               		.loc 1 47 35 view .LVU59
+ 194 005e 00C0      		rjmp .L20
+ 195               	.LVL29:
+ 196               	.L7:
+  48:SevenSegments.c ****     case 0x0E:	data = 0b01111001;	break;
+ 197               		.loc 1 48 16 is_stmt 1 view .LVU60
+  48:SevenSegments.c ****     case 0x0E:	data = 0b01111001;	break;
+ 198               		.loc 1 48 35 view .LVU61
+  48:SevenSegments.c ****     case 0x0E:	data = 0b01111001;	break;
+ 199               		.loc 1 48 21 is_stmt 0 view .LVU62
+ 200 0060 8EE5      		ldi r24,lo8(94)
+ 201               	.LVL30:
+  48:SevenSegments.c ****     case 0x0E:	data = 0b01111001;	break;
+ 202               		.loc 1 48 35 view .LVU63
+ 203 0062 00C0      		rjmp .L20
+ 204               	.LVL31:
+ 205               	.L6:
+  49:SevenSegments.c ****     case 0x0F:	data = 0b01110001;	break;
+ 206               		.loc 1 49 16 is_stmt 1 view .LVU64
+  49:SevenSegments.c ****     case 0x0F:	data = 0b01110001;	break;
+ 207               		.loc 1 49 35 view .LVU65
+  49:SevenSegments.c ****     case 0x0F:	data = 0b01110001;	break;
+ 208               		.loc 1 49 21 is_stmt 0 view .LVU66
+ 209 0064 89E7      		ldi r24,lo8(121)
+ 210               	.LVL32:
+  49:SevenSegments.c ****     case 0x0F:	data = 0b01110001;	break;
+ 211               		.loc 1 49 35 view .LVU67
+ 212 0066 00C0      		rjmp .L20
+ 213               	.LVL33:
+ 214               	.L4:
+  50:SevenSegments.c ****     case DISPLAY_DASH:	data = 0b01000000;	break;	// Dash
+ 215               		.loc 1 50 16 is_stmt 1 view .LVU68
+  50:SevenSegments.c ****     case DISPLAY_DASH:	data = 0b01000000;	break;	// Dash
+ 216               		.loc 1 50 35 view .LVU69
+  50:SevenSegments.c ****     case DISPLAY_DASH:	data = 0b01000000;	break;	// Dash
+ 217               		.loc 1 50 21 is_stmt 0 view .LVU70
+ 218 0068 81E7      		ldi r24,lo8(113)
+ 219               	.LVL34:
+  50:SevenSegments.c ****     case DISPLAY_DASH:	data = 0b01000000;	break;	// Dash
+ 220               		.loc 1 50 35 view .LVU71
+ 221 006a 00C0      		rjmp .L20
+ 222               	.LVL35:
+ 223               	.L23:
+  35:SevenSegments.c ****     case 0x01:	data = 0b00000110;	break;
+ 224               		.loc 1 35 21 view .LVU72
+ 225 006c 8FE3      		ldi r24,lo8(63)
+GAS LISTING C:\Users\Aluno\AppData\Local\Temp\ccHE6K94.s 			page 7
+
+
+ 226               	.LVL36:
+  35:SevenSegments.c ****     case 0x01:	data = 0b00000110;	break;
+ 227               		.loc 1 35 21 view .LVU73
+ 228 006e 00C0      		rjmp .L20
+ 229               	.LVL37:
+ 230               	.L24:
+  51:SevenSegments.c ****     case DISPLAY_U:		data = 0b00111110;	break;	// U
+ 231               		.loc 1 51 29 view .LVU74
+ 232 0070 80E4      		ldi r24,lo8(64)
+ 233               	.LVL38:
+  51:SevenSegments.c ****     case DISPLAY_U:		data = 0b00111110;	break;	// U
+ 234               		.loc 1 51 29 view .LVU75
+ 235 0072 00C0      		rjmp .L20
+ 236               	.LVL39:
+ 237               	.L25:
+  34:SevenSegments.c ****     case 0x00:	data = 0b00111111;	break;
+ 238               		.loc 1 34 5 view .LVU76
+ 239 0074 80E0      		ldi r24,0
+ 240               	.LVL40:
+  34:SevenSegments.c ****     case 0x00:	data = 0b00111111;	break;
+ 241               		.loc 1 34 5 view .LVU77
+ 242 0076 00C0      		rjmp .L20
+ 243               		.cfi_endproc
+ 244               	.LFE0:
+ 246               		.text
+ 247               	.Letext0:
+ 248               		.file 2 "e:\\vscode-win32-x64-1.75.1\\toolchains\\avr-gcc\\avr\\include\\stdint.h"
+ 249               		.file 3 "sevenSegments.h"
+GAS LISTING C:\Users\Aluno\AppData\Local\Temp\ccHE6K94.s 			page 8
+
+
+DEFINED SYMBOLS
+                            *ABS*:0000000000000000 SevenSegments.c
+C:\Users\Aluno\AppData\Local\Temp\ccHE6K94.s:2      *ABS*:000000000000003e __SP_H__
+C:\Users\Aluno\AppData\Local\Temp\ccHE6K94.s:3      *ABS*:000000000000003d __SP_L__
+C:\Users\Aluno\AppData\Local\Temp\ccHE6K94.s:4      *ABS*:000000000000003f __SREG__
+C:\Users\Aluno\AppData\Local\Temp\ccHE6K94.s:5      *ABS*:0000000000000000 __tmp_reg__
+C:\Users\Aluno\AppData\Local\Temp\ccHE6K94.s:6      *ABS*:0000000000000001 __zero_reg__
+C:\Users\Aluno\AppData\Local\Temp\ccHE6K94.s:14     .text.hex2SevenSegments:0000000000000000 hex2SevenSegments
+C:\Users\Aluno\AppData\Local\Temp\ccHE6K94.s:18     .text.hex2SevenSegments:0000000000000000 .Loc.0
+C:\Users\Aluno\AppData\Local\Temp\ccHE6K94.s:19     .text.hex2SevenSegments:0000000000000000 L0
+C:\Users\Aluno\AppData\Local\Temp\ccHE6K94.s:24     .text.hex2SevenSegments:0000000000000000 .Loc.1
+C:\Users\Aluno\AppData\Local\Temp\ccHE6K94.s:27     .text.hex2SevenSegments:0000000000000004 .Loc.2
+C:\Users\Aluno\AppData\Local\Temp\ccHE6K94.s:29     .text.hex2SevenSegments:0000000000000004 .Loc.3
+C:\Users\Aluno\AppData\Local\Temp\ccHE6K94.s:62     .text.hex2SevenSegments:000000000000001a .Loc.4
+C:\Users\Aluno\AppData\Local\Temp\ccHE6K94.s:66     .text.hex2SevenSegments:000000000000001c .Loc.5
+C:\Users\Aluno\AppData\Local\Temp\ccHE6K94.s:71     .text.hex2SevenSegments:0000000000000024 .Loc.6
+C:\Users\Aluno\AppData\Local\Temp\ccHE6K94.s:75     .text.hex2SevenSegments:0000000000000026 .Loc.7
+C:\Users\Aluno\AppData\Local\Temp\ccHE6K94.s:76     .text.hex2SevenSegments:0000000000000026 .Loc.8
+C:\Users\Aluno\AppData\Local\Temp\ccHE6K94.s:78     .text.hex2SevenSegments:0000000000000028 .Loc.9
+C:\Users\Aluno\AppData\Local\Temp\ccHE6K94.s:79     .text.hex2SevenSegments:0000000000000028 .Loc.10
+C:\Users\Aluno\AppData\Local\Temp\ccHE6K94.s:83     .text.hex2SevenSegments:000000000000002a .Loc.11
+C:\Users\Aluno\AppData\Local\Temp\ccHE6K94.s:84     .text.hex2SevenSegments:000000000000002a .Loc.12
+C:\Users\Aluno\AppData\Local\Temp\ccHE6K94.s:88     .text.hex2SevenSegments:0000000000000030 .Loc.13
+C:\Users\Aluno\AppData\Local\Temp\ccHE6K94.s:91     .text.hex2SevenSegments:0000000000000032 .Loc.14
+C:\Users\Aluno\AppData\Local\Temp\ccHE6K94.s:94     .text.hex2SevenSegments:0000000000000032 .Loc.15
+C:\Users\Aluno\AppData\Local\Temp\ccHE6K94.s:98     .text.hex2SevenSegments:0000000000000034 .Loc.16
+C:\Users\Aluno\AppData\Local\Temp\ccHE6K94.s:99     .text.hex2SevenSegments:0000000000000034 .Loc.17
+C:\Users\Aluno\AppData\Local\Temp\ccHE6K94.s:100    .text.hex2SevenSegments:0000000000000034 .Loc.18
+C:\Users\Aluno\AppData\Local\Temp\ccHE6K94.s:103    .text.hex2SevenSegments:0000000000000036 .Loc.19
+C:\Users\Aluno\AppData\Local\Temp\ccHE6K94.s:107    .text.hex2SevenSegments:0000000000000038 .Loc.20
+C:\Users\Aluno\AppData\Local\Temp\ccHE6K94.s:108    .text.hex2SevenSegments:0000000000000038 .Loc.21
+C:\Users\Aluno\AppData\Local\Temp\ccHE6K94.s:109    .text.hex2SevenSegments:0000000000000038 .Loc.22
+C:\Users\Aluno\AppData\Local\Temp\ccHE6K94.s:112    .text.hex2SevenSegments:000000000000003a .Loc.23
+C:\Users\Aluno\AppData\Local\Temp\ccHE6K94.s:116    .text.hex2SevenSegments:000000000000003c .Loc.24
+C:\Users\Aluno\AppData\Local\Temp\ccHE6K94.s:117    .text.hex2SevenSegments:000000000000003c .Loc.25
+C:\Users\Aluno\AppData\Local\Temp\ccHE6K94.s:118    .text.hex2SevenSegments:000000000000003c .Loc.26
+C:\Users\Aluno\AppData\Local\Temp\ccHE6K94.s:121    .text.hex2SevenSegments:000000000000003e .Loc.27
+C:\Users\Aluno\AppData\Local\Temp\ccHE6K94.s:125    .text.hex2SevenSegments:0000000000000040 .Loc.28
+C:\Users\Aluno\AppData\Local\Temp\ccHE6K94.s:126    .text.hex2SevenSegments:0000000000000040 .Loc.29
+C:\Users\Aluno\AppData\Local\Temp\ccHE6K94.s:127    .text.hex2SevenSegments:0000000000000040 .Loc.30
+C:\Users\Aluno\AppData\Local\Temp\ccHE6K94.s:130    .text.hex2SevenSegments:0000000000000042 .Loc.31
+C:\Users\Aluno\AppData\Local\Temp\ccHE6K94.s:134    .text.hex2SevenSegments:0000000000000044 .Loc.32
+C:\Users\Aluno\AppData\Local\Temp\ccHE6K94.s:135    .text.hex2SevenSegments:0000000000000044 .Loc.33
+C:\Users\Aluno\AppData\Local\Temp\ccHE6K94.s:136    .text.hex2SevenSegments:0000000000000044 .Loc.34
+C:\Users\Aluno\AppData\Local\Temp\ccHE6K94.s:139    .text.hex2SevenSegments:0000000000000046 .Loc.35
+C:\Users\Aluno\AppData\Local\Temp\ccHE6K94.s:143    .text.hex2SevenSegments:0000000000000048 .Loc.36
+C:\Users\Aluno\AppData\Local\Temp\ccHE6K94.s:144    .text.hex2SevenSegments:0000000000000048 .Loc.37
+C:\Users\Aluno\AppData\Local\Temp\ccHE6K94.s:145    .text.hex2SevenSegments:0000000000000048 .Loc.38
+C:\Users\Aluno\AppData\Local\Temp\ccHE6K94.s:148    .text.hex2SevenSegments:000000000000004a .Loc.39
+C:\Users\Aluno\AppData\Local\Temp\ccHE6K94.s:152    .text.hex2SevenSegments:000000000000004c .Loc.40
+C:\Users\Aluno\AppData\Local\Temp\ccHE6K94.s:153    .text.hex2SevenSegments:000000000000004c .Loc.41
+C:\Users\Aluno\AppData\Local\Temp\ccHE6K94.s:154    .text.hex2SevenSegments:000000000000004c .Loc.42
+C:\Users\Aluno\AppData\Local\Temp\ccHE6K94.s:157    .text.hex2SevenSegments:000000000000004e .Loc.43
+C:\Users\Aluno\AppData\Local\Temp\ccHE6K94.s:161    .text.hex2SevenSegments:0000000000000050 .Loc.44
+C:\Users\Aluno\AppData\Local\Temp\ccHE6K94.s:162    .text.hex2SevenSegments:0000000000000050 .Loc.45
+C:\Users\Aluno\AppData\Local\Temp\ccHE6K94.s:163    .text.hex2SevenSegments:0000000000000050 .Loc.46
+C:\Users\Aluno\AppData\Local\Temp\ccHE6K94.s:166    .text.hex2SevenSegments:0000000000000052 .Loc.47
+GAS LISTING C:\Users\Aluno\AppData\Local\Temp\ccHE6K94.s 			page 9
+
+
+C:\Users\Aluno\AppData\Local\Temp\ccHE6K94.s:170    .text.hex2SevenSegments:0000000000000054 .Loc.48
+C:\Users\Aluno\AppData\Local\Temp\ccHE6K94.s:171    .text.hex2SevenSegments:0000000000000054 .Loc.49
+C:\Users\Aluno\AppData\Local\Temp\ccHE6K94.s:172    .text.hex2SevenSegments:0000000000000054 .Loc.50
+C:\Users\Aluno\AppData\Local\Temp\ccHE6K94.s:175    .text.hex2SevenSegments:0000000000000056 .Loc.51
+C:\Users\Aluno\AppData\Local\Temp\ccHE6K94.s:179    .text.hex2SevenSegments:0000000000000058 .Loc.52
+C:\Users\Aluno\AppData\Local\Temp\ccHE6K94.s:180    .text.hex2SevenSegments:0000000000000058 .Loc.53
+C:\Users\Aluno\AppData\Local\Temp\ccHE6K94.s:181    .text.hex2SevenSegments:0000000000000058 .Loc.54
+C:\Users\Aluno\AppData\Local\Temp\ccHE6K94.s:184    .text.hex2SevenSegments:000000000000005a .Loc.55
+C:\Users\Aluno\AppData\Local\Temp\ccHE6K94.s:188    .text.hex2SevenSegments:000000000000005c .Loc.56
+C:\Users\Aluno\AppData\Local\Temp\ccHE6K94.s:189    .text.hex2SevenSegments:000000000000005c .Loc.57
+C:\Users\Aluno\AppData\Local\Temp\ccHE6K94.s:190    .text.hex2SevenSegments:000000000000005c .Loc.58
+C:\Users\Aluno\AppData\Local\Temp\ccHE6K94.s:193    .text.hex2SevenSegments:000000000000005e .Loc.59
+C:\Users\Aluno\AppData\Local\Temp\ccHE6K94.s:197    .text.hex2SevenSegments:0000000000000060 .Loc.60
+C:\Users\Aluno\AppData\Local\Temp\ccHE6K94.s:198    .text.hex2SevenSegments:0000000000000060 .Loc.61
+C:\Users\Aluno\AppData\Local\Temp\ccHE6K94.s:199    .text.hex2SevenSegments:0000000000000060 .Loc.62
+C:\Users\Aluno\AppData\Local\Temp\ccHE6K94.s:202    .text.hex2SevenSegments:0000000000000062 .Loc.63
+C:\Users\Aluno\AppData\Local\Temp\ccHE6K94.s:206    .text.hex2SevenSegments:0000000000000064 .Loc.64
+C:\Users\Aluno\AppData\Local\Temp\ccHE6K94.s:207    .text.hex2SevenSegments:0000000000000064 .Loc.65
+C:\Users\Aluno\AppData\Local\Temp\ccHE6K94.s:208    .text.hex2SevenSegments:0000000000000064 .Loc.66
+C:\Users\Aluno\AppData\Local\Temp\ccHE6K94.s:211    .text.hex2SevenSegments:0000000000000066 .Loc.67
+C:\Users\Aluno\AppData\Local\Temp\ccHE6K94.s:215    .text.hex2SevenSegments:0000000000000068 .Loc.68
+C:\Users\Aluno\AppData\Local\Temp\ccHE6K94.s:216    .text.hex2SevenSegments:0000000000000068 .Loc.69
+C:\Users\Aluno\AppData\Local\Temp\ccHE6K94.s:217    .text.hex2SevenSegments:0000000000000068 .Loc.70
+C:\Users\Aluno\AppData\Local\Temp\ccHE6K94.s:220    .text.hex2SevenSegments:000000000000006a .Loc.71
+C:\Users\Aluno\AppData\Local\Temp\ccHE6K94.s:224    .text.hex2SevenSegments:000000000000006c .Loc.72
+C:\Users\Aluno\AppData\Local\Temp\ccHE6K94.s:227    .text.hex2SevenSegments:000000000000006e .Loc.73
+C:\Users\Aluno\AppData\Local\Temp\ccHE6K94.s:231    .text.hex2SevenSegments:0000000000000070 .Loc.74
+C:\Users\Aluno\AppData\Local\Temp\ccHE6K94.s:234    .text.hex2SevenSegments:0000000000000072 .Loc.75
+C:\Users\Aluno\AppData\Local\Temp\ccHE6K94.s:238    .text.hex2SevenSegments:0000000000000074 .Loc.76
+C:\Users\Aluno\AppData\Local\Temp\ccHE6K94.s:241    .text.hex2SevenSegments:0000000000000076 .Loc.77
+C:\Users\Aluno\AppData\Local\Temp\ccHE6K94.s:243    .text.hex2SevenSegments:0000000000000078 L0
+C:\Users\Aluno\AppData\Local\Temp\ccHE6K94.s:246    .text.hex2SevenSegments:0000000000000078 L0
+                     .debug_frame:0000000000000000 L0
+C:\Users\Aluno\AppData\Local\Temp\ccHE6K94.s:65     .text.hex2SevenSegments:000000000000001c .L2
+C:\Users\Aluno\AppData\Local\Temp\ccHE6K94.s:59     .text.hex2SevenSegments:0000000000000018 .L3
+C:\Users\Aluno\AppData\Local\Temp\ccHE6K94.s:41     .jumptables.gcc.hex2SevenSegments:0000000000000000 .L5
+C:\Users\Aluno\AppData\Local\Temp\ccHE6K94.s:74     .text.hex2SevenSegments:0000000000000026 .L20
+C:\Users\Aluno\AppData\Local\Temp\ccHE6K94.s:230    .text.hex2SevenSegments:0000000000000070 .L24
+C:\Users\Aluno\AppData\Local\Temp\ccHE6K94.s:237    .text.hex2SevenSegments:0000000000000074 .L25
+C:\Users\Aluno\AppData\Local\Temp\ccHE6K94.s:92     .text.hex2SevenSegments:0000000000000032 .L1
+C:\Users\Aluno\AppData\Local\Temp\ccHE6K94.s:223    .text.hex2SevenSegments:000000000000006c .L23
+C:\Users\Aluno\AppData\Local\Temp\ccHE6K94.s:97     .text.hex2SevenSegments:0000000000000034 .L19
+C:\Users\Aluno\AppData\Local\Temp\ccHE6K94.s:106    .text.hex2SevenSegments:0000000000000038 .L18
+C:\Users\Aluno\AppData\Local\Temp\ccHE6K94.s:115    .text.hex2SevenSegments:000000000000003c .L17
+C:\Users\Aluno\AppData\Local\Temp\ccHE6K94.s:124    .text.hex2SevenSegments:0000000000000040 .L16
+C:\Users\Aluno\AppData\Local\Temp\ccHE6K94.s:133    .text.hex2SevenSegments:0000000000000044 .L15
+C:\Users\Aluno\AppData\Local\Temp\ccHE6K94.s:142    .text.hex2SevenSegments:0000000000000048 .L14
+C:\Users\Aluno\AppData\Local\Temp\ccHE6K94.s:151    .text.hex2SevenSegments:000000000000004c .L12
+C:\Users\Aluno\AppData\Local\Temp\ccHE6K94.s:160    .text.hex2SevenSegments:0000000000000050 .L11
+C:\Users\Aluno\AppData\Local\Temp\ccHE6K94.s:169    .text.hex2SevenSegments:0000000000000054 .L10
+C:\Users\Aluno\AppData\Local\Temp\ccHE6K94.s:178    .text.hex2SevenSegments:0000000000000058 .L9
+C:\Users\Aluno\AppData\Local\Temp\ccHE6K94.s:187    .text.hex2SevenSegments:000000000000005c .L8
+C:\Users\Aluno\AppData\Local\Temp\ccHE6K94.s:196    .text.hex2SevenSegments:0000000000000060 .L7
+C:\Users\Aluno\AppData\Local\Temp\ccHE6K94.s:205    .text.hex2SevenSegments:0000000000000064 .L6
+C:\Users\Aluno\AppData\Local\Temp\ccHE6K94.s:214    .text.hex2SevenSegments:0000000000000068 .L4
+C:\Users\Aluno\AppData\Local\Temp\ccHE6K94.s:371    .debug_abbrev:0000000000000000 .Ldebug_abbrev0
+C:\Users\Aluno\AppData\Local\Temp\ccHE6K94.s:1165   .debug_rnglists:000000000000000c .LLRL2
+GAS LISTING C:\Users\Aluno\AppData\Local\Temp\ccHE6K94.s 			page 10
+
+
+C:\Users\Aluno\AppData\Local\Temp\ccHE6K94.s:1172   .debug_line:0000000000000000 .Ldebug_line0
+C:\Users\Aluno\AppData\Local\Temp\ccHE6K94.s:16     .text.hex2SevenSegments:0000000000000000 .LFB0
+C:\Users\Aluno\AppData\Local\Temp\ccHE6K94.s:244    .text.hex2SevenSegments:0000000000000078 .LFE0
+C:\Users\Aluno\AppData\Local\Temp\ccHE6K94.s:628    .debug_loclists:0000000000000058 .LLST0
+C:\Users\Aluno\AppData\Local\Temp\ccHE6K94.s:551    .debug_loclists:000000000000000c .LVUS0
+C:\Users\Aluno\AppData\Local\Temp\ccHE6K94.s:942    .debug_loclists:0000000000000193 .LLST1
+C:\Users\Aluno\AppData\Local\Temp\ccHE6K94.s:879    .debug_loclists:0000000000000155 .LVUS1
+C:\Users\Aluno\AppData\Local\Temp\ccHE6K94.s:15     .text.hex2SevenSegments:0000000000000000 .LVL0
+C:\Users\Aluno\AppData\Local\Temp\ccHE6K94.s:28     .text.hex2SevenSegments:0000000000000004 .LVL1
+C:\Users\Aluno\AppData\Local\Temp\ccHE6K94.s:251    .debug_info:0000000000000000 .Ldebug_info0
+
+UNDEFINED SYMBOLS
+__tablejump2__
