@@ -1,5 +1,5 @@
 
-AVRASM ver. 2.1.43  main.asm Fri Apr 07 15:48:00 2023
+AVRASM ver. 2.1.43  main.asm Fri May 12 16:48:29 2023
 
 main.asm(14): Including file 'include/m328Pdef.inc'
                  
@@ -1009,73 +1009,62 @@ main.asm(14): Including file 'include/m328Pdef.inc'
                  ; ------------------------------------------------------------------------------
                  ; Functions
                  ; ------------------------------------------------------------------------------
-                 .macro  PUSH_TO_LED_PORT;(reg1, reg2)
-                     MOV     temp1, @0
-                     OR      temp1, @1
-                     OUT     LED_PORT, temp1
-                     RCALL   delay_250m
-                 .endmacro
-                 
-                 .macro  SET_IOR; (IOR, 0x)
-                     LDI     temp1, @0
-                     OUT     @0, temp1
-                 .endmacro
                  
                  ; ------------------------------------------------------------------------------
                  ; Interruption handlers
                  ; ------------------------------------------------------------------------------
                  .org 0x0000
-000000 940c 0062 	JMP resetHandler
+000000 940c 0063 	JMP resetHandler
                  .org INT0addr
-000002 940c 0062 	JMP int0Handler
+000002 940c 0063 	JMP int0Handler
                  .org INT1addr
-000004 940c 0062 	JMP int1Handler
+000004 940c 0063 	JMP int1Handler
                  .org PCI0addr
-000006 940c 0062 	JMP pcint0Handler
+000006 940c 0063 	JMP pcint0Handler
                  .org PCI1addr
-000008 940c 0062 	JMP pcint1Handler
+000008 940c 0063 	JMP pcint1Handler
                  .org PCI2addr
-00000a 940c 0062 	JMP pcint2Handler
+00000a 940c 0063 	JMP pcint2Handler
                  .org WDTaddr
-00000c 940c 0062 	JMP wdtHandler
+00000c 940c 0063 	JMP wdtHandler
                  .org OC2Aaddr
-00000e 940c 0062 	JMP timer2CompAHandler
+00000e 940c 0063 	JMP timer2CompAHandler
                  .org OC2Baddr
-000010 940c 0062 	JMP timer2CompBHandler
+000010 940c 0063 	JMP timer2CompBHandler
                  .org OVF2addr
-000012 940c 0062 	JMP timer2OvfHandler
+000012 940c 0063 	JMP timer2OvfHandler
                  .org ICP1addr
-000014 940c 0062 	JMP timer1CaptureHandler
+000014 940c 0063 	JMP timer1CaptureHandler
                  .org OC1Aaddr
-000016 940c 0062 	JMP timer1CompAHandler
+000016 940c 0063 	JMP timer1CompAHandler
                  .org OC1Baddr
-000018 940c 0062 	JMP timer1CompBHandler
+000018 940c 0063 	JMP timer1CompBHandler
                  .org OVF1addr
-00001a 940c 0062 	JMP timer1OvfHandler
+00001a 940c 0063 	JMP timer1OvfHandler
                  .org OC0Aaddr
-00001c 940c 0062 	JMP timer0CompAHandler
+00001c 940c 0063 	JMP timer0CompAHandler
                  .org OC0Baddr
-00001e 940c 0062 	JMP timer0CompBHandler
+00001e 940c 0063 	JMP timer0CompBHandler
                  .org OVF0addr
-000020 940c 0062 	JMP timer0OvfHandler
+000020 940c 0063 	JMP timer0OvfHandler
                  .org SPIaddr
-000022 940c 0062 	JMP spiHandler
+000022 940c 0063 	JMP spiHandler
                  .org URXCaddr
-000024 940c 0062 	JMP usartRxHandler
+000024 940c 0063 	JMP usartRxHandler
                  .org UDREaddr
-000026 940c 0062 	JMP usartDataEmptyHandler
+000026 940c 0063 	JMP usartDataEmptyHandler
                  .org UTXCaddr
-000028 940c 0062 	JMP usartTxHandler
+000028 940c 0063 	JMP usartTxHandler
                  .org ADCCaddr
-00002a 940c 0062 	JMP adcHandler
+00002a 940c 0063 	JMP adcHandler
                  .org ERDYaddr
-00002c 940c 0062 	JMP eepromHandler
+00002c 940c 0063 	JMP eepromHandler
                  .org ACIaddr
-00002e 940c 0062 	JMP analogCompHandler
+00002e 940c 0063 	JMP analogCompHandler
                  .org TWIaddr
-000030 940c 0062 	JMP twiHandler
+000030 940c 0063 	JMP twiHandler
                  .org SPMRaddr
-000032 940c 0062 	JMP flashHandler
+000032 940c 0063 	JMP flashHandler
                  .org INT_VECTORS_SIZE
                  
                  ; ------------------------------------------------------------------------------
@@ -1091,66 +1080,71 @@ main.asm(14): Including file 'include/m328Pdef.inc'
                  ; Main code
                  ; ------------------------------------------------------------------------------
                  main:
-000034 e03b
-000035 b93b          SET_IOR LED_PORT, 0x00;     // Set all pins to 0
-000036 e03a
-000037 b93a          SET_IOR LED_DDR,  0xFF;     // Sets LED_PORT as output
-                 mainLoop:
-000038 e002          LDI     pushed, 0x02
-000039 e011          LDI     pusher, 0x01
-00003a 2f30
-00003b 2b31
-00003c b93b
-00003d d00e          PUSH_TO_LED_PORT pushed, pusher
-                     animationLoop:
-00003e 1701              CP      pushed, pusher
-00003f f011              BREQ    push_pushed
-000040 0f11              LSL     pusher
-000041 c003              RJMP    animationEnd
-                         push_pushed:
-000042 7800                  ANDI    pushed, 0x80
-000043 f7a1                  BRNE    mainLoop
-000044 0f00                  LSL     pushed
-                         animationEnd:
-000045 2f30
-000046 2b31
-000047 b93b
-000048 d003                  PUSH_TO_LED_PORT pushed, pusher
-000049 cff4                  RJMP    animationLoop
-                 
-                 
-00004a 940c 0038     JMP     mainLoop
-                 
+                     ; Set LED_PORT as output
+000034 ef2f          LDI     temp0, 0xFF
+000035 e030          LDI     temp1, 0x00
+000036 b93b          OUT     LED_PORT, temp1
+000037 b92a          OUT     LED_DDR, temp0
+                     main_loop:
+                         ; Push initial values to LED_PORT
+000038 e002              LDI     pushed, 0x02
+                         push0:
+000039 e011              LDI     pusher, 0x01
+00003a 2f30              MOV     temp1,  pushed
+00003b 2b31              OR      temp1,  pusher  ; temp1 = (pushed | pusher)
+00003c b93b              OUT     LED_PORT, temp1
+00003d d00f              RCALL   delay_250m
+                         ; Enter main animation loop
+                         ani_loop:
+                             ; if (pushed=pusher): _BV(pushed); pusher=0
+00003e 1701                  CP      pushed, pusher
+00003f f029                  BREQ    ani_if
+000040 2311                  TST     pusher;     Test pusher
+000041 f3b9                  BREQ    push0;      (pusher==0) ? LSL(pusher) : pusher=1
+000042 f3aa                  BRMI    main_loop;  ((pusher & _BV(7)) == 1): goto main_loop
+000043 0f11                  LSL     pusher
+000044 c002                  RJMP     ani_end
+                             ; else: _BV(pusher)
+                             ani_if:
+000045 0f00                  LSL     pushed
+000046 7010                  ANDI    pusher, 0x00
+                             ani_end:
+000047 2f30                  MOV     temp1,  pushed
+000048 2b31                  OR      temp1,  pusher;     temp1 = (pushed | pusher)
+000049 b93b                  OUT     LED_PORT, temp1
+00004a d002                  RCALL   delay_250m
+00004b cff2                  RJMP     ani_loop
+00004c cfeb          RJMP     main_loop;                  Should never be called
                  
                  delay_250m:
-00004c e229          LDI  R18, 41
-00004d e936          LDI  R19, 150
-00004e e74d          LDI  R20, 125
+00004d e229          LDI  R18, 41
+00004e e936          LDI  R19, 150
+00004f e74d          LDI  R20, 125
                  d250m_L1:
-00004f 954a          DEC  R20
-000050 f7f1          BRNE d250m_L1
-000051 953a          DEC  R19
-000052 f7e1          BRNE d250m_L1
-000053 952a          DEC  R18
-000054 f7d1          BRNE d250m_L1
-000055 c000          RJMP PC+1
+000050 954a          DEC  R20
+000051 f7f1          BRNE d250m_L1
+000052 953a          DEC  R19
+000053 f7e1          BRNE d250m_L1
+000054 952a          DEC  R18
+000055 f7d1          BRNE d250m_L1
+000056 c000          RJMP PC+1
                  
-000056 9508          RET
+000057 9508          RET
                  
                  delay_500m:
-000057 e229          LDI  R18, 41
-000058 e936          LDI  R19, 150
-000059 e74d          LDI  R20, 125
+000058 e229          LDI  R18, 41
+000059 e936          LDI  R19, 150
+00005a e74d          LDI  R20, 125
                  d500m_L1:
-00005a 954a          DEC  R20
-00005b f7f1          BRNE d500m_L1
-00005c 953a          DEC  R19
-00005d f7e1          BRNE d500m_L1
-00005e 952a          DEC  R18
-00005f f7d1          BRNE d500m_L1
-000060 c000          RJMP PC+1
+00005b 954a          DEC  R20
+00005c f7f1          BRNE d500m_L1
+00005d 953a          DEC  R19
+00005e f7e1          BRNE d500m_L1
+00005f 952a          DEC  R18
+000060 f7d1          BRNE d500m_L1
+000061 c000          RJMP PC+1
                  
-000061 9508          RET
+000062 9508          RET
                  ; ------------------------------------------------------------------------------
                  ; Interrupt handlers
                  ; ------------------------------------------------------------------------------
@@ -1180,11 +1174,11 @@ main.asm(14): Including file 'include/m328Pdef.inc'
                  twiHandler:
                  flashHandler:
                  resetHandler:
-000062 ef3f      	LDI		R19, LOW(RAMEND)
-000063 bf3d      	OUT		SPL, R19
-000064 e038      	LDI		R19, HIGH(RAMEND)
-000065 bf3e      	OUT		SPH,R19
-000066 940c 0034 	JMP		main
+000063 ef3f      	LDI		R19, LOW(RAMEND)
+000064 bf3d      	OUT		SPL, R19
+000065 e038      	LDI		R19, HIGH(RAMEND)
+000066 bf3e      	OUT		SPH,R19
+000067 940c 0034 	JMP		main
 
 
 RESOURCE USE INFORMATION
@@ -1204,7 +1198,7 @@ counted separately from r26..r31 here.
 ATmega328P register use summary:
 r0 :   0 r1 :   0 r2 :   0 r3 :   0 r4 :   0 r5 :   0 r6 :   0 r7 :   0 
 r8 :   0 r9 :   0 r10:   0 r11:   0 r12:   0 r13:   0 r14:   0 r15:   0 
-r16:   6 r17:   5 r18:   4 r19:  18 r20:   4 r21:   0 r22:   0 r23:   0 
+r16:   5 r17:   7 r18:   6 r19:  16 r20:   4 r21:   0 r22:   0 r23:   0 
 r24:   0 r25:   0 r26:   0 r27:   0 r28:   0 r29:   0 r30:   0 r31:   0 
 x  :   0 y  :   0 z  :   0 
 Registers used: 5 out of 35 (14.3%)
@@ -1212,29 +1206,29 @@ Registers used: 5 out of 35 (14.3%)
 ATmega328P instruction use summary:
 .lds  :   0 .sts  :   0 adc   :   0 add   :   0 adiw  :   0 and   :   0 
 andi  :   1 asr   :   0 bclr  :   0 bld   :   0 brbc  :   0 brbs  :   0 
-brcc  :   0 brcs  :   0 break :   0 breq  :   1 brge  :   0 brhc  :   0 
-brhs  :   0 brid  :   0 brie  :   0 brlo  :   0 brlt  :   0 brmi  :   0 
-brne  :   7 brpl  :   0 brsh  :   0 brtc  :   0 brts  :   0 brvc  :   0 
+brcc  :   0 brcs  :   0 break :   0 breq  :   2 brge  :   0 brhc  :   0 
+brhs  :   0 brid  :   0 brie  :   0 brlo  :   0 brlt  :   0 brmi  :   1 
+brne  :   6 brpl  :   0 brsh  :   0 brtc  :   0 brts  :   0 brvc  :   0 
 brvs  :   0 bset  :   0 bst   :   0 call  :   0 cbi   :   0 cbr   :   0 
 clc   :   0 clh   :   0 cli   :   0 cln   :   0 clr   :   0 cls   :   0 
 clt   :   0 clv   :   0 clz   :   0 com   :   0 cp    :   1 cpc   :   0 
 cpi   :   0 cpse  :   0 dec   :   6 eor   :   0 fmul  :   0 fmuls :   0 
-fmulsu:   0 icall :   0 ijmp  :   0 in    :   0 inc   :   0 jmp   :  28 
+fmulsu:   0 icall :   0 ijmp  :   0 in    :   0 inc   :   0 jmp   :  27 
 ld    :   0 ldd   :   0 ldi   :  12 lds   :   0 lpm   :   0 lsl   :   2 
 lsr   :   0 mov   :   2 movw  :   0 mul   :   0 muls  :   0 mulsu :   0 
 neg   :   0 nop   :   0 or    :   2 ori   :   0 out   :   6 pop   :   0 
-push  :   0 rcall :   2 ret   :   2 reti  :   0 rjmp  :   4 rol   :   0 
+push  :   0 rcall :   2 ret   :   2 reti  :   0 rjmp  :   5 rol   :   0 
 ror   :   0 sbc   :   0 sbci  :   0 sbi   :   0 sbic  :   0 sbis  :   0 
 sbiw  :   0 sbr   :   0 sbrc  :   0 sbrs  :   0 sec   :   0 seh   :   0 
 sei   :   0 sen   :   0 ser   :   0 ses   :   0 set   :   0 sev   :   0 
 sez   :   0 sleep :   0 spm   :   0 st    :   0 std   :   0 sts   :   0 
-sub   :   0 subi  :   0 swap  :   0 tst   :   0 wdr   :   0 
-Instructions used: 14 out of 113 (12.4%)
+sub   :   0 subi  :   0 swap  :   0 tst   :   1 wdr   :   0 
+Instructions used: 16 out of 113 (14.2%)
 
 ATmega328P memory use summary [bytes]:
 Segment   Begin    End      Code   Data   Used    Size   Use%
 ---------------------------------------------------------------
-[.cseg] 0x000000 0x0000d0    208      0    208   32768   0.6%
+[.cseg] 0x000000 0x0000d2    210      0    210   32768   0.6%
 [.dseg] 0x000100 0x000100      0      0      0    2048   0.0%
 [.eseg] 0x000000 0x000000      0      0      0    1024   0.0%
 

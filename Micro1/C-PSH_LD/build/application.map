@@ -1,49 +1,51 @@
 Archive member included to satisfy reference by file (symbol)
 
-c:/vscode/toolchains/avr-gcc/bin/../lib/gcc/avr/12.1.0/avr5\libgcc.a(_exit.o)
-                              c:/vscode/toolchains/avr-gcc/bin/../lib/gcc/avr/12.1.0/../../../../avr/lib/avr5/crtatmega328p.o (exit)
-c:/vscode/toolchains/avr-gcc/bin/../lib/gcc/avr/12.1.0/avr5\libgcc.a(_copy_data.o)
-                              build/main.o (__do_copy_data)
+f:/vscode-win32-x64-1.75.1/toolchains/avr-gcc/bin/../lib/gcc/avr/12.1.0/avr5\libgcc.a(_exit.o)
+                              f:/vscode-win32-x64-1.75.1/toolchains/avr-gcc/bin/../lib/gcc/avr/12.1.0/../../../../avr/lib/avr5/crtatmega328p.o (exit)
+f:/vscode-win32-x64-1.75.1/toolchains/avr-gcc/bin/../lib/gcc/avr/12.1.0/avr5\libgcc.a(_clear_bss.o)
+                              build/main.o (__do_clear_bss)
 
 Discarded input sections
 
- .data          0x0000000000000000        0x0 c:/vscode/toolchains/avr-gcc/bin/../lib/gcc/avr/12.1.0/../../../../avr/lib/avr5/crtatmega328p.o
- .bss           0x0000000000000000        0x0 c:/vscode/toolchains/avr-gcc/bin/../lib/gcc/avr/12.1.0/../../../../avr/lib/avr5/crtatmega328p.o
+ .data          0x0000000000000000        0x0 f:/vscode-win32-x64-1.75.1/toolchains/avr-gcc/bin/../lib/gcc/avr/12.1.0/../../../../avr/lib/avr5/crtatmega328p.o
+ .bss           0x0000000000000000        0x0 f:/vscode-win32-x64-1.75.1/toolchains/avr-gcc/bin/../lib/gcc/avr/12.1.0/../../../../avr/lib/avr5/crtatmega328p.o
  .text          0x0000000000000000        0x0 build/main.o
  .data          0x0000000000000000        0x0 build/main.o
  .bss           0x0000000000000000        0x0 build/main.o
- .text          0x0000000000000000        0x0 c:/vscode/toolchains/avr-gcc/bin/../lib/gcc/avr/12.1.0/avr5\libgcc.a(_exit.o)
- .data          0x0000000000000000        0x0 c:/vscode/toolchains/avr-gcc/bin/../lib/gcc/avr/12.1.0/avr5\libgcc.a(_exit.o)
- .bss           0x0000000000000000        0x0 c:/vscode/toolchains/avr-gcc/bin/../lib/gcc/avr/12.1.0/avr5\libgcc.a(_exit.o)
+ .bss.new_time  0x0000000000000000        0x2 build/main.o
+ .bss.gbl_read  0x0000000000000000        0x1 build/main.o
+ .text          0x0000000000000000        0x0 f:/vscode-win32-x64-1.75.1/toolchains/avr-gcc/bin/../lib/gcc/avr/12.1.0/avr5\libgcc.a(_exit.o)
+ .data          0x0000000000000000        0x0 f:/vscode-win32-x64-1.75.1/toolchains/avr-gcc/bin/../lib/gcc/avr/12.1.0/avr5\libgcc.a(_exit.o)
+ .bss           0x0000000000000000        0x0 f:/vscode-win32-x64-1.75.1/toolchains/avr-gcc/bin/../lib/gcc/avr/12.1.0/avr5\libgcc.a(_exit.o)
  .text.libgcc.mul
-                0x0000000000000000        0x0 c:/vscode/toolchains/avr-gcc/bin/../lib/gcc/avr/12.1.0/avr5\libgcc.a(_exit.o)
+                0x0000000000000000        0x0 f:/vscode-win32-x64-1.75.1/toolchains/avr-gcc/bin/../lib/gcc/avr/12.1.0/avr5\libgcc.a(_exit.o)
  .text.libgcc.div
-                0x0000000000000000        0x0 c:/vscode/toolchains/avr-gcc/bin/../lib/gcc/avr/12.1.0/avr5\libgcc.a(_exit.o)
- .text.libgcc   0x0000000000000000        0x0 c:/vscode/toolchains/avr-gcc/bin/../lib/gcc/avr/12.1.0/avr5\libgcc.a(_exit.o)
+                0x0000000000000000        0x0 f:/vscode-win32-x64-1.75.1/toolchains/avr-gcc/bin/../lib/gcc/avr/12.1.0/avr5\libgcc.a(_exit.o)
+ .text.libgcc   0x0000000000000000        0x0 f:/vscode-win32-x64-1.75.1/toolchains/avr-gcc/bin/../lib/gcc/avr/12.1.0/avr5\libgcc.a(_exit.o)
  .text.libgcc.prologue
-                0x0000000000000000        0x0 c:/vscode/toolchains/avr-gcc/bin/../lib/gcc/avr/12.1.0/avr5\libgcc.a(_exit.o)
+                0x0000000000000000        0x0 f:/vscode-win32-x64-1.75.1/toolchains/avr-gcc/bin/../lib/gcc/avr/12.1.0/avr5\libgcc.a(_exit.o)
  .text.libgcc.builtins
-                0x0000000000000000        0x0 c:/vscode/toolchains/avr-gcc/bin/../lib/gcc/avr/12.1.0/avr5\libgcc.a(_exit.o)
+                0x0000000000000000        0x0 f:/vscode-win32-x64-1.75.1/toolchains/avr-gcc/bin/../lib/gcc/avr/12.1.0/avr5\libgcc.a(_exit.o)
  .text.libgcc.fmul
-                0x0000000000000000        0x0 c:/vscode/toolchains/avr-gcc/bin/../lib/gcc/avr/12.1.0/avr5\libgcc.a(_exit.o)
+                0x0000000000000000        0x0 f:/vscode-win32-x64-1.75.1/toolchains/avr-gcc/bin/../lib/gcc/avr/12.1.0/avr5\libgcc.a(_exit.o)
  .text.libgcc.fixed
-                0x0000000000000000        0x0 c:/vscode/toolchains/avr-gcc/bin/../lib/gcc/avr/12.1.0/avr5\libgcc.a(_exit.o)
- .text          0x0000000000000000        0x0 c:/vscode/toolchains/avr-gcc/bin/../lib/gcc/avr/12.1.0/avr5\libgcc.a(_copy_data.o)
- .data          0x0000000000000000        0x0 c:/vscode/toolchains/avr-gcc/bin/../lib/gcc/avr/12.1.0/avr5\libgcc.a(_copy_data.o)
- .bss           0x0000000000000000        0x0 c:/vscode/toolchains/avr-gcc/bin/../lib/gcc/avr/12.1.0/avr5\libgcc.a(_copy_data.o)
+                0x0000000000000000        0x0 f:/vscode-win32-x64-1.75.1/toolchains/avr-gcc/bin/../lib/gcc/avr/12.1.0/avr5\libgcc.a(_exit.o)
+ .text          0x0000000000000000        0x0 f:/vscode-win32-x64-1.75.1/toolchains/avr-gcc/bin/../lib/gcc/avr/12.1.0/avr5\libgcc.a(_clear_bss.o)
+ .data          0x0000000000000000        0x0 f:/vscode-win32-x64-1.75.1/toolchains/avr-gcc/bin/../lib/gcc/avr/12.1.0/avr5\libgcc.a(_clear_bss.o)
+ .bss           0x0000000000000000        0x0 f:/vscode-win32-x64-1.75.1/toolchains/avr-gcc/bin/../lib/gcc/avr/12.1.0/avr5\libgcc.a(_clear_bss.o)
  .text.libgcc.mul
-                0x0000000000000000        0x0 c:/vscode/toolchains/avr-gcc/bin/../lib/gcc/avr/12.1.0/avr5\libgcc.a(_copy_data.o)
+                0x0000000000000000        0x0 f:/vscode-win32-x64-1.75.1/toolchains/avr-gcc/bin/../lib/gcc/avr/12.1.0/avr5\libgcc.a(_clear_bss.o)
  .text.libgcc.div
-                0x0000000000000000        0x0 c:/vscode/toolchains/avr-gcc/bin/../lib/gcc/avr/12.1.0/avr5\libgcc.a(_copy_data.o)
- .text.libgcc   0x0000000000000000        0x0 c:/vscode/toolchains/avr-gcc/bin/../lib/gcc/avr/12.1.0/avr5\libgcc.a(_copy_data.o)
+                0x0000000000000000        0x0 f:/vscode-win32-x64-1.75.1/toolchains/avr-gcc/bin/../lib/gcc/avr/12.1.0/avr5\libgcc.a(_clear_bss.o)
+ .text.libgcc   0x0000000000000000        0x0 f:/vscode-win32-x64-1.75.1/toolchains/avr-gcc/bin/../lib/gcc/avr/12.1.0/avr5\libgcc.a(_clear_bss.o)
  .text.libgcc.prologue
-                0x0000000000000000        0x0 c:/vscode/toolchains/avr-gcc/bin/../lib/gcc/avr/12.1.0/avr5\libgcc.a(_copy_data.o)
+                0x0000000000000000        0x0 f:/vscode-win32-x64-1.75.1/toolchains/avr-gcc/bin/../lib/gcc/avr/12.1.0/avr5\libgcc.a(_clear_bss.o)
  .text.libgcc.builtins
-                0x0000000000000000        0x0 c:/vscode/toolchains/avr-gcc/bin/../lib/gcc/avr/12.1.0/avr5\libgcc.a(_copy_data.o)
+                0x0000000000000000        0x0 f:/vscode-win32-x64-1.75.1/toolchains/avr-gcc/bin/../lib/gcc/avr/12.1.0/avr5\libgcc.a(_clear_bss.o)
  .text.libgcc.fmul
-                0x0000000000000000        0x0 c:/vscode/toolchains/avr-gcc/bin/../lib/gcc/avr/12.1.0/avr5\libgcc.a(_copy_data.o)
+                0x0000000000000000        0x0 f:/vscode-win32-x64-1.75.1/toolchains/avr-gcc/bin/../lib/gcc/avr/12.1.0/avr5\libgcc.a(_clear_bss.o)
  .text.libgcc.fixed
-                0x0000000000000000        0x0 c:/vscode/toolchains/avr-gcc/bin/../lib/gcc/avr/12.1.0/avr5\libgcc.a(_copy_data.o)
+                0x0000000000000000        0x0 f:/vscode-win32-x64-1.75.1/toolchains/avr-gcc/bin/../lib/gcc/avr/12.1.0/avr5\libgcc.a(_clear_bss.o)
 
 Memory Configuration
 
@@ -60,15 +62,15 @@ user_signatures  0x0000000000850000 0x0000000000000400 rw !x
 Linker script and memory map
 
 Address of section .data set to 0x800100
-LOAD c:/vscode/toolchains/avr-gcc/bin/../lib/gcc/avr/12.1.0/../../../../avr/lib/avr5/crtatmega328p.o
+LOAD f:/vscode-win32-x64-1.75.1/toolchains/avr-gcc/bin/../lib/gcc/avr/12.1.0/../../../../avr/lib/avr5/crtatmega328p.o
 LOAD build/main.o
-LOAD c:/vscode/toolchains/avr-gcc/bin/../lib/gcc/avr/12.1.0/avr5\libgcc.a
-LOAD c:/vscode/toolchains/avr-gcc/bin/../lib/gcc/avr/12.1.0/../../../../avr/lib/avr5\libm.a
+LOAD f:/vscode-win32-x64-1.75.1/toolchains/avr-gcc/bin/../lib/gcc/avr/12.1.0/avr5\libgcc.a
+LOAD f:/vscode-win32-x64-1.75.1/toolchains/avr-gcc/bin/../lib/gcc/avr/12.1.0/../../../../avr/lib/avr5\libm.a
 START GROUP
-LOAD c:/vscode/toolchains/avr-gcc/bin/../lib/gcc/avr/12.1.0/avr5\libgcc.a
-LOAD c:/vscode/toolchains/avr-gcc/bin/../lib/gcc/avr/12.1.0/../../../../avr/lib/avr5\libm.a
-LOAD c:/vscode/toolchains/avr-gcc/bin/../lib/gcc/avr/12.1.0/../../../../avr/lib/avr5\libc.a
-LOAD c:/vscode/toolchains/avr-gcc/bin/../lib/gcc/avr/12.1.0/../../../../avr/lib/avr5\libatmega328p.a
+LOAD f:/vscode-win32-x64-1.75.1/toolchains/avr-gcc/bin/../lib/gcc/avr/12.1.0/avr5\libgcc.a
+LOAD f:/vscode-win32-x64-1.75.1/toolchains/avr-gcc/bin/../lib/gcc/avr/12.1.0/../../../../avr/lib/avr5\libm.a
+LOAD f:/vscode-win32-x64-1.75.1/toolchains/avr-gcc/bin/../lib/gcc/avr/12.1.0/../../../../avr/lib/avr5\libc.a
+LOAD f:/vscode-win32-x64-1.75.1/toolchains/avr-gcc/bin/../lib/gcc/avr/12.1.0/../../../../avr/lib/avr5\libatmega328p.a
 END GROUP
                 0x0000000000020000                __TEXT_REGION_LENGTH__ = DEFINED (__TEXT_REGION_LENGTH__)?__TEXT_REGION_LENGTH__:0x20000
                 0x000000000000ffa0                __DATA_REGION_LENGTH__ = DEFINED (__DATA_REGION_LENGTH__)?__DATA_REGION_LENGTH__:0xffa0
@@ -168,9 +170,9 @@ END GROUP
 .rela.plt
  *(.rela.plt)
 
-.text           0x0000000000000000      0x166
+.text           0x0000000000000000      0x1ea
  *(.vectors)
- .vectors       0x0000000000000000       0x68 c:/vscode/toolchains/avr-gcc/bin/../lib/gcc/avr/12.1.0/../../../../avr/lib/avr5/crtatmega328p.o
+ .vectors       0x0000000000000000       0x68 f:/vscode-win32-x64-1.75.1/toolchains/avr-gcc/bin/../lib/gcc/avr/12.1.0/../../../../avr/lib/avr5/crtatmega328p.o
                 0x0000000000000000                __vector_default
                 0x0000000000000000                __vectors
  *(.vectors)
@@ -196,19 +198,19 @@ END GROUP
  SORT_BY_NAME(*)(.ctors)
  SORT_BY_NAME(*)(.dtors)
  *(.init0)
- .init0         0x0000000000000068        0x0 c:/vscode/toolchains/avr-gcc/bin/../lib/gcc/avr/12.1.0/../../../../avr/lib/avr5/crtatmega328p.o
+ .init0         0x0000000000000068        0x0 f:/vscode-win32-x64-1.75.1/toolchains/avr-gcc/bin/../lib/gcc/avr/12.1.0/../../../../avr/lib/avr5/crtatmega328p.o
                 0x0000000000000068                __init
  *(.init0)
  *(.init1)
  *(.init1)
  *(.init2)
- .init2         0x0000000000000068        0xc c:/vscode/toolchains/avr-gcc/bin/../lib/gcc/avr/12.1.0/../../../../avr/lib/avr5/crtatmega328p.o
+ .init2         0x0000000000000068        0xc f:/vscode-win32-x64-1.75.1/toolchains/avr-gcc/bin/../lib/gcc/avr/12.1.0/../../../../avr/lib/avr5/crtatmega328p.o
  *(.init2)
  *(.init3)
  *(.init3)
  *(.init4)
- .init4         0x0000000000000074       0x16 c:/vscode/toolchains/avr-gcc/bin/../lib/gcc/avr/12.1.0/avr5\libgcc.a(_copy_data.o)
-                0x0000000000000074                __do_copy_data
+ .init4         0x0000000000000074       0x10 f:/vscode-win32-x64-1.75.1/toolchains/avr-gcc/bin/../lib/gcc/avr/12.1.0/avr5\libgcc.a(_clear_bss.o)
+                0x0000000000000074                __do_clear_bss
  *(.init4)
  *(.init5)
  *(.init5)
@@ -219,47 +221,47 @@ END GROUP
  *(.init8)
  *(.init8)
  *(.init9)
- .init9         0x000000000000008a        0x8 c:/vscode/toolchains/avr-gcc/bin/../lib/gcc/avr/12.1.0/../../../../avr/lib/avr5/crtatmega328p.o
+ .init9         0x0000000000000084        0x8 f:/vscode-win32-x64-1.75.1/toolchains/avr-gcc/bin/../lib/gcc/avr/12.1.0/../../../../avr/lib/avr5/crtatmega328p.o
  *(.init9)
  *(.text)
- .text          0x0000000000000092        0x4 c:/vscode/toolchains/avr-gcc/bin/../lib/gcc/avr/12.1.0/../../../../avr/lib/avr5/crtatmega328p.o
-                0x0000000000000092                __vector_22
-                0x0000000000000092                __vector_1
-                0x0000000000000092                __vector_24
-                0x0000000000000092                __vector_12
-                0x0000000000000092                __bad_interrupt
-                0x0000000000000092                __vector_6
-                0x0000000000000092                __vector_3
-                0x0000000000000092                __vector_23
-                0x0000000000000092                __vector_25
-                0x0000000000000092                __vector_11
-                0x0000000000000092                __vector_13
-                0x0000000000000092                __vector_17
-                0x0000000000000092                __vector_19
-                0x0000000000000092                __vector_7
-                0x0000000000000092                __vector_4
-                0x0000000000000092                __vector_9
-                0x0000000000000092                __vector_2
-                0x0000000000000092                __vector_21
-                0x0000000000000092                __vector_15
-                0x0000000000000092                __vector_8
-                0x0000000000000092                __vector_14
-                0x0000000000000092                __vector_10
-                0x0000000000000092                __vector_16
-                0x0000000000000092                __vector_18
-                0x0000000000000092                __vector_20
-                0x0000000000000096                . = ALIGN (0x2)
+ .text          0x000000000000008c        0x4 f:/vscode-win32-x64-1.75.1/toolchains/avr-gcc/bin/../lib/gcc/avr/12.1.0/../../../../avr/lib/avr5/crtatmega328p.o
+                0x000000000000008c                __vector_22
+                0x000000000000008c                __vector_1
+                0x000000000000008c                __vector_24
+                0x000000000000008c                __vector_12
+                0x000000000000008c                __bad_interrupt
+                0x000000000000008c                __vector_6
+                0x000000000000008c                __vector_23
+                0x000000000000008c                __vector_25
+                0x000000000000008c                __vector_11
+                0x000000000000008c                __vector_13
+                0x000000000000008c                __vector_17
+                0x000000000000008c                __vector_19
+                0x000000000000008c                __vector_7
+                0x000000000000008c                __vector_5
+                0x000000000000008c                __vector_4
+                0x000000000000008c                __vector_9
+                0x000000000000008c                __vector_2
+                0x000000000000008c                __vector_21
+                0x000000000000008c                __vector_15
+                0x000000000000008c                __vector_8
+                0x000000000000008c                __vector_14
+                0x000000000000008c                __vector_10
+                0x000000000000008c                __vector_16
+                0x000000000000008c                __vector_18
+                0x000000000000008c                __vector_20
+                0x0000000000000090                . = ALIGN (0x2)
  *(.text.*)
- .text.main     0x0000000000000096       0x96 build/main.o
-                0x0000000000000096                main
- .text.__vector_5
-                0x000000000000012c       0x36 build/main.o
-                0x000000000000012c                __vector_5
-                0x0000000000000162                . = ALIGN (0x2)
+ .text.main     0x0000000000000090       0xb6 build/main.o
+                0x0000000000000090                main
+ .text.__vector_3
+                0x0000000000000146       0xa0 build/main.o
+                0x0000000000000146                __vector_3
+                0x00000000000001e6                . = ALIGN (0x2)
  *(.fini9)
- .fini9         0x0000000000000162        0x0 c:/vscode/toolchains/avr-gcc/bin/../lib/gcc/avr/12.1.0/avr5\libgcc.a(_exit.o)
-                0x0000000000000162                _exit
-                0x0000000000000162                exit
+ .fini9         0x00000000000001e6        0x0 f:/vscode-win32-x64-1.75.1/toolchains/avr-gcc/bin/../lib/gcc/avr/12.1.0/avr5\libgcc.a(_exit.o)
+                0x00000000000001e6                _exit
+                0x00000000000001e6                exit
  *(.fini9)
  *(.fini8)
  *(.fini8)
@@ -278,45 +280,48 @@ END GROUP
  *(.fini1)
  *(.fini1)
  *(.fini0)
- .fini0         0x0000000000000162        0x4 c:/vscode/toolchains/avr-gcc/bin/../lib/gcc/avr/12.1.0/avr5\libgcc.a(_exit.o)
+ .fini0         0x00000000000001e6        0x4 f:/vscode-win32-x64-1.75.1/toolchains/avr-gcc/bin/../lib/gcc/avr/12.1.0/avr5\libgcc.a(_exit.o)
  *(.fini0)
  *(.hightext)
  *(.hightext*)
  *(.progmemx.*)
-                0x0000000000000166                . = ALIGN (0x2)
+                0x00000000000001ea                . = ALIGN (0x2)
  *(.jumptables)
  *(.jumptables*)
-                0x0000000000000166                _etext = .
+                0x00000000000001ea                _etext = .
 
-.data           0x0000000000800100        0x2 load address 0x0000000000000166
-                0x0000000000800100                PROVIDE (__data_start = .)
+.data           0x0000000000800100        0x0 load address 0x00000000000001ea
+                [!provide]                        PROVIDE (__data_start = .)
  *(.data)
  *(.data*)
- .data.cont     0x0000000000800100        0x1 build/main.o
-                0x0000000000800100                cont
  *(.gnu.linkonce.d*)
  *(.rodata)
  *(.rodata*)
  *(.gnu.linkonce.r*)
-                0x0000000000800102                . = ALIGN (0x2)
- *fill*         0x0000000000800101        0x1 
-                0x0000000000800102                _edata = .
-                0x0000000000800102                PROVIDE (__data_end = .)
+                0x0000000000800100                . = ALIGN (0x2)
+                0x0000000000800100                _edata = .
+                [!provide]                        PROVIDE (__data_end = .)
 
-.bss            0x0000000000800102        0x0
-                [!provide]                        PROVIDE (__bss_start = .)
+.bss            0x0000000000800100        0x4
+                0x0000000000800100                PROVIDE (__bss_start = .)
  *(.bss)
  *(.bss*)
+ .bss.inter     0x0000000000800100        0x1 build/main.o
+                0x0000000000800100                inter
+ .bss.old_time  0x0000000000800101        0x2 build/main.o
+                0x0000000000800101                old_time
+ .bss.old_read  0x0000000000800103        0x1 build/main.o
+                0x0000000000800103                old_read
  *(COMMON)
-                [!provide]                        PROVIDE (__bss_end = .)
-                0x0000000000000166                __data_load_start = LOADADDR (.data)
-                0x0000000000000168                __data_load_end = (__data_load_start + SIZEOF (.data))
+                0x0000000000800104                PROVIDE (__bss_end = .)
+                0x00000000000001ea                __data_load_start = LOADADDR (.data)
+                0x00000000000001ea                __data_load_end = (__data_load_start + SIZEOF (.data))
 
-.noinit         0x0000000000800102        0x0
+.noinit         0x0000000000800104        0x0
                 [!provide]                        PROVIDE (__noinit_start = .)
  *(.noinit .noinit.* .gnu.linkonce.n.*)
                 [!provide]                        PROVIDE (__noinit_end = .)
-                0x0000000000800102                _end = .
+                0x0000000000800104                _end = .
                 [!provide]                        PROVIDE (__heap_start = .)
 
 .eeprom         0x0000000000810000        0x0
@@ -361,7 +366,7 @@ END GROUP
 .note.gnu.avr.deviceinfo
                 0x0000000000000000       0x40
  .note.gnu.avr.deviceinfo
-                0x0000000000000000       0x40 c:/vscode/toolchains/avr-gcc/bin/../lib/gcc/avr/12.1.0/../../../../avr/lib/avr5/crtatmega328p.o
+                0x0000000000000000       0x40 f:/vscode-win32-x64-1.75.1/toolchains/avr-gcc/bin/../lib/gcc/avr/12.1.0/../../../../avr/lib/avr5/crtatmega328p.o
 
 .note.gnu.build-id
  *(.note.gnu.build-id)
@@ -378,50 +383,42 @@ END GROUP
 .debug_sfnames
  *(.debug_sfnames)
 
-.debug_aranges  0x0000000000000000       0x68
+.debug_aranges  0x0000000000000000       0x40
  *(.debug_aranges)
  .debug_aranges
-                0x0000000000000000       0x28 build/main.o
+                0x0000000000000000       0x20 f:/vscode-win32-x64-1.75.1/toolchains/avr-gcc/bin/../lib/gcc/avr/12.1.0/avr5\libgcc.a(_exit.o)
  .debug_aranges
-                0x0000000000000028       0x20 c:/vscode/toolchains/avr-gcc/bin/../lib/gcc/avr/12.1.0/avr5\libgcc.a(_exit.o)
- .debug_aranges
-                0x0000000000000048       0x20 c:/vscode/toolchains/avr-gcc/bin/../lib/gcc/avr/12.1.0/avr5\libgcc.a(_copy_data.o)
+                0x0000000000000020       0x20 f:/vscode-win32-x64-1.75.1/toolchains/avr-gcc/bin/../lib/gcc/avr/12.1.0/avr5\libgcc.a(_clear_bss.o)
 
 .debug_pubnames
  *(.debug_pubnames)
 
-.debug_info     0x0000000000000000      0x84c
+.debug_info     0x0000000000000000      0x63c
  *(.debug_info .gnu.linkonce.wi.*)
- .debug_info    0x0000000000000000      0x5f4 c:/vscode/toolchains/avr-gcc/bin/../lib/gcc/avr/12.1.0/../../../../avr/lib/avr5/crtatmega328p.o
- .debug_info    0x00000000000005f4      0x210 build/main.o
- .debug_info    0x0000000000000804       0x24 c:/vscode/toolchains/avr-gcc/bin/../lib/gcc/avr/12.1.0/avr5\libgcc.a(_exit.o)
- .debug_info    0x0000000000000828       0x24 c:/vscode/toolchains/avr-gcc/bin/../lib/gcc/avr/12.1.0/avr5\libgcc.a(_copy_data.o)
+ .debug_info    0x0000000000000000      0x5f4 f:/vscode-win32-x64-1.75.1/toolchains/avr-gcc/bin/../lib/gcc/avr/12.1.0/../../../../avr/lib/avr5/crtatmega328p.o
+ .debug_info    0x00000000000005f4       0x24 f:/vscode-win32-x64-1.75.1/toolchains/avr-gcc/bin/../lib/gcc/avr/12.1.0/avr5\libgcc.a(_exit.o)
+ .debug_info    0x0000000000000618       0x24 f:/vscode-win32-x64-1.75.1/toolchains/avr-gcc/bin/../lib/gcc/avr/12.1.0/avr5\libgcc.a(_clear_bss.o)
 
-.debug_abbrev   0x0000000000000000      0x74b
+.debug_abbrev   0x0000000000000000      0x5ca
  *(.debug_abbrev)
- .debug_abbrev  0x0000000000000000      0x5a2 c:/vscode/toolchains/avr-gcc/bin/../lib/gcc/avr/12.1.0/../../../../avr/lib/avr5/crtatmega328p.o
- .debug_abbrev  0x00000000000005a2      0x181 build/main.o
- .debug_abbrev  0x0000000000000723       0x14 c:/vscode/toolchains/avr-gcc/bin/../lib/gcc/avr/12.1.0/avr5\libgcc.a(_exit.o)
- .debug_abbrev  0x0000000000000737       0x14 c:/vscode/toolchains/avr-gcc/bin/../lib/gcc/avr/12.1.0/avr5\libgcc.a(_copy_data.o)
+ .debug_abbrev  0x0000000000000000      0x5a2 f:/vscode-win32-x64-1.75.1/toolchains/avr-gcc/bin/../lib/gcc/avr/12.1.0/../../../../avr/lib/avr5/crtatmega328p.o
+ .debug_abbrev  0x00000000000005a2       0x14 f:/vscode-win32-x64-1.75.1/toolchains/avr-gcc/bin/../lib/gcc/avr/12.1.0/avr5\libgcc.a(_exit.o)
+ .debug_abbrev  0x00000000000005b6       0x14 f:/vscode-win32-x64-1.75.1/toolchains/avr-gcc/bin/../lib/gcc/avr/12.1.0/avr5\libgcc.a(_clear_bss.o)
 
-.debug_line     0x0000000000000000      0x370
+.debug_line     0x0000000000000000       0xe3
  *(.debug_line .debug_line.* .debug_line_end)
- .debug_line    0x0000000000000000       0x1d c:/vscode/toolchains/avr-gcc/bin/../lib/gcc/avr/12.1.0/../../../../avr/lib/avr5/crtatmega328p.o
- .debug_line    0x000000000000001d      0x27b build/main.o
- .debug_line    0x0000000000000298       0x51 c:/vscode/toolchains/avr-gcc/bin/../lib/gcc/avr/12.1.0/avr5\libgcc.a(_exit.o)
- .debug_line    0x00000000000002e9       0x87 c:/vscode/toolchains/avr-gcc/bin/../lib/gcc/avr/12.1.0/avr5\libgcc.a(_copy_data.o)
+ .debug_line    0x0000000000000000       0x1d f:/vscode-win32-x64-1.75.1/toolchains/avr-gcc/bin/../lib/gcc/avr/12.1.0/../../../../avr/lib/avr5/crtatmega328p.o
+ .debug_line    0x000000000000001d       0x51 f:/vscode-win32-x64-1.75.1/toolchains/avr-gcc/bin/../lib/gcc/avr/12.1.0/avr5\libgcc.a(_exit.o)
+ .debug_line    0x000000000000006e       0x75 f:/vscode-win32-x64-1.75.1/toolchains/avr-gcc/bin/../lib/gcc/avr/12.1.0/avr5\libgcc.a(_clear_bss.o)
 
-.debug_frame    0x0000000000000000       0x48
+.debug_frame
  *(.debug_frame)
- .debug_frame   0x0000000000000000       0x48 build/main.o
 
-.debug_str      0x0000000000000000      0x3af
+.debug_str      0x0000000000000000      0x26a
  *(.debug_str)
- .debug_str     0x0000000000000000      0x20b c:/vscode/toolchains/avr-gcc/bin/../lib/gcc/avr/12.1.0/../../../../avr/lib/avr5/crtatmega328p.o
- .debug_str     0x000000000000020b      0x145 build/main.o
-                                        0x179 (size before relaxing)
- .debug_str     0x0000000000000350       0x5f c:/vscode/toolchains/avr-gcc/bin/../lib/gcc/avr/12.1.0/avr5\libgcc.a(_exit.o)
- .debug_str     0x00000000000003af       0x5f c:/vscode/toolchains/avr-gcc/bin/../lib/gcc/avr/12.1.0/avr5\libgcc.a(_copy_data.o)
+ .debug_str     0x0000000000000000      0x20b f:/vscode-win32-x64-1.75.1/toolchains/avr-gcc/bin/../lib/gcc/avr/12.1.0/../../../../avr/lib/avr5/crtatmega328p.o
+ .debug_str     0x000000000000020b       0x5f f:/vscode-win32-x64-1.75.1/toolchains/avr-gcc/bin/../lib/gcc/avr/12.1.0/avr5\libgcc.a(_exit.o)
+ .debug_str     0x000000000000026a       0x5f f:/vscode-win32-x64-1.75.1/toolchains/avr-gcc/bin/../lib/gcc/avr/12.1.0/avr5\libgcc.a(_clear_bss.o)
 
 .debug_loc
  *(.debug_loc)
@@ -451,22 +448,16 @@ END GROUP
  *(.debug_addr)
 
 .debug_line_str
-                0x0000000000000000       0xde
+                0x0000000000000000       0x53
  *(.debug_line_str)
  .debug_line_str
-                0x0000000000000000       0x8b build/main.o
-                                         0xae (size before relaxing)
- .debug_line_str
-                0x000000000000008b       0x53 c:/vscode/toolchains/avr-gcc/bin/../lib/gcc/avr/12.1.0/avr5\libgcc.a(_exit.o)
+                0x0000000000000000       0x53 f:/vscode-win32-x64-1.75.1/toolchains/avr-gcc/bin/../lib/gcc/avr/12.1.0/avr5\libgcc.a(_exit.o)
                                          0x5f (size before relaxing)
  .debug_line_str
-                0x00000000000000de       0x5f c:/vscode/toolchains/avr-gcc/bin/../lib/gcc/avr/12.1.0/avr5\libgcc.a(_copy_data.o)
+                0x0000000000000053       0x5f f:/vscode-win32-x64-1.75.1/toolchains/avr-gcc/bin/../lib/gcc/avr/12.1.0/avr5\libgcc.a(_clear_bss.o)
 
 .debug_loclists
-                0x0000000000000000       0xce
  *(.debug_loclists)
- .debug_loclists
-                0x0000000000000000       0xce build/main.o
 
 .debug_macro
  *(.debug_macro)
@@ -475,10 +466,7 @@ END GROUP
  *(.debug_names)
 
 .debug_rnglists
-                0x0000000000000000       0x26
  *(.debug_rnglists)
- .debug_rnglists
-                0x0000000000000000       0x26 build/main.o
 
 .debug_str_offsets
  *(.debug_str_offsets)
@@ -491,47 +479,50 @@ LOAD linker stubs
 Cross Reference Table
 
 Symbol                                            File
-__FUSE_REGION_LENGTH__                            c:/vscode/toolchains/avr-gcc/bin/../lib/gcc/avr/12.1.0/../../../../avr/lib/avr5/crtatmega328p.o
-__bad_interrupt                                   c:/vscode/toolchains/avr-gcc/bin/../lib/gcc/avr/12.1.0/../../../../avr/lib/avr5/crtatmega328p.o
-__data_end                                        c:/vscode/toolchains/avr-gcc/bin/../lib/gcc/avr/12.1.0/avr5\libgcc.a(_copy_data.o)
-__data_load_start                                 c:/vscode/toolchains/avr-gcc/bin/../lib/gcc/avr/12.1.0/avr5\libgcc.a(_copy_data.o)
-__data_start                                      c:/vscode/toolchains/avr-gcc/bin/../lib/gcc/avr/12.1.0/avr5\libgcc.a(_copy_data.o)
-__do_copy_data                                    c:/vscode/toolchains/avr-gcc/bin/../lib/gcc/avr/12.1.0/avr5\libgcc.a(_copy_data.o)
+__FUSE_REGION_LENGTH__                            f:/vscode-win32-x64-1.75.1/toolchains/avr-gcc/bin/../lib/gcc/avr/12.1.0/../../../../avr/lib/avr5/crtatmega328p.o
+__bad_interrupt                                   f:/vscode-win32-x64-1.75.1/toolchains/avr-gcc/bin/../lib/gcc/avr/12.1.0/../../../../avr/lib/avr5/crtatmega328p.o
+__bss_end                                         f:/vscode-win32-x64-1.75.1/toolchains/avr-gcc/bin/../lib/gcc/avr/12.1.0/avr5\libgcc.a(_clear_bss.o)
+__bss_start                                       f:/vscode-win32-x64-1.75.1/toolchains/avr-gcc/bin/../lib/gcc/avr/12.1.0/avr5\libgcc.a(_clear_bss.o)
+__do_clear_bss                                    f:/vscode-win32-x64-1.75.1/toolchains/avr-gcc/bin/../lib/gcc/avr/12.1.0/avr5\libgcc.a(_clear_bss.o)
                                                   build/main.o
-__heap_end                                        c:/vscode/toolchains/avr-gcc/bin/../lib/gcc/avr/12.1.0/../../../../avr/lib/avr5/crtatmega328p.o
-__init                                            c:/vscode/toolchains/avr-gcc/bin/../lib/gcc/avr/12.1.0/../../../../avr/lib/avr5/crtatmega328p.o
-__stack                                           c:/vscode/toolchains/avr-gcc/bin/../lib/gcc/avr/12.1.0/../../../../avr/lib/avr5/crtatmega328p.o
-__vector_1                                        c:/vscode/toolchains/avr-gcc/bin/../lib/gcc/avr/12.1.0/../../../../avr/lib/avr5/crtatmega328p.o
-__vector_10                                       c:/vscode/toolchains/avr-gcc/bin/../lib/gcc/avr/12.1.0/../../../../avr/lib/avr5/crtatmega328p.o
-__vector_11                                       c:/vscode/toolchains/avr-gcc/bin/../lib/gcc/avr/12.1.0/../../../../avr/lib/avr5/crtatmega328p.o
-__vector_12                                       c:/vscode/toolchains/avr-gcc/bin/../lib/gcc/avr/12.1.0/../../../../avr/lib/avr5/crtatmega328p.o
-__vector_13                                       c:/vscode/toolchains/avr-gcc/bin/../lib/gcc/avr/12.1.0/../../../../avr/lib/avr5/crtatmega328p.o
-__vector_14                                       c:/vscode/toolchains/avr-gcc/bin/../lib/gcc/avr/12.1.0/../../../../avr/lib/avr5/crtatmega328p.o
-__vector_15                                       c:/vscode/toolchains/avr-gcc/bin/../lib/gcc/avr/12.1.0/../../../../avr/lib/avr5/crtatmega328p.o
-__vector_16                                       c:/vscode/toolchains/avr-gcc/bin/../lib/gcc/avr/12.1.0/../../../../avr/lib/avr5/crtatmega328p.o
-__vector_17                                       c:/vscode/toolchains/avr-gcc/bin/../lib/gcc/avr/12.1.0/../../../../avr/lib/avr5/crtatmega328p.o
-__vector_18                                       c:/vscode/toolchains/avr-gcc/bin/../lib/gcc/avr/12.1.0/../../../../avr/lib/avr5/crtatmega328p.o
-__vector_19                                       c:/vscode/toolchains/avr-gcc/bin/../lib/gcc/avr/12.1.0/../../../../avr/lib/avr5/crtatmega328p.o
-__vector_2                                        c:/vscode/toolchains/avr-gcc/bin/../lib/gcc/avr/12.1.0/../../../../avr/lib/avr5/crtatmega328p.o
-__vector_20                                       c:/vscode/toolchains/avr-gcc/bin/../lib/gcc/avr/12.1.0/../../../../avr/lib/avr5/crtatmega328p.o
-__vector_21                                       c:/vscode/toolchains/avr-gcc/bin/../lib/gcc/avr/12.1.0/../../../../avr/lib/avr5/crtatmega328p.o
-__vector_22                                       c:/vscode/toolchains/avr-gcc/bin/../lib/gcc/avr/12.1.0/../../../../avr/lib/avr5/crtatmega328p.o
-__vector_23                                       c:/vscode/toolchains/avr-gcc/bin/../lib/gcc/avr/12.1.0/../../../../avr/lib/avr5/crtatmega328p.o
-__vector_24                                       c:/vscode/toolchains/avr-gcc/bin/../lib/gcc/avr/12.1.0/../../../../avr/lib/avr5/crtatmega328p.o
-__vector_25                                       c:/vscode/toolchains/avr-gcc/bin/../lib/gcc/avr/12.1.0/../../../../avr/lib/avr5/crtatmega328p.o
-__vector_3                                        c:/vscode/toolchains/avr-gcc/bin/../lib/gcc/avr/12.1.0/../../../../avr/lib/avr5/crtatmega328p.o
-__vector_4                                        c:/vscode/toolchains/avr-gcc/bin/../lib/gcc/avr/12.1.0/../../../../avr/lib/avr5/crtatmega328p.o
-__vector_5                                        build/main.o
-                                                  c:/vscode/toolchains/avr-gcc/bin/../lib/gcc/avr/12.1.0/../../../../avr/lib/avr5/crtatmega328p.o
-__vector_6                                        c:/vscode/toolchains/avr-gcc/bin/../lib/gcc/avr/12.1.0/../../../../avr/lib/avr5/crtatmega328p.o
-__vector_7                                        c:/vscode/toolchains/avr-gcc/bin/../lib/gcc/avr/12.1.0/../../../../avr/lib/avr5/crtatmega328p.o
-__vector_8                                        c:/vscode/toolchains/avr-gcc/bin/../lib/gcc/avr/12.1.0/../../../../avr/lib/avr5/crtatmega328p.o
-__vector_9                                        c:/vscode/toolchains/avr-gcc/bin/../lib/gcc/avr/12.1.0/../../../../avr/lib/avr5/crtatmega328p.o
-__vector_default                                  c:/vscode/toolchains/avr-gcc/bin/../lib/gcc/avr/12.1.0/../../../../avr/lib/avr5/crtatmega328p.o
-__vectors                                         c:/vscode/toolchains/avr-gcc/bin/../lib/gcc/avr/12.1.0/../../../../avr/lib/avr5/crtatmega328p.o
-_exit                                             c:/vscode/toolchains/avr-gcc/bin/../lib/gcc/avr/12.1.0/avr5\libgcc.a(_exit.o)
-cont                                              build/main.o
-exit                                              c:/vscode/toolchains/avr-gcc/bin/../lib/gcc/avr/12.1.0/avr5\libgcc.a(_exit.o)
-                                                  c:/vscode/toolchains/avr-gcc/bin/../lib/gcc/avr/12.1.0/../../../../avr/lib/avr5/crtatmega328p.o
+__heap_end                                        f:/vscode-win32-x64-1.75.1/toolchains/avr-gcc/bin/../lib/gcc/avr/12.1.0/../../../../avr/lib/avr5/crtatmega328p.o
+__init                                            f:/vscode-win32-x64-1.75.1/toolchains/avr-gcc/bin/../lib/gcc/avr/12.1.0/../../../../avr/lib/avr5/crtatmega328p.o
+__stack                                           f:/vscode-win32-x64-1.75.1/toolchains/avr-gcc/bin/../lib/gcc/avr/12.1.0/../../../../avr/lib/avr5/crtatmega328p.o
+__vector_1                                        f:/vscode-win32-x64-1.75.1/toolchains/avr-gcc/bin/../lib/gcc/avr/12.1.0/../../../../avr/lib/avr5/crtatmega328p.o
+__vector_10                                       f:/vscode-win32-x64-1.75.1/toolchains/avr-gcc/bin/../lib/gcc/avr/12.1.0/../../../../avr/lib/avr5/crtatmega328p.o
+__vector_11                                       f:/vscode-win32-x64-1.75.1/toolchains/avr-gcc/bin/../lib/gcc/avr/12.1.0/../../../../avr/lib/avr5/crtatmega328p.o
+__vector_12                                       f:/vscode-win32-x64-1.75.1/toolchains/avr-gcc/bin/../lib/gcc/avr/12.1.0/../../../../avr/lib/avr5/crtatmega328p.o
+__vector_13                                       f:/vscode-win32-x64-1.75.1/toolchains/avr-gcc/bin/../lib/gcc/avr/12.1.0/../../../../avr/lib/avr5/crtatmega328p.o
+__vector_14                                       f:/vscode-win32-x64-1.75.1/toolchains/avr-gcc/bin/../lib/gcc/avr/12.1.0/../../../../avr/lib/avr5/crtatmega328p.o
+__vector_15                                       f:/vscode-win32-x64-1.75.1/toolchains/avr-gcc/bin/../lib/gcc/avr/12.1.0/../../../../avr/lib/avr5/crtatmega328p.o
+__vector_16                                       f:/vscode-win32-x64-1.75.1/toolchains/avr-gcc/bin/../lib/gcc/avr/12.1.0/../../../../avr/lib/avr5/crtatmega328p.o
+__vector_17                                       f:/vscode-win32-x64-1.75.1/toolchains/avr-gcc/bin/../lib/gcc/avr/12.1.0/../../../../avr/lib/avr5/crtatmega328p.o
+__vector_18                                       f:/vscode-win32-x64-1.75.1/toolchains/avr-gcc/bin/../lib/gcc/avr/12.1.0/../../../../avr/lib/avr5/crtatmega328p.o
+__vector_19                                       f:/vscode-win32-x64-1.75.1/toolchains/avr-gcc/bin/../lib/gcc/avr/12.1.0/../../../../avr/lib/avr5/crtatmega328p.o
+__vector_2                                        f:/vscode-win32-x64-1.75.1/toolchains/avr-gcc/bin/../lib/gcc/avr/12.1.0/../../../../avr/lib/avr5/crtatmega328p.o
+__vector_20                                       f:/vscode-win32-x64-1.75.1/toolchains/avr-gcc/bin/../lib/gcc/avr/12.1.0/../../../../avr/lib/avr5/crtatmega328p.o
+__vector_21                                       f:/vscode-win32-x64-1.75.1/toolchains/avr-gcc/bin/../lib/gcc/avr/12.1.0/../../../../avr/lib/avr5/crtatmega328p.o
+__vector_22                                       f:/vscode-win32-x64-1.75.1/toolchains/avr-gcc/bin/../lib/gcc/avr/12.1.0/../../../../avr/lib/avr5/crtatmega328p.o
+__vector_23                                       f:/vscode-win32-x64-1.75.1/toolchains/avr-gcc/bin/../lib/gcc/avr/12.1.0/../../../../avr/lib/avr5/crtatmega328p.o
+__vector_24                                       f:/vscode-win32-x64-1.75.1/toolchains/avr-gcc/bin/../lib/gcc/avr/12.1.0/../../../../avr/lib/avr5/crtatmega328p.o
+__vector_25                                       f:/vscode-win32-x64-1.75.1/toolchains/avr-gcc/bin/../lib/gcc/avr/12.1.0/../../../../avr/lib/avr5/crtatmega328p.o
+__vector_3                                        build/main.o
+                                                  f:/vscode-win32-x64-1.75.1/toolchains/avr-gcc/bin/../lib/gcc/avr/12.1.0/../../../../avr/lib/avr5/crtatmega328p.o
+__vector_4                                        f:/vscode-win32-x64-1.75.1/toolchains/avr-gcc/bin/../lib/gcc/avr/12.1.0/../../../../avr/lib/avr5/crtatmega328p.o
+__vector_5                                        f:/vscode-win32-x64-1.75.1/toolchains/avr-gcc/bin/../lib/gcc/avr/12.1.0/../../../../avr/lib/avr5/crtatmega328p.o
+__vector_6                                        f:/vscode-win32-x64-1.75.1/toolchains/avr-gcc/bin/../lib/gcc/avr/12.1.0/../../../../avr/lib/avr5/crtatmega328p.o
+__vector_7                                        f:/vscode-win32-x64-1.75.1/toolchains/avr-gcc/bin/../lib/gcc/avr/12.1.0/../../../../avr/lib/avr5/crtatmega328p.o
+__vector_8                                        f:/vscode-win32-x64-1.75.1/toolchains/avr-gcc/bin/../lib/gcc/avr/12.1.0/../../../../avr/lib/avr5/crtatmega328p.o
+__vector_9                                        f:/vscode-win32-x64-1.75.1/toolchains/avr-gcc/bin/../lib/gcc/avr/12.1.0/../../../../avr/lib/avr5/crtatmega328p.o
+__vector_default                                  f:/vscode-win32-x64-1.75.1/toolchains/avr-gcc/bin/../lib/gcc/avr/12.1.0/../../../../avr/lib/avr5/crtatmega328p.o
+__vectors                                         f:/vscode-win32-x64-1.75.1/toolchains/avr-gcc/bin/../lib/gcc/avr/12.1.0/../../../../avr/lib/avr5/crtatmega328p.o
+_exit                                             f:/vscode-win32-x64-1.75.1/toolchains/avr-gcc/bin/../lib/gcc/avr/12.1.0/avr5\libgcc.a(_exit.o)
+exit                                              f:/vscode-win32-x64-1.75.1/toolchains/avr-gcc/bin/../lib/gcc/avr/12.1.0/avr5\libgcc.a(_exit.o)
+                                                  f:/vscode-win32-x64-1.75.1/toolchains/avr-gcc/bin/../lib/gcc/avr/12.1.0/../../../../avr/lib/avr5/crtatmega328p.o
+gbl_read                                          build/main.o
+inter                                             build/main.o
 main                                              build/main.o
-                                                  c:/vscode/toolchains/avr-gcc/bin/../lib/gcc/avr/12.1.0/../../../../avr/lib/avr5/crtatmega328p.o
+                                                  f:/vscode-win32-x64-1.75.1/toolchains/avr-gcc/bin/../lib/gcc/avr/12.1.0/../../../../avr/lib/avr5/crtatmega328p.o
+new_time                                          build/main.o
+old_read                                          build/main.o
+old_time                                          build/main.o
