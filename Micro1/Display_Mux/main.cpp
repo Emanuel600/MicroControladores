@@ -38,15 +38,15 @@
 #define Is_But_Press(BPin, BBit)    isBitClear(BPIN, BBIT)
 #define LSL(reg)                    (reg = reg<<1)
 #define LSR(reg)                    (reg = reg>>1)
-#define NSL(reg)					(reg = reg<<4)
-#define NSR(reg)					(reg = reg>>4)
+#define NSL(reg)                    (reg = reg<<4)
+#define NSR(reg)                    (reg = reg>>4)
 #define Set_Single_Bit(reg, bit)    (reg = (_BV(bit)))
 #define Clr_Single_Bit(reg, bit)    (reg = (~(_BV(bit))))
 #define Get_Nibble(num, nib)        ((num >> (nib<<2)) & 0xF)
 // Value encoded in BCD => overflows if over 1000, returning to 0
 volatile uint16_t cntgm = 0x1802;
 volatile uint8_t  bttns = 0x0000;
-volatile uint16_t temp	= 0x0000;
+volatile uint16_t temp  = 0x0000;
 
 void display(uint16_t num);
 int main()
@@ -82,9 +82,7 @@ int main()
             }
             // addr = 0x10 - 0x0A = 0x06
             addr    = 0x06;
-            temp    = 0x00; // i = 0;
-            // cntgm = 0x1110
-            // tmp   = 4
+            temp    = 0x00;
             while(temp != 4) {
                 cntgm += ((Get_Nibble(cntgm, temp) < 0xA) ? 0 : addr);
                 temp++;
