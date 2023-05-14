@@ -27,17 +27,6 @@
 ; ------------------------------------------------------------------------------
 ; Functions
 ; ------------------------------------------------------------------------------
-.macro  PUSH_TO_LED_PORT;(reg1, reg2)
-    MOV     temp1, @0
-    OR      temp1, @1
-    OUT     LED_PORT, temp1
-    RCALL   delay_250m
-.endmacro
-
-.macro  SET_IOR; (IOR, 0x)
-    LDI     temp1, @0
-    OUT     @0, temp1
-.endmacro
 
 ; ------------------------------------------------------------------------------
 ; Interruption handlers
@@ -109,28 +98,41 @@
 ; Main code
 ; ------------------------------------------------------------------------------
 main:
-    SET_IOR LED_PORT, 0x00;     // Set all pins to 0
-    SET_IOR LED_DDR,  0xFF;     // Sets LED_PORT as output
-mainLoop:
-    LDI     pushed, 0x02
-    LDI     pusher, 0x01
-    PUSH_TO_LED_PORT pushed, pusher
-    animationLoop:
-        CP      pushed, pusher
-        BREQ    push_pushed
-        LSL     pusher
-        RJMP    animationEnd
-        push_pushed:
-            ANDI    pushed, 0x80
-            BRNE    mainLoop
+    ; Set LED_PORT as output
+    LDI     temp0, 0xFF
+    LDI     temp1, 0x00
+    OUT     LED_PORT, temp1
+    OUT     LED_DDR, temp0
+    main_loop:
+        ; Push initial values to LED_PORT
+        LDI     pushed, 0x02
+        push0:
+        LDI     pusher, 0x01
+        MOV     temp1,  pushed
+        OR      temp1,  pusher  ; temp1 = (pushed | pusher)
+        OUT     LED_PORT, temp1
+        RCALL   delay_250m
+        ; Enter main animation loop
+        ani_loop:
+            ; if (pushed=pusher): _BV(pushed); pusher=0
+            CP      pushed, pusher
+            BREQ    ani_if
+            TST     pusher;     Test pusher
+            BREQ    push0;      (pusher==0) ? LSL(pusher) : pusher=1
+            BRMI    main_loop;  ((pusher & _BV(7)) == 1): goto main_loop
+            LSL     pusher
+            RJMP     ani_end
+            ; else: _BV(pusher)
+            ani_if:
             LSL     pushed
-        animationEnd:
-            PUSH_TO_LED_PORT pushed, pusher
-            RJMP    animationLoop
-
-
-    JMP     mainLoop
-
+            ANDI    pusher, 0x00
+            ani_end:
+            MOV     temp1,  pushed
+            OR      temp1,  pusher;     temp1 = (pushed | pusher)
+            OUT     LED_PORT, temp1
+            RCALL   delay_250m
+            RJMP     ani_loop
+    RJMP     main_loop;                  Should never be called
 
 delay_250m:
     LDI  R18, 41
