@@ -1,0 +1,25 @@
+\chapter{Firmware Test For ARM (STM32-\/\+F0)}
+\hypertarget{index}{}\label{index}\index{Firmware Test For ARM (STM32-\/F0)@{Firmware Test For ARM (STM32-\/F0)}}
+\label{index_md__r_e_a_d_m_e}%
+\Hypertarget{index_md__r_e_a_d_m_e}%
+ Description\+:
+
+\begin{quote}
+Testing the GNU-\/embedded toolchain for ARM and doxygen documentation generation \end{quote}
+After disassembling, the symbol {\ttfamily \texorpdfstring{$<$}{<}Reset\+\_\+\+Handler\texorpdfstring{$>$}{>}} could not be found, tested with\+:
+
+
+\begin{DoxyItemize}
+\item Adding startup file directly to linker (no precompiling)
+\item Making {\ttfamily \texorpdfstring{$<$}{<}Reset\+\_\+\+Handler\texorpdfstring{$>$}{>}} global
+\item Changing symbol to generate linker warning (no warning generated)
+\end{DoxyItemize}
+
+Question\+:
+
+\begin{quote}
+Why can\textquotesingle{}t I find the symbol, and is the code starting where it should? \end{quote}
+TODO\+:
+
+\begin{quote}
+Re-\/generate project makefile and disassemble again \end{quote}
