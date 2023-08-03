@@ -1,8 +1,24 @@
+/**
+ * @file Traffic_Light.h
+ * @author Emanuel Staub
+ * @brief Declarations and Data Structures for Traffic_Light.c
+ * @version 0.1
+ * @date 2023-08-03
+ *
+ * @copyright Copyright (c) 2023
+ *
+ */
+
+#ifndef TRAFFIC_LIGHT_H
+// TRAFFIC_LIGHT_H = Major_Release_Version*100 + Minor_Version*10 + Patch_Version
+#define TRAFFIC_LIGHT_H         10
 #include "stm32f1xx_hal.h"
 #include <stdbool.h>
 
 /**
  * @brief Status of the traffic light
+ *
+ * @enum    traffic_status_e
  *
  * @param TR_ERROR:    Some kind of error has been detected,
  *  error will be comunicated through `stderr`, TR_YELLOW light
@@ -22,6 +38,7 @@ typedef enum Traffic_Status {
 /**
  * @brief Contains the necessary data for operating the traffic light
  *
+ * @struct traffic_light_s
  * @param LIGHT_PORT:       Address to the GPIO port that controls the lights
  * @param RED_LIGHT:        Pin used to turn the red light ON/OFF
  * @param YELLOW_LIGHT:     Pin used to turn the yellow light ON/OFF
@@ -70,4 +87,6 @@ bool Traffic_Error(traffic_light_s *light);
 bool Traffic_STANDBY(traffic_light_s *light);
 
 /// @brief          Array of function pointers to "state setters"
+/// @param light:   Pointer to the traffic light
 typedef bool (*StateSetters_fp)(traffic_light_s *light);
+#endif

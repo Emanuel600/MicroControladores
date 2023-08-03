@@ -25,12 +25,16 @@
 #define GREEN_PIN           GPIO_PIN_0
 #define YEL_PIN             GPIO_PIN_1
 #define RED_PIN             GPIO_PIN_2
+/// @defgroup Traffic Light Delays
+#define GREEN_DELAY         60000U
+#define YELLOW_DELAY        5000U
+#define RED_DELAY           30000U
 
 /// @brief          Rerouting stderr to USART2
 #define PUTCHAR_PROTOTYPE int __io_putchar(int ch)
 
 UART_HandleTypeDef huart2;
-
+extern StateSetters_fp State_Setters[];
 /* Private function prototypes -----------------------------------------------*/
 void SystemClock_Config(void);
 static void MX_GPIO_Init(void);
@@ -53,10 +57,15 @@ int main(void)
 #ifdef _DEBUG
     fprintf(stderr, "USART on");
 #endif
+    traffic_light_s light = Init_Traffic_Light(LIGHT_PORT, GREEN_PIN, YEL_PIN, RED_PIN);
 
-    //traffic_light_s light = Init_Traffic_Light(LIGHT_PORT, GREEN_PIN, YEL_PIN, RED_PIN);
     while(1) {
-        //
+        State_Setters[TR_GREEN](&light);
+        HAL_Delay(GREEN_DELAY);
+        State_Setters[TR_YELLOW](&light);
+        HAL_Delay(YELLOW_DELAY);
+        State_Setters[TR_RED](&light);
+        HAL_Delay(RED_DELAY);
     }
     /* USER CODE END 3 */
 }
