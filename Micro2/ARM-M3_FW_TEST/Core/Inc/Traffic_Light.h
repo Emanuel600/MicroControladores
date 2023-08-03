@@ -15,6 +15,10 @@
 #include "stm32f1xx_hal.h"
 #include <stdbool.h>
 
+#ifdef __cplusplus
+extern "C" {
+#endif
+
 /**
  * @brief Status of the traffic light
  *
@@ -89,4 +93,8 @@ bool Traffic_STANDBY(traffic_light_s *light);
 /// @brief          Array of function pointers to "state setters"
 /// @param light:   Pointer to the traffic light
 typedef bool (*StateSetters_fp)(traffic_light_s *light);
+#ifdef __cplusplus
+}
+#endif
+
 #endif
