@@ -17,5 +17,5 @@ ___
 > This project aim to demonstrate and improve programming techniques,
 > being mostly didactic in nature.
 >
-> Implements a simple traffic light using the bluepill $\mu$Controller,
+> Implements a simple traffic light using the bluepill μController,
 > with a focus on code documentation and organization.
