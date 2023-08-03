@@ -64,7 +64,7 @@ DecompileHeaders:
 	$(OBJ_DUMP) -h -g -EL $(APP).elf
 
 test:
-	@echo "%.c $(sort $(dir $(CC_SRCS)))"
+	@echo "$(CC_SRCS)"
 
 .DEFAULT_GOAL		:= ShowHelp
 

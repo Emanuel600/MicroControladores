@@ -15,47 +15,26 @@
   *
   ******************************************************************************
   */
-/* USER CODE END Header */
+#include <stdio.h>
 /* Includes ------------------------------------------------------------------*/
 #include "main.h"
+#include "Traffic_Light.h"
 
-/* Private includes ----------------------------------------------------------*/
-/* USER CODE BEGIN Includes */
+/// @defgroup Traffic Light Pins and Port
+#define LIGHT_PORT          GPIOB
+#define GREEN_PIN           GPIO_PIN_0
+#define YEL_PIN             GPIO_PIN_1
+#define RED_PIN             GPIO_PIN_2
 
-/* USER CODE END Includes */
+/// @brief          Rerouting stderr to USART2
+#define PUTCHAR_PROTOTYPE int __io_putchar(int ch)
 
-/* Private typedef -----------------------------------------------------------*/
-/* USER CODE BEGIN PTD */
-
-/* USER CODE END PTD */
-
-/* Private define ------------------------------------------------------------*/
-/* USER CODE BEGIN PD */
-
-/* USER CODE END PD */
-
-/* Private macro -------------------------------------------------------------*/
-/* USER CODE BEGIN PM */
-
-/* USER CODE END PM */
-
-/* Private variables ---------------------------------------------------------*/
-
-/* USER CODE BEGIN PV */
-
-/* USER CODE END PV */
+UART_HandleTypeDef huart2;
 
 /* Private function prototypes -----------------------------------------------*/
 void SystemClock_Config(void);
 static void MX_GPIO_Init(void);
-/* USER CODE BEGIN PFP */
-
-/* USER CODE END PFP */
-
-/* Private user code ---------------------------------------------------------*/
-/* USER CODE BEGIN 0 */
-
-/* USER CODE END 0 */
+static void MX_USART2_UART_Init(void);
 
 /**
   * @brief  The application entry point.
@@ -63,40 +42,21 @@ static void MX_GPIO_Init(void);
   */
 int main(void)
 {
-    /* USER CODE BEGIN 1 */
-
-    /* USER CODE END 1 */
-
-    /* MCU Configuration--------------------------------------------------------*/
-
     /* Reset of all peripherals, Initializes the Flash interface and the Systick. */
     HAL_Init();
-
-    /* USER CODE BEGIN Init */
-
-    /* USER CODE END Init */
-
     /* Configure the system clock */
     SystemClock_Config();
-
-    /* USER CODE BEGIN SysInit */
-
-    /* USER CODE END SysInit */
-
     /* Initialize all configured peripherals */
     MX_GPIO_Init();
-    /* USER CODE BEGIN 2 */
+    MX_USART2_UART_Init();
+    // I **THINK** it's calling USART
+#ifdef _DEBUG
+    fprintf(stderr, "USART on");
+#endif
 
-    /* USER CODE END 2 */
-
-    /* Infinite loop */
-    /* USER CODE BEGIN WHILE */
+    //traffic_light_s light = Init_Traffic_Light(LIGHT_PORT, GREEN_PIN, YEL_PIN, RED_PIN);
     while(1) {
-        /* USER CODE END WHILE */
-        HAL_GPIO_TogglePin(GPIOA, GPIO_PIN_3);
-        HAL_Delay(100);
-
-        /* USER CODE BEGIN 3 */
+        //
     }
     /* USER CODE END 3 */
 }
@@ -136,6 +96,38 @@ void SystemClock_Config(void)
 }
 
 /**
+  * @brief USART2 Initialization Function
+  * @param None
+  * @retval None
+  */
+static void MX_USART2_UART_Init(void)
+{
+
+    /* USER CODE BEGIN USART2_Init 0 */
+
+    /* USER CODE END USART2_Init 0 */
+
+    /* USER CODE BEGIN USART2_Init 1 */
+
+    /* USER CODE END USART2_Init 1 */
+    huart2.Instance = USART2;
+    huart2.Init.BaudRate = 115200;
+    huart2.Init.WordLength = UART_WORDLENGTH_8B;
+    huart2.Init.StopBits = UART_STOPBITS_1;
+    huart2.Init.Parity = UART_PARITY_NONE;
+    huart2.Init.Mode = UART_MODE_TX_RX;
+    huart2.Init.HwFlowCtl = UART_HWCONTROL_NONE;
+    huart2.Init.OverSampling = UART_OVERSAMPLING_16;
+    if(HAL_UART_Init(&huart2) != HAL_OK) {
+        Error_Handler();
+    }
+    /* USER CODE BEGIN USART2_Init 2 */
+
+    /* USER CODE END USART2_Init 2 */
+
+}
+
+/**
   * @brief GPIO Initialization Function
   * @param None
   * @retval None
@@ -151,19 +143,13 @@ static void MX_GPIO_Init(void)
     __HAL_RCC_GPIOB_CLK_ENABLE();
 
     /*Configure GPIO pin Output Level */
-    HAL_GPIO_WritePin(GPIOA, GPIO_PIN_3, GPIO_PIN_RESET);
+    HAL_GPIO_WritePin(GPIOB, GPIO_PIN_0 | GPIO_PIN_1 | GPIO_PIN_2, GPIO_PIN_RESET);
 
-    /*Configure GPIO pin : PA3 */
-    GPIO_InitStruct.Pin = GPIO_PIN_3;
+    /*Configure GPIO pins : PB0 PB1 PB2 */
+    GPIO_InitStruct.Pin = GPIO_PIN_0 | GPIO_PIN_1 | GPIO_PIN_2;
     GPIO_InitStruct.Mode = GPIO_MODE_OUTPUT_PP;
     GPIO_InitStruct.Pull = GPIO_NOPULL;
     GPIO_InitStruct.Speed = GPIO_SPEED_FREQ_LOW;
-    HAL_GPIO_Init(GPIOA, &GPIO_InitStruct);
-
-    /*Configure GPIO pin : PB2 */
-    GPIO_InitStruct.Pin = GPIO_PIN_2;
-    GPIO_InitStruct.Mode = GPIO_MODE_INPUT;
-    GPIO_InitStruct.Pull = GPIO_NOPULL;
     HAL_GPIO_Init(GPIOB, &GPIO_InitStruct);
 
     /* USER CODE BEGIN MX_GPIO_Init_2 */
@@ -204,3 +190,25 @@ void assert_failed(uint8_t *file, uint32_t line)
     /* USER CODE END 6 */
 }
 #endif /* USE_FULL_ASSERT */
+
+/**
+ * @brief Re-routes STDs to USART
+ *
+ * @param fd:       File descriptor
+ * @param ptr:      String to write
+ * @param len:      Bytes to write $(strlen(ptr))
+ * @return int:     bytes written $(len)
+ */
+int _write(int fd, char *ptr, int len)
+{
+    HAL_UART_Transmit(&huart2, (uint8_t *) ptr, len, HAL_MAX_DELAY);
+    return len;
+}
+
+PUTCHAR_PROTOTYPE {
+    /* Place your implementation of fputc here */
+    /* e.g. write a character to the USART1 and Loop until the end of transmission */
+    HAL_UART_Transmit(&huart2, (uint8_t *)&ch, 1, 0xFFFF);
+
+    return ch;
+}
