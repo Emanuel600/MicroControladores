@@ -14,7 +14,7 @@ ___
 ___
 
 ## Description:
-> This project aim to demonstrate and improve programming techniques,
+> This project aims to demonstrate and improve programming techniques,
 > being mostly didactic in nature.
 >
 > Implements a simple traffic light using the bluepill μController,
