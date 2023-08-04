@@ -19,6 +19,7 @@
 /* Includes ------------------------------------------------------------------*/
 #include "main.h"
 #include "Traffic_Light.h"
+#include "Global_Defines.h"
 
 /// @defgroup Traffic Light Pins and Port
 #define LIGHT_PORT          GPIOB
@@ -26,9 +27,9 @@
 #define YEL_PIN             GPIO_PIN_1
 #define RED_PIN             GPIO_PIN_2
 /// @defgroup Traffic Light Delays
-#define GREEN_DELAY         60000U
-#define YELLOW_DELAY        5000U
-#define RED_DELAY           30000U
+#define GREEN_DELAY         60U
+#define YELLOW_DELAY        5U
+#define RED_DELAY           30U
 
 /// @brief          Rerouting stderr to USART2
 #define PUTCHAR_PROTOTYPE int __io_putchar(int ch)
@@ -61,11 +62,11 @@ int main(void)
 
     while(1) {
         State_Setters[TR_GREEN](&light);
-        HAL_Delay(GREEN_DELAY);
+        delay_s(GREEN_DELAY);
         State_Setters[TR_YELLOW](&light);
-        HAL_Delay(YELLOW_DELAY);
+        delay_s(YELLOW_DELAY);
         State_Setters[TR_RED](&light);
-        HAL_Delay(RED_DELAY);
+        delay_s(RED_DELAY);
     }
     /* USER CODE END 3 */
 }

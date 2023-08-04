@@ -10,6 +10,8 @@
  */
 
 #include "Traffic_Light.h"
+#include "Global_Defines.h"
+
 #ifdef _DEBUG
 #include <stdio.h>
 #endif
@@ -91,9 +93,9 @@ bool Turn_Red_On(traffic_light_s *light)
         State_Setters[TR_ERROR](light);
         return false;
     }
-    HAL_GPIO_WritePin(light->LIGHT_PORT, light->GREEN_LIGHT, GPIO_PIN_RESET);
-    HAL_GPIO_WritePin(light->LIGHT_PORT, light->YELLOW_LIGHT, GPIO_PIN_RESET);
-    HAL_GPIO_WritePin(light->LIGHT_PORT, light->RED_LIGHT, GPIO_PIN_SET);
+    Clr_Pin(light->LIGHT_PORT, light->GREEN_LIGHT);
+    Clr_Pin(light->LIGHT_PORT, light->YELLOW_LIGHT);
+    Set_Pin(light->LIGHT_PORT, light->RED_LIGHT);
     return true;
 }
 
@@ -110,9 +112,9 @@ bool Turn_Green_On(traffic_light_s *light)
         State_Setters[TR_ERROR](light);
         return false;
     }
-    HAL_GPIO_WritePin(light->LIGHT_PORT, light->GREEN_LIGHT, GPIO_PIN_SET);
-    HAL_GPIO_WritePin(light->LIGHT_PORT, light->YELLOW_LIGHT, GPIO_PIN_RESET);
-    HAL_GPIO_WritePin(light->LIGHT_PORT, light->RED_LIGHT, GPIO_PIN_RESET);
+    Set_Pin(light->LIGHT_PORT, light->GREEN_LIGHT);
+    Clr_Pin(light->LIGHT_PORT, light->YELLOW_LIGHT);
+    Clr_Pin(light->LIGHT_PORT, light->RED_LIGHT);
     return true;
 }
 
@@ -129,9 +131,9 @@ bool Turn_Yellow_On(traffic_light_s *light)
         State_Setters[TR_ERROR](light);
         return false;
     }
-    HAL_GPIO_WritePin(light->LIGHT_PORT, light->GREEN_LIGHT, GPIO_PIN_RESET);
-    HAL_GPIO_WritePin(light->LIGHT_PORT, light->YELLOW_LIGHT, GPIO_PIN_SET);
-    HAL_GPIO_WritePin(light->LIGHT_PORT, light->RED_LIGHT, GPIO_PIN_RESET);
+    Clr_Pin(light->LIGHT_PORT, light->GREEN_LIGHT);
+    Set_Pin(light->LIGHT_PORT, light->YELLOW_LIGHT);
+    Clr_Pin(light->LIGHT_PORT, light->RED_LIGHT);
     return true;
 }
 
@@ -143,10 +145,10 @@ bool Traffic_Error(traffic_light_s *light)
 #endif
         return false;
     }
-    HAL_GPIO_WritePin(light->LIGHT_PORT, light->GREEN_LIGHT, GPIO_PIN_RESET);
-    HAL_GPIO_WritePin(light->LIGHT_PORT, light->RED_LIGHT, GPIO_PIN_RESET);
+    Clr_Pin(light->LIGHT_PORT, light->GREEN_LIGHT);
+    Clr_Pin(light->LIGHT_PORT, light->RED_LIGHT);
     do {
-        HAL_GPIO_TogglePin(light->LIGHT_PORT, light->YELLOW_LIGHT);
+        Toggle_Pin(light->LIGHT_PORT, light->YELLOW_LIGHT);
         HAL_Delay(250);
         // Check_For_Errors(&light);
     } while(light->Current_Status == TR_ERROR);
@@ -164,23 +166,23 @@ bool Traffic_STANDBY(traffic_light_s *light)
 
     /* Test all lights */
     // Green
-    HAL_GPIO_WritePin(light->LIGHT_PORT, light->GREEN_LIGHT, GPIO_PIN_SET);
-    HAL_GPIO_WritePin(light->LIGHT_PORT, light->YELLOW_LIGHT, GPIO_PIN_RESET);
-    HAL_GPIO_WritePin(light->LIGHT_PORT, light->RED_LIGHT, GPIO_PIN_RESET);
+    Set_Pin(light->LIGHT_PORT, light->GREEN_LIGHT);
+    Clr_Pin(light->LIGHT_PORT, light->YELLOW_LIGHT);
+    Clr_Pin(light->LIGHT_PORT, light->RED_LIGHT);
     /// Could check green light here
-    HAL_Delay(333);
+    delay_ms(333);
     // Yellow
-    HAL_GPIO_WritePin(light->LIGHT_PORT, light->GREEN_LIGHT, GPIO_PIN_SET);
-    HAL_GPIO_WritePin(light->LIGHT_PORT, light->YELLOW_LIGHT, GPIO_PIN_RESET);
-    HAL_GPIO_WritePin(light->LIGHT_PORT, light->RED_LIGHT, GPIO_PIN_RESET);
+    Set_Pin(light->LIGHT_PORT, light->GREEN_LIGHT);
+    Clr_Pin(light->LIGHT_PORT, light->YELLOW_LIGHT);
+    Clr_Pin(light->LIGHT_PORT, light->RED_LIGHT);
     /// Could check yellow light here
-    HAL_Delay(333);
+    delay_ms(333);
     // Red
-    HAL_GPIO_WritePin(light->LIGHT_PORT, light->GREEN_LIGHT, GPIO_PIN_SET);
-    HAL_GPIO_WritePin(light->LIGHT_PORT, light->YELLOW_LIGHT, GPIO_PIN_RESET);
-    HAL_GPIO_WritePin(light->LIGHT_PORT, light->RED_LIGHT, GPIO_PIN_RESET);
+    Set_Pin(light->LIGHT_PORT, light->GREEN_LIGHT);
+    Clr_Pin(light->LIGHT_PORT, light->YELLOW_LIGHT);
+    Clr_Pin(light->LIGHT_PORT, light->RED_LIGHT);
     /// Could check red light here
-    HAL_Delay(333);
+    delay_ms(333);
 
     return true;
 }
