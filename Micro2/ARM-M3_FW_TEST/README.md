@@ -1,13 +1,13 @@
 # Traffic Light Implementation
 ___
 
-Version: 0.1
+> Version: 0.1
+>
+> NOTE: This program is ***UNTESTED***, it has neither been simulated nor
+ debugged.
+>
 
-NOTE: This program is UNTESTED, it has neither been simulated nor
-debugged.
-
-TODO:
-
+## TODO:
     - Simulate USART communication;
     - Implement and debug on real hardware (maybe).
 
