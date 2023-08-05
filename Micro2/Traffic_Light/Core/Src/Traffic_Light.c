@@ -22,7 +22,7 @@
 /// @param Turn_Red_On:     Switches to RED state
 /// @param Traffic_Error:   Switches to GREEN state
 /// @param Traffic_STANDBY: Switches to STANDBY state
-StateSetters_fp State_Setters[] = {
+StateSetters_fp Set_Traffic_State[] = {
     Turn_Green_On,
     Turn_Yellow_On,
     Turn_Red_On,
@@ -40,28 +40,20 @@ traffic_light_s Init_Traffic_Light(GPIO_TypeDef *PORT, uint16_t green, uint16_t 
      * if _DEBUG is defined (on Project_Root/env_vars.mk)
      */
     if(!IS_GPIO_ALL_INSTANCE(PORT)) {
-#ifdef _DEBUG
-        fprintf(stderr, "[ERROR] setting port: Invalid Address");
-#endif
-        State_Setters[TR_ERROR](&light);
+        pdebug("[ERROR] setting port: Invalid Address");
+        Set_Traffic_State[TR_ERROR](&light);
         return light;
     } else if(!IS_GPIO_PIN(red)) {
-#ifdef _DEBUG
-        fprintf(stderr, "[ERROR] setting the red light's pin: Invalid Address");
-#endif
-        State_Setters[TR_ERROR](&light);
+        pdebug("[ERROR] setting the red light's pin: Invalid Address");
+        Set_Traffic_State[TR_ERROR](&light);
         return light;
     } else if(!IS_GPIO_PIN(yellow)) {
-#ifdef _DEBUG
-        fprintf(stderr, "[ERROR] setting the yellow light's pin: Invalid Address");
-#endif
-        State_Setters[TR_ERROR](&light);
+        pdebug("[ERROR] setting the yellow light's pin: Invalid Address");
+        Set_Traffic_State[TR_ERROR](&light);
         return light;
     } else if(!IS_GPIO_PIN(green)) {
-#ifdef _DEBUG
-        fprintf(stderr, "[ERROR] setting the green light's pin: Invalid Address");
-#endif
-        State_Setters[TR_ERROR](&light);
+        pdebug("[ERROR] setting the green light's pin: Invalid Address");
+        Set_Traffic_State[TR_ERROR](&light);
         return light;
     }
     // All addresses are valid, so we may continue
@@ -69,13 +61,12 @@ traffic_light_s Init_Traffic_Light(GPIO_TypeDef *PORT, uint16_t green, uint16_t 
     light.RED_LIGHT     = red;
     light.YELLOW_LIGHT  = yellow;
     light.GREEN_LIGHT   = green;
-#ifdef _DEBUG
-    fprintf(stderr, "[OK!] - Light Initialized Properly");
-#endif
+
+    pdebug("[OK!] - Light Initialized Properly");
     // Checks all lights - ~1 second delay
-    State_Setters[TR_STANDBY](&light);
+    Set_Traffic_State[TR_STANDBY](&light);
     // Sets Red light
-    State_Setters[TR_RED](&light);
+    Set_Traffic_State[TR_RED](&light);
 
     return light;
 }
@@ -83,18 +74,15 @@ traffic_light_s Init_Traffic_Light(GPIO_TypeDef *PORT, uint16_t green, uint16_t 
 bool Turn_Red_On(traffic_light_s *light)
 {
     if(light == NULL) {
-#ifdef _DEBUG
-        fprintf(stderr, "Invalid pointer to traffic light");
-#endif
+        pdebug("Invalid pointer to traffic light");
         return false;
     }
     // Make sure there are no logic conflicts
     if((light->Current_Status != TR_YELLOW) || (light->Current_Status != TR_STANDBY)) {
-        State_Setters[TR_ERROR](light);
+        Set_Traffic_State[TR_ERROR](light);
         return false;
     }
-    Clr_Pin(light->LIGHT_PORT, light->GREEN_LIGHT);
-    Clr_Pin(light->LIGHT_PORT, light->YELLOW_LIGHT);
+    Clr_Pin(light->LIGHT_PORT, light->GREEN_LIGHT | light->YELLOW_LIGHT);
     Set_Pin(light->LIGHT_PORT, light->RED_LIGHT);
     return true;
 }
@@ -102,86 +90,73 @@ bool Turn_Red_On(traffic_light_s *light)
 bool Turn_Green_On(traffic_light_s *light)
 {
     if(light == NULL) {
-#ifdef _DEBUG
-        fprintf(stderr, "Invalid pointer to traffic light");
-#endif
+        pdebug("Invalid pointer to traffic light");
         return false;
     }
     // Make sure there are no logic conflicts
     if((light->Current_Status != TR_RED)) {
-        State_Setters[TR_ERROR](light);
+        Set_Traffic_State[TR_ERROR](light);
         return false;
     }
     Set_Pin(light->LIGHT_PORT, light->GREEN_LIGHT);
-    Clr_Pin(light->LIGHT_PORT, light->YELLOW_LIGHT);
-    Clr_Pin(light->LIGHT_PORT, light->RED_LIGHT);
+    Clr_Pin(light->LIGHT_PORT, light->RED_LIGHT | light->YELLOW_LIGHT);
     return true;
 }
 
 bool Turn_Yellow_On(traffic_light_s *light)
 {
     if(light == NULL) {
-#ifdef _DEBUG
-        fprintf(stderr, "Invalid pointer to traffic light");
-#endif
+        pdebug("Invalid pointer to traffic light");
         return false;
     }
     // Make sure there are no logic conflicts
     if((light->Current_Status != TR_GREEN)) {
-        State_Setters[TR_ERROR](light);
+        Set_Traffic_State[TR_ERROR](light);
         return false;
     }
-    Clr_Pin(light->LIGHT_PORT, light->GREEN_LIGHT);
+    Clr_Pin(light->LIGHT_PORT, light->GREEN_LIGHT | light->RED_LIGHT);
     Set_Pin(light->LIGHT_PORT, light->YELLOW_LIGHT);
-    Clr_Pin(light->LIGHT_PORT, light->RED_LIGHT);
     return true;
 }
 
 bool Traffic_Error(traffic_light_s *light)
 {
     if(light == NULL) {
-#ifdef _DEBUG
-        fprintf(stderr, "Invalid pointer to traffic light");
-#endif
+        pdebug("[ERROR] Invalid pointer to traffic light");
         return false;
     }
-    Clr_Pin(light->LIGHT_PORT, light->GREEN_LIGHT);
-    Clr_Pin(light->LIGHT_PORT, light->RED_LIGHT);
+    Clr_Pin(light->LIGHT_PORT, light->GREEN_LIGHT | light->RED_LIGHT);
     do {
         Toggle_Pin(light->LIGHT_PORT, light->YELLOW_LIGHT);
         HAL_Delay(250);
-        // Check_For_Errors(&light);
+        // Check_For_Errors(&light); => Change to STANDBY maybe?
     } while(light->Current_Status == TR_ERROR);
+    Set_Traffic_State[TR_RED](light);
     return false;
 }
 
 bool Traffic_STANDBY(traffic_light_s *light)
 {
     if(light == NULL) {
-#ifdef _DEBUG
-        fprintf(stderr, "Invalid pointer to traffic light");
-#endif
+        pdebug("Invalid pointer to traffic light");
         return false;
     }
 
     /* Test all lights */
     // Green
     Set_Pin(light->LIGHT_PORT, light->GREEN_LIGHT);
-    Clr_Pin(light->LIGHT_PORT, light->YELLOW_LIGHT);
-    Clr_Pin(light->LIGHT_PORT, light->RED_LIGHT);
-    /// Could check green light here
+    Clr_Pin(light->LIGHT_PORT, light->YELLOW_LIGHT | light->RED_LIGHT);
+    // Could check green light here
     delay_ms(333);
     // Yellow
     Set_Pin(light->LIGHT_PORT, light->GREEN_LIGHT);
-    Clr_Pin(light->LIGHT_PORT, light->YELLOW_LIGHT);
-    Clr_Pin(light->LIGHT_PORT, light->RED_LIGHT);
-    /// Could check yellow light here
+    Clr_Pin(light->LIGHT_PORT, light->YELLOW_LIGHT | light->RED_LIGHT);
+    // Could check yellow light here
     delay_ms(333);
     // Red
     Set_Pin(light->LIGHT_PORT, light->GREEN_LIGHT);
-    Clr_Pin(light->LIGHT_PORT, light->YELLOW_LIGHT);
-    Clr_Pin(light->LIGHT_PORT, light->RED_LIGHT);
-    /// Could check red light here
+    Clr_Pin(light->LIGHT_PORT, light->YELLOW_LIGHT | light->RED_LIGHT);
+    // Could check red light here
     delay_ms(333);
 
     return true;

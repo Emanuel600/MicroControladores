@@ -18,10 +18,8 @@ ASM_HEADS		= $(wildcard $(INCLUDE_DIR)/*.S)
 ASM_HEADS		+= $(wildcard $(COMM_DIR)/Inc/*.S)
 # C++ Sources
 CXX_SRCS		= $(wildcard $(SOURCE_DIR)/*.cpp)
-CXX_SRCS		+= $(wildcard $(COMM_DIR)/Inc/*.hpp)
 # C Sources
 CC_SRCS			= $(wildcard $(SOURCE_DIR)/*.c)
-CC_SRCS		+= $(wildcard $(COMM_DIR)/Inc/*.c)
 # Must be added manually, unfortunately
 CC_SRCS			+= \
 $(HAL_DRIVERS)/Src/stm32f1xx_hal_gpio_ex.c \

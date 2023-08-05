@@ -18,6 +18,10 @@
 #ifdef __cplusplus
 extern "C" {
 #endif
+/**
+ * @addtogroup Traffic_Light Traffic_Light
+ * @{
+ */
 
 /**
  * @brief Status of the traffic light
@@ -66,20 +70,26 @@ typedef struct Traffic_Light {
  * @param green:    Green light pin
  * @return traffic_light_s
  *
- * @note:           Sets status to either `TR_ERROR` or `TR_STANDBY`
+ * @note:           Sets status to either `[TR_ERROR]` or `[TR_STANDBY]`
  */
 traffic_light_s Init_Traffic_Light(GPIO_TypeDef *PORT, uint16_t green, uint16_t yellow, uint16_t red);
 
+/// @defgroup       Traffic_State_Setters State_Setters
+/// @{
+
 /// @brief          Turns the red light on
 /// @param light:   Pointer to the traffic light
+/// @warning:       Turns to error mode on sequence error (Green->Red)
 bool Turn_Red_On(traffic_light_s *light);
 
 /// @brief          Turns the green light on
 /// @param light:   Pointer to the traffic light
+/// @warning:       Turns to error mode on sequence error (Yellow->Green)
 bool Turn_Green_On(traffic_light_s *light);
 
 /// @brief          Turns the yellow light on
 /// @param light:   Pointer to the traffic light
+/// @warning:       Turns to error mode on sequence error (Red->Yellow)
 bool Turn_Yellow_On(traffic_light_s *light);
 
 /// @brief          Sets the error sign on the traffic light
@@ -89,10 +99,13 @@ bool Traffic_Error(traffic_light_s *light);
 /// @brief          Sets the light to standby
 /// @param light:   Pointer to the traffic light
 bool Traffic_STANDBY(traffic_light_s *light);
+/** @} */
 
-/// @brief          Array of function pointers to "state setters"
-/// @param light:   Pointer to the traffic light
-typedef bool (*StateSetters_fp)(traffic_light_s *light);
+/// @brief          Array of function pointers to set a state
+typedef bool (*StateSetters_fp)();
+
+/// @}
+
 #ifdef __cplusplus
 }
 #endif

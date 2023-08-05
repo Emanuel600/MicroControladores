@@ -22,11 +22,12 @@
 #include "Global_Defines.h"
 
 /// @defgroup Traffic Light Pins and Port
+/// @{
 #define LIGHT_PORT          GPIOB
 #define GREEN_PIN           GPIO_PIN_0
 #define YEL_PIN             GPIO_PIN_1
 #define RED_PIN             GPIO_PIN_2
-/// @defgroup Traffic Light Delays
+/// @}
 #define GREEN_DELAY         60U
 #define YELLOW_DELAY        5U
 #define RED_DELAY           30U
@@ -35,7 +36,7 @@
 #define PUTCHAR_PROTOTYPE int __io_putchar(int ch)
 
 UART_HandleTypeDef huart2;
-extern StateSetters_fp State_Setters[];
+extern StateSetters_fp Set_Traffic_State[];
 /* Private function prototypes -----------------------------------------------*/
 void SystemClock_Config(void);
 static void MX_GPIO_Init(void);
@@ -47,25 +48,27 @@ static void MX_USART2_UART_Init(void);
   */
 int main(void)
 {
+    twerk();
     /* Reset of all peripherals, Initializes the Flash interface and the Systick. */
     HAL_Init();
     /* Configure the system clock */
     SystemClock_Config();
     /* Initialize all configured peripherals */
     MX_GPIO_Init();
-    MX_USART2_UART_Init();
+    // Only enable USART when debugging
+    DEBUG_BLOCK(
+            MX_USART2_UART_Init();
+    )
     // I **THINK** it's calling USART
-#ifdef _DEBUG
-    fprintf(stderr, "USART on");
-#endif
+    pdebug("USART on");
     traffic_light_s light = Init_Traffic_Light(LIGHT_PORT, GREEN_PIN, YEL_PIN, RED_PIN);
 
     while(1) {
-        State_Setters[TR_GREEN](&light);
+        Set_Traffic_State[TR_GREEN](&light);
         delay_s(GREEN_DELAY);
-        State_Setters[TR_YELLOW](&light);
+        Set_Traffic_State[TR_YELLOW](&light);
         delay_s(YELLOW_DELAY);
-        State_Setters[TR_RED](&light);
+        Set_Traffic_State[TR_RED](&light);
         delay_s(RED_DELAY);
     }
     /* USER CODE END 3 */
