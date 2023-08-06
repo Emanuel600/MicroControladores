@@ -50,7 +50,7 @@
 #define inlined                         inline ATTRIBUTE(always_inline)
 /// \addtogroup     Function types
 /// \brief          Function can be overwritten by a "strong" function
-#define weakend                         ATTRIBUTE(weak)
+#define weakened                        ATTRIBUTE(weak)
 #endif
 //! Misc Utils
 /** @} */
