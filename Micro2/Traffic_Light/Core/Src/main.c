@@ -59,7 +59,6 @@ int main(void)
     DEBUG_BLOCK(
             MX_USART2_UART_Init();
     )
-
     pdebug("USART on\r\n");
     traffic_light_s light = Init_Traffic_Light(LIGHT_PORT, GREEN_PIN, YEL_PIN, RED_PIN);
 
@@ -214,7 +213,7 @@ void assert_failed(uint8_t *file, uint32_t line)
  */
 int _write(int fd, char *ptr, int len)
 {
-    if(fd == STDERR_FILENO) {
+    if(fd == stderr->_file) {
         HAL_UART_Transmit(&huart2, (uint8_t *) ptr, len, HAL_MAX_DELAY);
     }
     return len;
