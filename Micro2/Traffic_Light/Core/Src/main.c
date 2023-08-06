@@ -214,7 +214,9 @@ void assert_failed(uint8_t *file, uint32_t line)
  */
 int _write(int fd, char *ptr, int len)
 {
-    HAL_UART_Transmit(&huart2, (uint8_t *) ptr, len, HAL_MAX_DELAY);
+    if(fd == STDERR_FILENO) {
+        HAL_UART_Transmit(&huart2, (uint8_t *) ptr, len, HAL_MAX_DELAY);
+    }
     return len;
 }
 
