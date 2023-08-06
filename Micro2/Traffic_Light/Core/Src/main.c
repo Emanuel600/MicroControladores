@@ -49,7 +49,6 @@ static void MX_USART2_UART_Init(void);
   */
 int main(void)
 {
-    twerk();
     /* Reset of all peripherals, Initializes the Flash interface and the Systick. */
     HAL_Init();
     /* Configure the system clock */
@@ -60,8 +59,8 @@ int main(void)
     DEBUG_BLOCK(
             MX_USART2_UART_Init();
     )
-    // I **THINK** it's calling USART
-    pdebug("USART on");
+
+    pdebug("USART on\r\n");
     traffic_light_s light = Init_Traffic_Light(LIGHT_PORT, GREEN_PIN, YEL_PIN, RED_PIN);
 
     while(1) {
@@ -125,7 +124,7 @@ static void MX_USART2_UART_Init(void)
 
     /* USER CODE END USART2_Init 1 */
     huart2.Instance = USART2;
-    huart2.Init.BaudRate = 115200;
+    huart2.Init.BaudRate = 9600;
     huart2.Init.WordLength = UART_WORDLENGTH_8B;
     huart2.Init.StopBits = UART_STOPBITS_1;
     huart2.Init.Parity = UART_PARITY_NONE;
@@ -222,7 +221,7 @@ int _write(int fd, char *ptr, int len)
 PUTCHAR_PROTOTYPE {
     /* Place your implementation of fputc here */
     /* e.g. write a character to the USART1 and Loop until the end of transmission */
-    HAL_UART_Transmit(&huart2, (uint8_t *)&ch, 1, 0xFFFF);
+    HAL_UART_Transmit(&huart2, (uint8_t *)&ch, 1, HAL_MAX_DELAY);
 
     return ch;
 }
