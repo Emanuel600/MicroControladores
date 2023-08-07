@@ -3,7 +3,7 @@
   ******************************************************************************
   * @file           : main.c
   * @brief          : Main program body
-  * @version        : 0.1
+  * @version        : 0.1.1
   ******************************************************************************
   * @attention
   *
@@ -17,6 +17,7 @@
   ******************************************************************************
   */
 #include <stdio.h>
+#include <unistd.h>
 /* Includes ------------------------------------------------------------------*/
 #include "main.h"
 #include "Traffic_Light.h"
@@ -59,7 +60,8 @@ int main(void)
     DEBUG_BLOCK(
             MX_USART2_UART_Init();
     )
-    pdebug("USART on\r\n");
+    pdebug("[OK]\tDEBUG info redirected to USART\r\n");
+
     traffic_light_s light = Init_Traffic_Light(LIGHT_PORT, GREEN_PIN, YEL_PIN, RED_PIN);
 
     while(1) {
@@ -71,6 +73,7 @@ int main(void)
         delay_s(RED_DELAY);
     }
     /* USER CODE END 3 */
+    return -1;
 }
 
 /**
@@ -213,16 +216,8 @@ void assert_failed(uint8_t *file, uint32_t line)
  */
 int _write(int fd, char *ptr, int len)
 {
-    if(fd == stderr->_file) {
+    if(fd == STDERR_FILENO) {
         HAL_UART_Transmit(&huart2, (uint8_t *) ptr, len, HAL_MAX_DELAY);
     }
     return len;
-}
-
-PUTCHAR_PROTOTYPE {
-    /* Place your implementation of fputc here */
-    /* e.g. write a character to the USART1 and Loop until the end of transmission */
-    HAL_UART_Transmit(&huart2, (uint8_t *)&ch, 1, HAL_MAX_DELAY);
-
-    return ch;
 }

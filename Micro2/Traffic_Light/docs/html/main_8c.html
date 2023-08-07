@@ -84,9 +84,33 @@ $(function() {
 <p>: Main program body  
 <a href="#details">More...</a></p>
 <div class="textblock"><code>#include &lt;stdio.h&gt;</code><br />
+<code>#include &lt;unistd.h&gt;</code><br />
 <code>#include &quot;<a class="el" href="main_8h_source.html">main.h</a>&quot;</code><br />
 <code>#include &quot;<a class="el" href="_traffic___light_8h_source.html">Traffic_Light.h</a>&quot;</code><br />
 <code>#include &quot;Global_Defines.h&quot;</code><br />
+</div><div class="textblock"><div class="dynheader">
+Include dependency graph for main.c:</div>
+<div class="dyncontent">
+<div class="center"><img src="main_8c__incl.png" border="0" usemap="#amain_8c" alt=""/></div>
+<map name="amain_8c" id="amain_8c">
+<area shape="rect" title=": Main program body" alt="" coords="181,5,242,32"/>
+<area shape="rect" title=" " alt="" coords="5,80,66,107"/>
+<area shape="poly" title=" " alt="" coords="182,35,80,77,78,72,180,30"/>
+<area shape="rect" title=" " alt="" coords="90,80,157,107"/>
+<area shape="poly" title=" " alt="" coords="198,35,152,72,148,68,194,30"/>
+<area shape="rect" href="main_8h.html" title=": Header for main.c file. This file contains the common defines of the application." alt="" coords="181,80,242,107"/>
+<area shape="poly" title=" " alt="" coords="214,33,214,65,209,65,209,33"/>
+<area shape="rect" href="_traffic___light_8h.html" title="Declarations and Data Structures for Traffic_Light.c." alt="" coords="266,80,368,107"/>
+<area shape="poly" title=" " alt="" coords="231,30,288,69,285,73,228,35"/>
+<area shape="rect" title=" " alt="" coords="392,80,511,107"/>
+<area shape="poly" title=" " alt="" coords="243,27,397,73,395,78,241,32"/>
+<area shape="rect" title=" " alt="" coords="153,155,270,181"/>
+<area shape="poly" title=" " alt="" coords="214,107,214,140,209,140,209,107"/>
+<area shape="poly" title=" " alt="" coords="300,109,243,148,240,144,297,105"/>
+<area shape="rect" title=" " alt="" coords="294,155,369,181"/>
+<area shape="poly" title=" " alt="" coords="322,107,329,140,323,141,317,108"/>
+</map>
+</div>
 </div><table class="memberdecls">
 <tr class="heading"><td colspan="2"><h2 class="groupheader"><a id="define-members" name="define-members"></a>
 Macros</h2></td></tr>
@@ -139,14 +163,10 @@ UART_HandleTypeDef&#160;</td><td class="memItemRight" valign="bottom"><b>huart2<
 <tr class="memitem:ad2a8e27b7036a6aaf908841105f06a3a"><td class="memItemLeft" align="right" valign="top"><a class="el" href="group___traffic___light.html#ga05958997a35686cb41a082b192c7ca99">StateSetters_fp</a>&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="main_8c.html#ad2a8e27b7036a6aaf908841105f06a3a">Set_Traffic_State</a> []</td></tr>
 <tr class="memdesc:ad2a8e27b7036a6aaf908841105f06a3a"><td class="mdescLeft">&#160;</td><td class="mdescRight">Calls forth the state setter function, can return an error.  <br /></td></tr>
 <tr class="separator:ad2a8e27b7036a6aaf908841105f06a3a"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:a6b71e3c5cd86d6941c8f4a8beb1b354f"><td class="memItemLeft" align="right" valign="top">&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="main_8c.html#a6b71e3c5cd86d6941c8f4a8beb1b354f">PUTCHAR_PROTOTYPE</a></td></tr>
-<tr class="separator:a6b71e3c5cd86d6941c8f4a8beb1b354f"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:a0523c05685d59544dca911cb6a3db77d"><td class="memItemLeft" align="right" valign="top"><a id="a0523c05685d59544dca911cb6a3db77d" name="a0523c05685d59544dca911cb6a3db77d"></a>
-return&#160;</td><td class="memItemRight" valign="bottom"><b>ch</b></td></tr>
-<tr class="separator:a0523c05685d59544dca911cb6a3db77d"><td class="memSeparator" colspan="2">&#160;</td></tr>
 </table>
 <a name="details" id="details"></a><h2 class="groupheader">Detailed Description</h2>
 <div class="textblock"><p>: Main program body </p>
+<dl class="section version"><dt>Version</dt><dd>: 0.1.1</dd></dl>
 <dl class="section attention"><dt>Attention</dt><dd></dd></dl>
 <p>Copyright (c) 2023 STMicroelectronics. All rights reserved.</p>
 <p>This software is licensed under terms that can be found in the LICENSE file in the root directory of this software component. If no LICENSE file comes with this software, it is provided AS-IS. </p>
@@ -245,7 +265,13 @@ return&#160;</td><td class="memItemRight" valign="bottom"><b>ch</b></td></tr>
   </table>
   </dd>
 </dl>
-
+<div class="dotgraph">
+<img src="dot_inline_dotgraph_1.png" alt="dot_inline_dotgraph_1.png" border="0" usemap="#dot_inline_dotgraph_1.map"/>
+<map name="dot_inline_dotgraph_1.map" id="dot_inline_dotgraph_1.map"><area shape="rect" href="" title="class B" alt="" coords="5,5,77,55"/>
+<area shape="rect" href="" title="class C" alt="" coords="5,103,77,152"/>
+</map>
+</div>
+ 
 </div>
 </div>
 <a id="a70af21c671abfcc773614a9a4f63d920" name="a70af21c671abfcc773614a9a4f63d920"></a>
@@ -277,24 +303,6 @@ return&#160;</td><td class="memItemRight" valign="bottom"><b>ch</b></td></tr>
 </div>
 </div>
 <h2 class="groupheader">Variable Documentation</h2>
-<a id="a6b71e3c5cd86d6941c8f4a8beb1b354f" name="a6b71e3c5cd86d6941c8f4a8beb1b354f"></a>
-<h2 class="memtitle"><span class="permalink"><a href="#a6b71e3c5cd86d6941c8f4a8beb1b354f">&#9670;&#160;</a></span>PUTCHAR_PROTOTYPE</h2>
-
-<div class="memitem">
-<div class="memproto">
-      <table class="memname">
-        <tr>
-          <td class="memname">PUTCHAR_PROTOTYPE</td>
-        </tr>
-      </table>
-</div><div class="memdoc">
-<b>Initial value:</b><div class="fragment"><div class="line">{</div>
-<div class="line">    </div>
-<div class="line">    </div>
-<div class="line">    HAL_UART_Transmit(&amp;huart2, (uint8_t *)&amp;ch, 1, 0xFFFF)</div>
-</div><!-- fragment -->
-</div>
-</div>
 <a id="ad2a8e27b7036a6aaf908841105f06a3a" name="ad2a8e27b7036a6aaf908841105f06a3a"></a>
 <h2 class="memtitle"><span class="permalink"><a href="#ad2a8e27b7036a6aaf908841105f06a3a">&#9670;&#160;</a></span>Set_Traffic_State</h2>
 

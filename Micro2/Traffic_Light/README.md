@@ -19,3 +19,9 @@ ___
 >
 > Implements a simple traffic light using the bluepill μController,
 > with a focus on code documentation and organization.
+>
+
+<details>
+<summary></summary>
+@dotfile graph.dot "State Machine"
+</details>

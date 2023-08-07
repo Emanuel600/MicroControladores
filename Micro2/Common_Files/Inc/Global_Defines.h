@@ -9,7 +9,7 @@
  *
  */
 #ifndef GLOBAL_DEFINES
-#define GLOBAL_DEFINES  20
+#define GLOBAL_DEFINES  21
 /**
  * @addtogroup Global_Defines Global_Defines
  * @{
@@ -27,13 +27,13 @@
 #define DEBUG_BLOCK(BLOCK)              {BLOCK}
 #else
 #define pdebug(...)
-#define DEBUG_BLOCK(BLOCK)
+#define DEBUG_BLOCK(BLOCK)              {}
 #endif
 //! Pragmas - GCC
 #ifdef __GNUC__
 #define ATTRIBUTE(att)                  __attribute__((att))
 /* Code optimization controll */
-/// @addtogroup       GCC Pragmas
+/// @addtogroup     GCC Pragmas
 /// @{
 /// @brief          Function is not optimized
 #define __UNOPTIMIZED__                 ATTRIBUTE(optimize("O0"))
@@ -53,5 +53,9 @@
 #define weakened                        ATTRIBUTE(weak)
 #endif
 //! Misc Utils
+/// @brief          Inserts asm instruction
+#define ASM(instruction)                __ASM volatile (instruction)
+/// @brief          Prints formatted to sdterr
+#define perrorf(...)                    fprintf(stderr, __VA_ARGS__)
 /** @} */
 #endif
