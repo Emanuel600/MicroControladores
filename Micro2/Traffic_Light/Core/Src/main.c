@@ -60,7 +60,7 @@ int main(void)
     DEBUG_BLOCK(
             MX_USART2_UART_Init();
     )
-    pdebug("[OK]\tDEBUG info redirected to USART\r\n");
+    pdebug("[OK]    DEBUG info redirected to USART\r\n");
 
     traffic_light_s light = Init_Traffic_Light(LIGHT_PORT, GREEN_PIN, YEL_PIN, RED_PIN);
 
