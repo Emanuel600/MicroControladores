@@ -54,11 +54,11 @@ typedef enum Traffic_Status {
  * @param Current_Status:   Current operating status of the traffic light (as described in traffic_status_e)
  */
 typedef struct Traffic_Light {
-    GPIO_TypeDef            *LIGHT_PORT;
-    uint16_t                RED_LIGHT;
-    uint16_t                YELLOW_LIGHT;
-    uint16_t                GREEN_LIGHT;
-    traffic_status_e        Current_Status;
+    GPIO_TypeDef                *LIGHT_PORT;
+    uint16_t                    RED_LIGHT;
+    uint16_t                    YELLOW_LIGHT;
+    uint16_t                    GREEN_LIGHT;
+    volatile traffic_status_e   Current_Status;
 } traffic_light_s;
 
 /**
