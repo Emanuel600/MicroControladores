@@ -23,7 +23,7 @@ void light_single_led(uint8_t led);
 
 int main()
 {
-    UCSR0B  = 0;    // Disable USArt
+    UCSR0B  = 0;            // Disable USArt
     SHIFTREG_DDR    = 0xFF; // Utilizando todas as portas como saída
     SHIFTREG_PORT   = 0x00; // Set all pins to LOW
     uint8_t i;
@@ -48,6 +48,7 @@ int main()
         i = 15;
         while(i != 0) {
             light_single_led(i--);
+            _delay_ms(250);
         }
     }
     return 0;
@@ -76,7 +77,7 @@ void light_single_led(uint8_t led)
         // O Bit Mais Significativo é enviado primeiro
         (i == led) ? SetBit(SHIFTREG_PORT, SHIFTREG_INPUT) : clrBit(SHIFTREG_PORT, SHIFTREG_INPUT);
         // Delay deve ser maior que 15n
-        clrBit(SHIFTREG_PORT, SHIFTREG_INPUT);
+        __BUILTIN_AVR_NOP;
         shift();
         i--;
     }
