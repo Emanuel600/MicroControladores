@@ -25,10 +25,26 @@
 
 /// @defgroup Traffic Light Pins and Port
 /// @{
-#define LIGHT_PORT          GPIOB
-#define GREEN_PIN           GPIO_PIN_0
-#define YEL_PIN             GPIO_PIN_1
-#define RED_PIN             GPIO_PIN_2
+/// Traffic Light #1
+#define LIGHT1_PORT         GPIOB
+#define GREEN1_PIN          GPIO_PIN_0
+#define YEL1_PIN            GPIO_PIN_1
+#define RED1_PIN            GPIO_PIN_2
+/// Traffic Light #2
+#define LIGHT2_PORT         GPIOB
+#define GREEN2_PIN          GPIO_PIN_5
+#define YEL2_PIN            GPIO_PIN_6
+#define RED2_PIN            GPIO_PIN_7
+/// Traffic Light #3
+#define LIGHT3_PORT         GPIOA
+#define GREEN3_PIN          GPIO_PIN_5
+#define YEL3_PIN            GPIO_PIN_6
+#define RED3_PIN            GPIO_PIN_7
+/// Traffic Light #4
+#define LIGHT4_PORT         GPIOA
+#define GREEN4_PIN          GPIO_PIN_9
+#define YEL4_PIN            GPIO_PIN_10
+#define RED4_PIN            GPIO_PIN_11
 /// @}
 #define GREEN_DELAY         60U
 #define YELLOW_DELAY        5U
@@ -62,14 +78,39 @@ int main(void)
     )
     pdebug("[OK]    DEBUG info redirected to USART\r\n");
 
-    traffic_light_s light = Init_Traffic_Light(LIGHT_PORT, GREEN_PIN, YEL_PIN, RED_PIN);
+    traffic_light_s light1 = Init_Traffic_Light(LIGHT1_PORT, GREEN1_PIN, YEL1_PIN, RED1_PIN);
+    traffic_light_s light2 = Init_Traffic_Light(LIGHT2_PORT, GREEN2_PIN, YEL2_PIN, RED2_PIN);
+    traffic_light_s light3 = Init_Traffic_Light(LIGHT3_PORT, GREEN3_PIN, YEL3_PIN, RED3_PIN);
+    traffic_light_s light4 = Init_Traffic_Light(LIGHT4_PORT, GREEN4_PIN, YEL4_PIN, RED4_PIN);
 
     while(1) {
-        Set_Traffic_State[TR_GREEN](&light);
+        // Operate Light 1
+        Set_Traffic_State[TR_GREEN](&light1);
         delay_s(GREEN_DELAY);
-        Set_Traffic_State[TR_YELLOW](&light);
+        Set_Traffic_State[TR_YELLOW](&light1);
         delay_s(YELLOW_DELAY);
-        Set_Traffic_State[TR_RED](&light);
+        Set_Traffic_State[TR_RED](&light1);
+        delay_s(RED_DELAY);
+        // Operate Light 2
+        Set_Traffic_State[TR_GREEN](&light2);
+        delay_s(GREEN_DELAY);
+        Set_Traffic_State[TR_YELLOW](&light2);
+        delay_s(YELLOW_DELAY);
+        Set_Traffic_State[TR_RED](&light2);
+        delay_s(RED_DELAY);
+        // Operate Light 3
+        Set_Traffic_State[TR_GREEN](&light3);
+        delay_s(GREEN_DELAY);
+        Set_Traffic_State[TR_YELLOW](&light3);
+        delay_s(YELLOW_DELAY);
+        Set_Traffic_State[TR_RED](&light3);
+        delay_s(RED_DELAY);
+        // Operate Light 4
+        Set_Traffic_State[TR_GREEN](&light4);
+        delay_s(GREEN_DELAY);
+        Set_Traffic_State[TR_YELLOW](&light4);
+        delay_s(YELLOW_DELAY);
+        Set_Traffic_State[TR_RED](&light4);
         delay_s(RED_DELAY);
     }
     /* USER CODE END 3 */
