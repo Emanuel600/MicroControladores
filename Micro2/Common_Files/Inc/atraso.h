@@ -16,7 +16,7 @@
 
 #include "Global_Defines.h"
 
-#ifdef STM32F103xB
+#ifdef STM32F103x6
 // CPU Clock in Hz
 #define FCPU        72000000U
 // CPU Clock in kHz

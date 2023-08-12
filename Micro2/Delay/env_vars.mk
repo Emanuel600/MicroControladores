@@ -42,6 +42,7 @@ $(COMM_DIR)/Src/atraso.c \
 vpath %.c $(sort $(dir $(CC_SRCS)))
 # ASM Sources
 ASM_SRCS		= $(wildcard $(SOURCE_DIR)/*.s)
+ASM_SRCS		= $(wildcard *.s)
 
 vpath %.s $(sort $(dir $(ASM_SRCS)))
 # All Sources
@@ -71,7 +72,7 @@ APP				= $(BIN_DIR)/app
 #====================#
 #==! Project Specific Flags ==!
 # User Defines
-USER_DEFS		+= -D_DEBUG -DSTM32F103xB -DUSE_HAL_DRIVERS
+USER_DEFS		+= -D_DEBUG -DSTM32F103x6 -DUSE_HAL_DRIVERS
 
 # Linker Script
 LINKER_SCRIPT	= $(wildcard *.ld)
