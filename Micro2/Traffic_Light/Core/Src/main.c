@@ -3,7 +3,7 @@
   ******************************************************************************
   * @file           : main.c
   * @brief          : Main program body
-  * @version        : 0.1.1
+  * @version        : 0.2.1
   ******************************************************************************
   * @attention
   *
@@ -20,6 +20,7 @@
 #include <unistd.h>
 /* Includes ------------------------------------------------------------------*/
 #include "main.h"
+#include "atraso.h"
 #include "Traffic_Light.h"
 #include "Global_Defines.h"
 
@@ -46,19 +47,29 @@
 #define YEL4_PIN            GPIO_PIN_10
 #define RED4_PIN            GPIO_PIN_11
 /// @}
-#define GREEN_DELAY         60U
-#define YELLOW_DELAY        5U
-#define RED_DELAY           30U
+#define GREEN_DELAY         3U
+#define YELLOW_DELAY        1U
+#define RED_DELAY           2U
 
 /// @brief          Rerouting stderr to USART2
 #define PUTCHAR_PROTOTYPE int __io_putchar(int ch)
+#define PUTCHAR_PROTOTYPE int __io_putchar(int ch)
 
+/* Private variables ---------------------------------------------------------*/
 UART_HandleTypeDef huart2;
 extern StateSetters_fp Set_Traffic_State[];
 /* Private function prototypes -----------------------------------------------*/
 void SystemClock_Config(void);
 static void MX_GPIO_Init(void);
 static void MX_USART2_UART_Init(void);
+/* USER CODE BEGIN PFP */
+
+/* USER CODE END PFP */
+
+/* Private user code ---------------------------------------------------------*/
+/* USER CODE BEGIN 0 */
+
+/* USER CODE END 0 */
 
 /**
   * @brief  The application entry point.
@@ -199,10 +210,26 @@ static void MX_GPIO_Init(void)
     __HAL_RCC_GPIOB_CLK_ENABLE();
 
     /*Configure GPIO pin Output Level */
-    HAL_GPIO_WritePin(GPIOB, GPIO_PIN_0 | GPIO_PIN_1 | GPIO_PIN_2, GPIO_PIN_RESET);
+    HAL_GPIO_WritePin(GPIOA, GPIO_PIN_5 | GPIO_PIN_6 | GPIO_PIN_7 | GPIO_PIN_9
+            | GPIO_PIN_10 | GPIO_PIN_11, GPIO_PIN_RESET);
 
-    /*Configure GPIO pins : PB0 PB1 PB2 */
-    GPIO_InitStruct.Pin = GPIO_PIN_0 | GPIO_PIN_1 | GPIO_PIN_2;
+    /*Configure GPIO pin Output Level */
+    HAL_GPIO_WritePin(GPIOB, GPIO_PIN_0 | GPIO_PIN_1 | GPIO_PIN_2 | GPIO_PIN_5
+            | GPIO_PIN_6 | GPIO_PIN_7, GPIO_PIN_RESET);
+
+    /*Configure GPIO pins : PA5 PA6 PA7 PA9
+                             PA10 PA11 */
+    GPIO_InitStruct.Pin = GPIO_PIN_5 | GPIO_PIN_6 | GPIO_PIN_7 | GPIO_PIN_9
+            | GPIO_PIN_10 | GPIO_PIN_11;
+    GPIO_InitStruct.Mode = GPIO_MODE_OUTPUT_PP;
+    GPIO_InitStruct.Pull = GPIO_NOPULL;
+    GPIO_InitStruct.Speed = GPIO_SPEED_FREQ_LOW;
+    HAL_GPIO_Init(GPIOA, &GPIO_InitStruct);
+
+    /*Configure GPIO pins : PB0 PB1 PB2 PB5
+                             PB6 PB7 */
+    GPIO_InitStruct.Pin = GPIO_PIN_0 | GPIO_PIN_1 | GPIO_PIN_2 | GPIO_PIN_5
+            | GPIO_PIN_6 | GPIO_PIN_7;
     GPIO_InitStruct.Mode = GPIO_MODE_OUTPUT_PP;
     GPIO_InitStruct.Pull = GPIO_NOPULL;
     GPIO_InitStruct.Speed = GPIO_SPEED_FREQ_LOW;

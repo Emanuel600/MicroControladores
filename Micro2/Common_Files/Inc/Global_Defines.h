@@ -54,7 +54,7 @@
 #endif
 //! Misc Utils
 /// @brief          Inserts asm instruction
-#define ASM(instruction)                __ASM volatile (instruction)
+#define ASM(instruction)                __asm__ volatile (instruction)
 /// @brief          Prints formatted to sdterr
 #define perrorf(...)                    fprintf(stderr, __VA_ARGS__)
 /** @} */
