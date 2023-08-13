@@ -14,6 +14,12 @@
  * @addtogroup Global_Defines Global_Defines
  * @{
  */
+//! CPU Details
+#ifdef STM32F103x6
+#define FCPU        72000000
+#define FCPUk       72000
+#define FCPUM       72
+#endif
 //! Change pin status
 #define Set_Pin(GPIOx, PINy)            HAL_GPIO_WritePin(GPIOx, PINy, GPIO_PIN_SET)
 #define Clr_Pin(GPIOx, PINy)            HAL_GPIO_WritePin(GPIOx, PINy, GPIO_PIN_RESET)

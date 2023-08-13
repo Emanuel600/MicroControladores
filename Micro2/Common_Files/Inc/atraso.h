@@ -16,26 +16,18 @@
 
 #include "Global_Defines.h"
 
-#ifdef STM32F103x6
-// CPU Clock in Hz
-#define FCPU        72000000U
-// CPU Clock in kHz
-#define FCPUk       72000U
-// CPU Clock in MHz
-#define FCPUM       72U
-#endif
+/**
+ * @brief Waits n cycles
+ *
+ */
+void wait_cycles(uint32_t cycles);
 
-asm(
-        ".equ fcpu, FCPU\n\t"
-        "//.equ const_ms, fcpu/3000\n\t"
-        "//.equ const_us, fcpu/300000\n\t"
-);
 /**
  * @brief Delays "delay" milliseconds
  *
  * @param delay:    Milliseconds to delay
  */
-ATTRIBUTE(noinline) void atraso_ms(uint32_t delay);
+void atraso_ms(uint32_t delay);
 
 /**
  * @brief Delays "delay" microseconds

@@ -95,7 +95,7 @@ int main(void)
     /* USER CODE BEGIN WHILE */
     while(1) {
         Toggle_Pin(GPIOB, GPIO_PIN_0);
-        atraso_ms(100U);
+        atraso_ms(1U);
         /* USER CODE END WHILE */
         /* USER CODE BEGIN 3 */
     }
