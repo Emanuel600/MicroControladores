@@ -30,7 +30,7 @@ void wait_cycles(uint32_t cycles);
 void atraso_ms(uint32_t delay);
 
 /**
- * @brief Delays "delay" microseconds
+ * @brief Delays "delay" microseconds, only acurate for delay >= 3
  *
  * @param delay:    Microseconds to delay
  */
