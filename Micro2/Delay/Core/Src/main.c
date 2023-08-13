@@ -18,11 +18,11 @@
 /* USER CODE END Header */
 /* Includes ------------------------------------------------------------------*/
 #include "main.h"
-#include "atraso.h"
-#include "Global_Defines.h"
 
 /* Private includes ----------------------------------------------------------*/
 /* USER CODE BEGIN Includes */
+#include "atraso.h"
+#include "Global_Defines.h"
 
 /* USER CODE END Includes */
 
