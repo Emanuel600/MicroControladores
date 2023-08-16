@@ -41,6 +41,10 @@
 /* Code optimization controll */
 /// @addtogroup     GCC Pragmas
 /// @{
+/// @brief          Pack struct
+#define PACKED                          ATTRIBUTE(packed)
+/// @brief          Pack with alignement
+#define PACKED_ALIGN(X)                 ATTRIBUTE(packed, aligned(X))
 /// @brief          Function is not optimized
 #define __UNOPTIMIZED__                 ATTRIBUTE(optimize("O0"))
 /// @brief          Function is optimized for speed
