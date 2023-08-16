@@ -14,7 +14,8 @@ inlined void wait_cycles(uint32_t cycles)
 inlined void atraso_ms(uint32_t delay)
 {
     // Loop frequency (kHz), also loops/ms
-    const uint32_t atraso_ms_loop = FCPUk / 4U;
+    // On real hardware, divide by 6; on PROTEUS, divide by 4
+    const uint32_t atraso_ms_loop = FCPUk / 6U;
     // Amount of times the loop needs to be executed
     delay *= atraso_ms_loop;
     ASM(
@@ -27,7 +28,8 @@ inlined void atraso_ms(uint32_t delay)
 inlined void atraso_us(uint32_t delay)
 {
     // Loop frequency (MHz), also loops/us
-    const uint32_t atraso_us_loop = FCPUM / 4U;
+    // On real hardware, divide by 6; on PROTEUS, divide by 4
+    const uint32_t atraso_us_loop = FCPUM / 6U;
     // Amount of times the loop needs to be executed
     delay *= atraso_us_loop;
     ASM(
