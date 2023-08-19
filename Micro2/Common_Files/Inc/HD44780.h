@@ -195,8 +195,8 @@ size_t LCD_Print(HD44780 *lcd, char *str);
 
 void LCD_Begin(uint8_t cols, uint8_t rows, uint8_t charsize = LCD_5x8DOTS);
 
-void LCD_clear();
-void LCD_home();
+void LCD_Clear();
+void LCD_Home();
 
 void LCD_No_Display();
 void LCD_Display();
