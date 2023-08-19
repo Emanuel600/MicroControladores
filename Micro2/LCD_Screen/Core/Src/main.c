@@ -37,7 +37,7 @@
 /// @brief          GPIO Port used for data transfer
 #define LCD_DATA_PORT                   GPIOB
 /// @brief          First GPIO Pin to be used (Using sequential pins)
-#define LCD_DATA_PINS                   (GPIO_PIN_0 | GPIO_PIN_1 | GPIO_PIN_2 | GPIO_PIN_3)
+#define LCD_FIRST_DATA_PIN              GPIO_PIN_0
 /// @brief          GPIO Port used for Register Select
 #define LCD_RS_PORT                     GPIOA
 /// @brief          GPIO Pin used for Register Select
