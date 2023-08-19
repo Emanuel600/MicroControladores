@@ -20,7 +20,6 @@
 #include <unistd.h>
 /* Includes ------------------------------------------------------------------*/
 #include "main.h"
-#include "atraso.h"
 #include "Traffic_Light.h"
 #include "Global_Defines.h"
 

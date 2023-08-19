@@ -36,7 +36,6 @@ $(HAL_DRIVERS)/Src/stm32f1xx_hal_flash.c \
 $(HAL_DRIVERS)/Src/stm32f1xx_hal_flash_ex.c \
 $(HAL_DRIVERS)/Src/stm32f1xx_hal_exti.c \
 $(HAL_DRIVERS)/Src/stm32f1xx_hal_uart.c \
-$(COMM_DIR)/Src/atraso.c \
 
 # Add dir to search
 vpath %.c $(sort $(dir $(CC_SRCS)))
