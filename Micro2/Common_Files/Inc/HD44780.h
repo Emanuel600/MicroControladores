@@ -173,7 +173,7 @@ void Set_Data_Port(HD44780_GPIO *Data_Struct, GPIO_TypeDef *Port, uint16_t First
  * @param lcd
  * @param c
  */
-void HD44780_put_char(HD44780 *lcd, char c);
+void HD44780_Put_Char(HD44780 *lcd, char c);
 
 /**
  * @brief           Sends a command to *lcd
@@ -181,7 +181,7 @@ void HD44780_put_char(HD44780 *lcd, char c);
  * @param lcd
  * @param c
  */
-void HD44780_command(HD44780 *lcd, uint8_t c);
+void HD44780_Command(HD44780 *lcd, uint8_t c);
 
 /**
  * @brief           Prints a string to the LCD
