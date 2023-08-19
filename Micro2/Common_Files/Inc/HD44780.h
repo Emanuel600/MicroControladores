@@ -173,7 +173,7 @@ void Set_Data_Port(HD44780_GPIO *Data_Struct, GPIO_TypeDef *Port, uint16_t First
  * @param lcd
  * @param c
  */
-void hd44780_put_char(HD44780 *lcd, char c);
+void HD44780_put_char(HD44780 *lcd, char c);
 
 /**
  * @brief           Sends a command to *lcd
@@ -181,7 +181,7 @@ void hd44780_put_char(HD44780 *lcd, char c);
  * @param lcd
  * @param c
  */
-void hd44780_command(HD44780 *lcd, uint8_t c);
+void HD44780_command(HD44780 *lcd, uint8_t c);
 
 /**
  * @brief           Prints a string to the LCD
@@ -191,32 +191,32 @@ void hd44780_command(HD44780 *lcd, uint8_t c);
  *
  * @return          Number of bytes written
  */
-size_t lcd_print(HD44780 *lcd, char *str);
+size_t LCD_Print(HD44780 *lcd, char *str);
 
-void begin(uint8_t cols, uint8_t rows, uint8_t charsize = LCD_5x8DOTS);
+void LCD_Begin(uint8_t cols, uint8_t rows, uint8_t charsize = LCD_5x8DOTS);
 
-void clear();
-void home();
+void LCD_clear();
+void LCD_home();
 
-void noDisplay();
-void display();
-void noBlink();
-void blink();
-void noCursor();
-void cursor();
-void scrollDisplayLeft();
-void scrollDisplayRight();
-void leftToRight();
-void rightToLeft();
-void autoscroll();
-void noAutoscroll();
+void LCD_No_Display();
+void LCD_Display();
+void LCD_No_Blink();
+void LCD_Blink();
+void LCD_No_Cursor();
+void LCD_Cursor();
+void LCD_Scroll_Display_Left();
+void LCD_Scroll_Display_Right();
+void LCD_Left_To_Right();
+void LCD_Right_To_Left();
+void LCD_Autoscroll();
+void LCD_No_Autoscroll();
 
-void setRowOffsets(int row1, int row2, int row3, int row4);
-void setCursor(uint8_t column, uint8_t line);
+void LCD_Set_Row_Offsets(int row1, int row2, int row3, int row4);
+void LCD_Set_Cursor(uint8_t column, uint8_t line);
 
-void send(char byte, uint8_t mode);
-void write4bits(uint8_t half_byte);
-void write8bits(uint8_t byte);
-void pulseEnable();
+void LCD_Send(char byte, uint8_t mode);
+void LCD_Write_4bits(uint8_t half_byte);
+void LCD_Write_8bits(uint8_t byte);
+void LCD_PulseEnable();
 
 #endif
