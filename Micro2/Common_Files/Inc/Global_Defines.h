@@ -16,51 +16,52 @@
  */
 //! CPU Details
 #ifdef STM32F103x6
-#define FCPU        72000000
-#define FCPUk       72000
-#define FCPUM       72
+    #define FCPU        72000000
+    #define FCPUk       72000
+    #define FCPUM       72
 #endif
 //! Change pin status
 #define Set_Pin(GPIOx, PINy)            HAL_GPIO_WritePin(GPIOx, PINy, GPIO_PIN_SET)
 #define Clr_Pin(GPIOx, PINy)            HAL_GPIO_WritePin(GPIOx, PINy, GPIO_PIN_RESET)
 #define Toggle_Pin(GPIOx, PINy)         HAL_GPIO_TogglePin(GPIOx, PINy)
+#define Write_Pin(GPIOx, PINy, W)       HAL_GPIO_WritePin(GPIOx, PINy, W)
 //! Delay utils
 #define delay_ms(delay)                 HAL_Delay((uint32_t)delay)
 #define delay_s(delay)                  delay_ms(delay*1000U)
 //! Debug Utils
 #ifdef _DEBUG
-#define pdebug(...)                     fprintf(stderr, __VA_ARGS__)
-#define DEBUG_BLOCK(BLOCK)              {BLOCK}
+    #define pdebug(...)                     fprintf(stderr, __VA_ARGS__)
+    #define DEBUG_BLOCK(BLOCK)              {BLOCK}
 #else
-#define pdebug(...)
-#define DEBUG_BLOCK(BLOCK)              {}
+    #define pdebug(...)
+    #define DEBUG_BLOCK(BLOCK)              {}
 #endif
 //! Pragmas - GCC
 #ifdef __GNUC__
-#define ATTRIBUTE(att)                  __attribute__((att))
-/* Code optimization controll */
-/// @addtogroup     GCC Pragmas
-/// @{
-/// @brief          Pack struct
-#define PACKED                          ATTRIBUTE(packed)
-/// @brief          Pack with alignement
-#define PACKED_ALIGN(X)                 ATTRIBUTE(packed, aligned(X))
-/// @brief          Function is not optimized
-#define __UNOPTIMIZED__                 ATTRIBUTE(optimize("O0"))
-/// @brief          Function is optimized for speed
-#define __FASTEST__                     ATTRIBUTE(optimize("O3"))
-/// @brief          Function is aggressively optimized for size
-#define __MAX_COMPRESS__                ATTRIBUTE(optimize("Oz"))
-/// @brief          Function is optimized for size
-#define __COMPRESS__                    ATTRIBUTE(optimize("Os"))
-/// @}
-/* Function types */
-/// \defgroup       Function types
-/// \brief          Always inlines the function
-#define inlined                         inline ATTRIBUTE(always_inline)
-/// \addtogroup     Function types
-/// \brief          Function can be overwritten by a "strong" function
-#define weakened                        ATTRIBUTE(weak)
+    #define ATTRIBUTE(att)                  __attribute__((att))
+    /* Code optimization controll */
+    /// @addtogroup     GCC Pragmas
+    /// @{
+    /// @brief          Pack struct
+    #define PACKED                          ATTRIBUTE(packed)
+    /// @brief          Pack with alignement
+    #define PACKED_ALIGN(X)                 ATTRIBUTE(packed, aligned(X))
+    /// @brief          Function is not optimized
+    #define __UNOPTIMIZED__                 ATTRIBUTE(optimize("O0"))
+    /// @brief          Function is optimized for speed
+    #define __FASTEST__                     ATTRIBUTE(optimize("O3"))
+    /// @brief          Function is aggressively optimized for size
+    #define __MAX_COMPRESS__                ATTRIBUTE(optimize("Oz"))
+    /// @brief          Function is optimized for size
+    #define __COMPRESS__                    ATTRIBUTE(optimize("Os"))
+    /// @}
+    /* Function types */
+    /// \defgroup       Function types
+    /// \brief          Always inlines the function
+    #define inlined                         inline ATTRIBUTE(always_inline)
+    /// \addtogroup     Function types
+    /// \brief          Function can be overwritten by a "strong" function
+    #define weakened                        ATTRIBUTE(weak)
 #endif
 //! Misc Utils
 /// @brief          Inserts asm instruction

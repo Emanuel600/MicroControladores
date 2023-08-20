@@ -65,21 +65,19 @@
  * @param SELECT_CHAR
  */
 typedef enum {
-    SELECT_COMMAND,
-    SELECT_CHAR
+    SELECT_COMMAND  = (uint32_t) GPIO_PIN_RESET,
+    SELECT_CHAR     = (uint32_t) GPIO_PIN_SET
 } Register_Select_e;
 
 /**
  * @brief           How many pins are being used to control the LCD
  *
- * @param CONTROL_1_PIN
  * @param CONTROL_2_PINS
  * @param CONTROL_3_PINS
  */
 typedef enum {
-    CONTROL_1_PIN,      //!< Just Register Select (RS)
-    CONTROL_2_PINS,     //!< RS and Read/Write (RW)
-    CONTROL_3_PINS      //!< RS, RW and Enable (E)
+    CONTROL_2_PINS,      //!< Register Select (RS) and Enable (E)
+    CONTROL_3_PINS,     //!< RS, E, and Read/Write (RW)
 } Control_Mode_e;
 
 /**
@@ -92,6 +90,38 @@ typedef enum {
     LCD_4_BITS,
     LCD_8_BITS
 } Data_Mode_e;
+
+/**
+ * @brief           Contains the offset for each row of the lcd
+ */
+typedef struct {
+    uint8_t row0;
+    uint8_t row1;
+    uint8_t row2;
+    uint8_t row3;
+} lcd_rows_offset;
+
+/**
+ * @brief           HD44780 - GPIO Definitions
+ * @param Data_Port
+ * @param Control_Port
+ * @param First_Data_Pin    D0
+ * @param RS_Pin            Register Select Pin, E = RS<<1 and RW = RS<<2
+ * @param Enable_Pin
+ * @param RW_Pin            Read/Write Pin
+ */
+typedef struct {
+    // Ports
+    GPIO_TypeDef*   Data_Port;          //!< Data Port
+    GPIO_TypeDef*   Control_Port;       //!< Control Port
+    // Pins
+    uint16_t        First_Data_Pin;
+    uint16_t        RS_Pin;             //!< Register Select Pin
+    lcd_rows_offset offsets;
+    // Modes
+    Control_Mode_e  Control_Mode;       //!< How many pins on control port
+    Data_Mode_e     Data_Mode;          //!< How many pins on data port
+} HD44780_GPIO;
 
 /**
  * @brief           GPIO struct for HD44780
@@ -118,34 +148,13 @@ typedef struct {
 
     uint8_t         initialized;        //!< If it was initialized properly
 } HD44780;
-/**
- * @brief           HD44780 - GPIO Definitions
- * @param Data_Port
- * @param Control_Port
- * @param First_Data_Pin    All data pins (D0 | D1 | ... | D7)
- * @param RS_Pin            Register Select Pin
- * @param Enable_Pin
- * @param RW_Pin            Read/Write Pin
- */
-typedef struct {
-    // Ports
-    GPIO_TypeDef    Data_Port;          //!< Data Port
-    GPIO_TypeDef    Control_Port;       //!< Control Port
-    // Pins
-    uint16_t        First_Data_Pin;
-    uint16_t        RS_Pin;             //!< Register Select Pin
-    // Modes
-    Control_Mode_e  Control_Mode;       //!< How many pins on control port
-    Data_Mode_e     Data_Mode;          //!< How many pins on data port
-} HD44780_GPIO;
 
 /**
  * @brief           HD44780 Init Function, should be called after setting ports
  *
  * @param lcd       Used screen
- * @param Pins      Pin Struct for HD44780
  */
-void HD_Init (HD44780* lcd, HD44780_GPIO Pins);
+void HD44780_Init (HD44780* lcd);
 
 /**
  * @brief           Sets control port pins
@@ -181,7 +190,7 @@ void HD44780_Put_Char (HD44780* lcd, char c);
  * @param lcd
  * @param command
  */
-void HD44780_Command (HD44780* lcd, uint8_t command);
+void HD44780_Command (HD44780* lcd, char command);
 
 /**
  * @brief           Prints a string to the LCD
@@ -191,89 +200,89 @@ void HD44780_Command (HD44780* lcd, uint8_t command);
  *
  * @return          Number of bytes written
  */
-size_t LCD_Print (HD44780* lcd, char* str);
+size_t HD44780_Print (HD44780* lcd, char* str);
 
 /**
  * @brief           Starts the LCD, called after init
  */
-void LCD_Begin (uint8_t cols, uint8_t rows, uint8_t charsize = LCD_5x8DOTS);
+void HD44780_Begin (HD44780* lcd, uint8_t cols, uint8_t rows, uint8_t charsize);
 
 /**
  * @brief           Clears Screen
  */
-void LCD_Clear();
+void HD44780_Clear (HD44780* lcd);
 
 /**
  * @brief           Homes Cursor
  */
-void LCD_Home();
+void HD44780_Home (HD44780* lcd);
 
 /**
  * @brief           Turns display off
  */
-void LCD_No_Display();
+void HD44780_No_Display (HD44780* lcd);
 
 /**
  * @brief           Turns display on
  */
-void LCD_Display();
+void HD44780_Display (HD44780* lcd);
 
 /**
  * @brief           Turns blinking off
  */
-void LCD_No_Blink();
+void HD44780_No_Blink (HD44780* lcd);
 
 /**
  * @brief           Turns Blinking on
  */
-void LCD_Blink();
+void HD44780_Blink (HD44780* lcd);
 
 /**
  * @brief           Turns cursor off
  */
-void LCD_No_Cursor();
+void HD44780_No_Cursor (HD44780* lcd);
 
 /**
  * @brief           Turns cursor on
  */
-void LCD_Cursor();
+void HD44780_Cursor (HD44780* lcd);
 
 /**
  * @brief           Makes the cursor go left->right
  */
-void LCD_Scroll_Display_Left();
+void HD44780_Scroll_Display_Left (HD44780* lcd);
 
 /**
  * @brief           Makes the cursor go right->left
  */
-void LCD_Scroll_Display_Right();
+void HD44780_Scroll_Display_Right (HD44780* lcd);
 
 /**
  * @brief           Shifts cursor to the right
  */
-void LCD_Left_To_Right();
+void HD44780_Left_To_Right (HD44780* lcd);
 
 /**
  * @brief           Shifts cursor to the left
  */
-void LCD_Right_To_Left();
+void HD44780_Right_To_Left (HD44780* lcd);
 
 /**
  * @brief           Turn on autoscroll
  */
-void LCD_Autoscroll();
+void HD44780_Autoscroll (HD44780* lcd);
 
 /**
  * @brief           Turn off autoscroll
  */
-void LCD_No_Autoscroll();
+void HD44780_No_Autoscroll (HD44780* lcd);
 
 /**
  * @brief           Sets the offset for each row
  *
  * @param rows
  */
-void LCD_Set_Row_Offsets (int row1, int row2, int row3, int row4);
+void HD44780_Set_Row_Offsets (HD44780* lcd, lcd_rows_offset rows);
 
 /**
  * @brief           Sets the cursor's position
@@ -281,7 +290,7 @@ void LCD_Set_Row_Offsets (int row1, int row2, int row3, int row4);
  * @param column
  * @param line
  */
-void LCD_Set_Cursor (uint8_t column, uint8_t line);
+void HD44780_Set_Cursor (HD44780* lcd, uint8_t column, uint8_t line);
 
 /**
  * @brief           Sends one byte of data to the LCD
@@ -289,25 +298,25 @@ void LCD_Set_Cursor (uint8_t column, uint8_t line);
  * @param byte
  * @param mode      Wether it's a command or a character
  */
-void LCD_Send (char byte, Register_Select_e mode);
+void HD44780_Send (HD44780* lcd, char byte, Register_Select_e mode);
 
 /**
  * @brief           Writes one half-byte on the data pins
  *
  * @param half_byte
  */
-void LCD_Write_4bits (uint8_t half_byte);
+void HD44780_Write_4bits (HD44780* lcd, uint8_t half_byte);
 
 /**
  * @brief           Writes one byte on the data pins
  *
  * @param byte
  */
-void LCD_Write_8bits (uint8_t byte);
+void HD44780_Write_8bits (HD44780* lcd, char byte);
 
 /**
- * @brief           Enables pulse (?)
+ * @brief           Pulses the enable pin
  */
-void LCD_Pulse_Enable();
+void HD44780_Pulse_Enable (HD44780* lcd);
 
 #endif
