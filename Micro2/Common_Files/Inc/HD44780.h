@@ -145,7 +145,7 @@ typedef struct {
  * @param lcd       Used screen
  * @param Pins      Pin Struct for HD44780
  */
-void HD_Init(HD44780 *lcd, HD44780_GPIO Pins);
+void HD_Init (HD44780* lcd, HD44780_GPIO Pins);
 
 /**
  * @brief           Sets control port pins
@@ -155,7 +155,7 @@ void HD_Init(HD44780 *lcd, HD44780_GPIO Pins);
  * @param First_Pin         First pin used for control
  * @param CM                Control Mode
  */
-void Set_Control_Port(HD44780_GPIO *Control_Struct, GPIO_TypeDef *Port, uint16_t First_Pin, Control_Mode_e CM);
+void Set_Control_Port (HD44780_GPIO* Control_Struct, GPIO_TypeDef* Port, uint16_t First_Pin, Control_Mode_e CM);
 
 /**
  * @brief           Set data port pins
@@ -165,7 +165,7 @@ void Set_Control_Port(HD44780_GPIO *Control_Struct, GPIO_TypeDef *Port, uint16_t
  * @param First_Pin     All pins used
  * @param DM            Data Mode
  */
-void Set_Data_Port(HD44780_GPIO *Data_Struct, GPIO_TypeDef *Port, uint16_t First_Pin, Data_Mode_e DM);
+void Set_Data_Port (HD44780_GPIO* Data_Struct, GPIO_TypeDef* Port, uint16_t First_Pin, Data_Mode_e DM);
 
 /**
  * @brief           Writes a single character to LCD display
@@ -173,15 +173,15 @@ void Set_Data_Port(HD44780_GPIO *Data_Struct, GPIO_TypeDef *Port, uint16_t First
  * @param lcd
  * @param c
  */
-void HD44780_Put_Char(HD44780 *lcd, char c);
+void HD44780_Put_Char (HD44780* lcd, char c);
 
 /**
  * @brief           Sends a command to *lcd
  *
  * @param lcd
- * @param c
+ * @param command
  */
-void HD44780_Command(HD44780 *lcd, uint8_t c);
+void HD44780_Command (HD44780* lcd, uint8_t command);
 
 /**
  * @brief           Prints a string to the LCD
@@ -191,32 +191,123 @@ void HD44780_Command(HD44780 *lcd, uint8_t c);
  *
  * @return          Number of bytes written
  */
-size_t LCD_Print(HD44780 *lcd, char *str);
+size_t LCD_Print (HD44780* lcd, char* str);
 
-void LCD_Begin(uint8_t cols, uint8_t rows, uint8_t charsize = LCD_5x8DOTS);
+/**
+ * @brief           Starts the LCD, called after init
+ */
+void LCD_Begin (uint8_t cols, uint8_t rows, uint8_t charsize = LCD_5x8DOTS);
 
+/**
+ * @brief           Clears Screen
+ */
 void LCD_Clear();
+
+/**
+ * @brief           Homes Cursor
+ */
 void LCD_Home();
 
+/**
+ * @brief           Turns display off
+ */
 void LCD_No_Display();
+
+/**
+ * @brief           Turns display on
+ */
 void LCD_Display();
+
+/**
+ * @brief           Turns blinking off
+ */
 void LCD_No_Blink();
+
+/**
+ * @brief           Turns Blinking on
+ */
 void LCD_Blink();
+
+/**
+ * @brief           Turns cursor off
+ */
 void LCD_No_Cursor();
+
+/**
+ * @brief           Turns cursor on
+ */
 void LCD_Cursor();
+
+/**
+ * @brief           Makes the cursor go left->right
+ */
 void LCD_Scroll_Display_Left();
+
+/**
+ * @brief           Makes the cursor go right->left
+ */
 void LCD_Scroll_Display_Right();
+
+/**
+ * @brief           Shifts cursor to the right
+ */
 void LCD_Left_To_Right();
+
+/**
+ * @brief           Shifts cursor to the left
+ */
 void LCD_Right_To_Left();
+
+/**
+ * @brief           Turn on autoscroll
+ */
 void LCD_Autoscroll();
+
+/**
+ * @brief           Turn off autoscroll
+ */
 void LCD_No_Autoscroll();
 
-void LCD_Set_Row_Offsets(int row1, int row2, int row3, int row4);
-void LCD_Set_Cursor(uint8_t column, uint8_t line);
+/**
+ * @brief           Sets the offset for each row
+ *
+ * @param rows
+ */
+void LCD_Set_Row_Offsets (int row1, int row2, int row3, int row4);
 
-void LCD_Send(char byte, uint8_t mode);
-void LCD_Write_4bits(uint8_t half_byte);
-void LCD_Write_8bits(uint8_t byte);
-void LCD_PulseEnable();
+/**
+ * @brief           Sets the cursor's position
+ *
+ * @param column
+ * @param line
+ */
+void LCD_Set_Cursor (uint8_t column, uint8_t line);
+
+/**
+ * @brief           Sends one byte of data to the LCD
+ *
+ * @param byte
+ * @param mode      Wether it's a command or a character
+ */
+void LCD_Send (char byte, Register_Select_e mode);
+
+/**
+ * @brief           Writes one half-byte on the data pins
+ *
+ * @param half_byte
+ */
+void LCD_Write_4bits (uint8_t half_byte);
+
+/**
+ * @brief           Writes one byte on the data pins
+ *
+ * @param byte
+ */
+void LCD_Write_8bits (uint8_t byte);
+
+/**
+ * @brief           Enables pulse (?)
+ */
+void LCD_Pulse_Enable();
 
 #endif
