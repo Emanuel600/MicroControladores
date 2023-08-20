@@ -59,9 +59,9 @@ void HD44780_Begin (HD44780* lcd, uint8_t cols, uint8_t rows, uint8_t charsize)
     if (! (lcd->Display_Function & (lcd->HD_GPIO.Data_Mode == LCD_8_BITS))) {
         // Tell HD44780 to use 4 bits, needs to be done thrice
         HD44780_Write_4bits (lcd, 0x03);
-        atraso_us (4400);
+        atraso_us (4500);
         HD44780_Write_4bits (lcd, 0x03);
-        atraso_us (4400);
+        atraso_us (4500);
         HD44780_Write_4bits (lcd, 0x03);
         atraso_us (150);
         // Set 4 bit interface
@@ -91,7 +91,6 @@ void HD44780_Display (HD44780* lcd)
 {
     lcd->Display_Control |= LCD_DISPLAYON;
     HD44780_Command (lcd, lcd->Display_Control | LCD_DISPLAYCONTROL);
-    delay_ms (2);
 }
 
 void HD44780_Clear (HD44780* lcd)
@@ -136,8 +135,9 @@ void HD44780_Put_Char (HD44780* lcd, char c)
 
 void HD44780_Write_4bits (HD44780* lcd, uint8_t half_byte)
 {
+    uint16_t D0 = lcd->HD_GPIO.First_Data_Pin;
     for (uint32_t i = 0; i < 4; i++) {
-        Write_Pin (lcd->HD_GPIO.Data_Port, lcd->HD_GPIO.First_Data_Pin << i, (half_byte >> i) & 0x01);
+        Write_Pin (lcd->HD_GPIO.Data_Port, D0 << i, (half_byte >> i) & 0x01);
     }
 
     HD44780_Pulse_Enable (lcd);
@@ -156,7 +156,8 @@ void HD44780_Write_8bits (HD44780* lcd, char byte)
 
 void HD44780_Pulse_Enable (HD44780* lcd)
 {
-    uint16_t E_Pin = lcd->HD_GPIO.RS_Pin << 1;
+    uint16_t E_Pin = lcd->HD_GPIO.RS_Pin;
+    E_Pin = E_Pin << 1;
     Clr_Pin (lcd->HD_GPIO.Control_Port, E_Pin);
     atraso_us (1);
     Set_Pin (lcd->HD_GPIO.Control_Port, E_Pin);
