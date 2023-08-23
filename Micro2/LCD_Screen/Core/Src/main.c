@@ -18,13 +18,17 @@
 /* USER CODE END Header */
 /* Includes ------------------------------------------------------------------*/
 #include "main.h"
+#include "rtc.h"
 #include "gpio.h"
 
 /* Private includes ----------------------------------------------------------*/
 /* USER CODE BEGIN Includes */
+#include <stdio.h>
+#include <errno.h>
+
 #include "Global_Defines.h"
-#include "atraso.h"
 #include "HD44780.h"
+#include "atraso.h"
 /* USER CODE END Includes */
 
 /* Private typedef -----------------------------------------------------------*/
@@ -34,7 +38,7 @@
 
 /* Private define ------------------------------------------------------------*/
 /* USER CODE BEGIN PD */
-/// @addtogroup Definitions     LCD_Pin_Defs
+/// @addtogroup Definitions     LCD_Pins
 /// @{
 /// @brief          GPIO Port used for data transfer
 #define LCD_DATA_PORT                   GPIOB
@@ -44,6 +48,10 @@
 #define LCD_CONTROL_PORT                GPIOA
 /// @brief          GPIO Pin used for Register Select
 #define LCD_RS_PIN                      GPIO_PIN_8
+/// @brief          Pin used to increase hours
+#define HOUR_PIN                        GPIO_PIN_7
+/// @brief          Pin used to increase minutes
+#define MINUTE_PIN                      GPIO_PIN_6
 /// @}
 /* USER CODE END PD */
 
@@ -55,18 +63,17 @@
 /* Private variables ---------------------------------------------------------*/
 
 /* USER CODE BEGIN PV */
-
+HD44780 lcd;
 /* USER CODE END PV */
 
 /* Private function prototypes -----------------------------------------------*/
 void SystemClock_Config (void);
 /* USER CODE BEGIN PFP */
-
+extern void Reset_Handler();
 /* USER CODE END PFP */
 
 /* Private user code ---------------------------------------------------------*/
 /* USER CODE BEGIN 0 */
-
 /* USER CODE END 0 */
 
 /**
@@ -76,7 +83,8 @@ void SystemClock_Config (void);
 int main (void)
 {
     /* USER CODE BEGIN 1 */
-    HD44780 lcd;
+    setvbuf (stdout, NULL, _IONBF, 0);
+    RTC_TimeTypeDef RTC_Time = {0};
     /* USER CODE END 1 */
 
     /* MCU Configuration--------------------------------------------------------*/
@@ -97,23 +105,27 @@ int main (void)
 
     /* Initialize all configured peripherals */
     MX_GPIO_Init();
+    MX_RTC_Init();
     /* USER CODE BEGIN 2 */
     Set_Control_Port (& (lcd.HD_GPIO), LCD_CONTROL_PORT, LCD_RS_PIN, CONTROL_2_PINS);
     Set_Data_Port (& (lcd.HD_GPIO), LCD_DATA_PORT, LCD_FIRST_DATA_PIN, LCD_4_BITS);
     HD44780_Init (&lcd);
-    HD44780_Begin (&lcd, 16, 2, 8);
+    HD44780_Begin (&lcd, 16, 2, LCD_5x8DOTS);
     /* USER CODE END 2 */
 
     /* Infinite loop */
     /* USER CODE BEGIN WHILE */
     while (1) {
         // Testing
-        HD44780_Put_Char (&lcd, 'a');
+        HAL_RTC_GetTime (&hrtc, &RTC_Time, RTC_FORMAT_BCD);
+        printf ("%02x:%02x:%02x", RTC_Time.Hours, RTC_Time.Minutes, RTC_Time.Seconds);
         delay_ms (500);
+        HD44780_Clear (&lcd);
         /* USER CODE END WHILE */
 
         /* USER CODE BEGIN 3 */
     }
+    return -1;
     /* USER CODE END 3 */
 }
 
@@ -125,14 +137,16 @@ void SystemClock_Config (void)
 {
     RCC_OscInitTypeDef RCC_OscInitStruct = {0};
     RCC_ClkInitTypeDef RCC_ClkInitStruct = {0};
+    RCC_PeriphCLKInitTypeDef PeriphClkInit = {0};
 
     /** Initializes the RCC Oscillators according to the specified parameters
     * in the RCC_OscInitTypeDef structure.
     */
-    RCC_OscInitStruct.OscillatorType = RCC_OSCILLATORTYPE_HSE;
+    RCC_OscInitStruct.OscillatorType = RCC_OSCILLATORTYPE_LSI | RCC_OSCILLATORTYPE_HSE;
     RCC_OscInitStruct.HSEState = RCC_HSE_ON;
     RCC_OscInitStruct.HSEPredivValue = RCC_HSE_PREDIV_DIV1;
     RCC_OscInitStruct.HSIState = RCC_HSI_ON;
+    RCC_OscInitStruct.LSIState = RCC_LSI_ON;
     RCC_OscInitStruct.PLL.PLLState = RCC_PLL_ON;
     RCC_OscInitStruct.PLL.PLLSource = RCC_PLLSOURCE_HSE;
     RCC_OscInitStruct.PLL.PLLMUL = RCC_PLL_MUL9;
@@ -152,10 +166,23 @@ void SystemClock_Config (void)
     if (HAL_RCC_ClockConfig (&RCC_ClkInitStruct, FLASH_LATENCY_2) != HAL_OK) {
         Error_Handler();
     }
+    PeriphClkInit.PeriphClockSelection = RCC_PERIPHCLK_RTC;
+    PeriphClkInit.RTCClockSelection = RCC_RTCCLKSOURCE_LSI;
+    if (HAL_RCCEx_PeriphCLKConfig (&PeriphClkInit) != HAL_OK) {
+        Error_Handler();
+    }
 }
 
 /* USER CODE BEGIN 4 */
-
+int _write (int fd, char* data, int len)
+{
+    if (fd == fileno (stdout)) {
+        while (len--) {
+            HD44780_Put_Char (&lcd, *data++);
+        }
+    }
+    return 1;
+}
 /* USER CODE END 4 */
 
 /**
@@ -167,7 +194,10 @@ void Error_Handler (void)
     /* USER CODE BEGIN Error_Handler_Debug */
     /* User can add his own implementation to report the HAL error return state */
     __disable_irq();
+    perrorf ("[Error] Program crashed {Code %d}\r\n", errno);
+    perrorf ("      - Attempting restart\r\n");
     while (1) {
+        Reset_Handler();
     }
     /* USER CODE END Error_Handler_Debug */
 }

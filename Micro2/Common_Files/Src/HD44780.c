@@ -35,6 +35,7 @@ void HD44780_Begin (HD44780* lcd, uint8_t cols, uint8_t rows, uint8_t charsize)
         lcd->Display_Function |= LCD_2LINE;
     }
     lcd->lines = rows;
+    lcd->colunms = cols;
 
     lcd->HD_GPIO.offsets.row0 = 0x00;
     lcd->HD_GPIO.offsets.row1 = 0x40;
@@ -129,13 +130,17 @@ void HD44780_Command (HD44780* lcd, char command)
 
 void HD44780_Put_Char (HD44780* lcd, char c)
 {
-    HD44780_Send (lcd, c, SELECT_CHAR);
+    if (c != '\n') {
+        HD44780_Send (lcd, c, SELECT_CHAR);
+    } else {
+        HD44780_Command (lcd, LCD_SETDDRAMADDR | (lcd->HD_GPIO.offsets.row1));
+    }
     return;
 }
 
 void HD44780_Write_4bits (HD44780* lcd, uint8_t half_byte)
 {
-    uint16_t D0 = lcd->HD_GPIO.First_Data_Pin;
+    const uint16_t D0 = lcd->HD_GPIO.First_Data_Pin;
     for (uint32_t i = 0; i < 4; i++) {
         Write_Pin (lcd->HD_GPIO.Data_Port, D0 << i, (half_byte >> i) & 0x01);
     }

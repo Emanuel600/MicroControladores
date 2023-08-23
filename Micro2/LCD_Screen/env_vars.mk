@@ -36,6 +36,7 @@ $(HAL_DRIVERS)/Src/stm32f1xx_hal_flash.c \
 $(HAL_DRIVERS)/Src/stm32f1xx_hal_flash_ex.c \
 $(HAL_DRIVERS)/Src/stm32f1xx_hal_exti.c \
 $(HAL_DRIVERS)/Src/stm32f1xx_hal_uart.c \
+$(HAL_DRIVERS)/Src/stm32f1xx_hal_rtc.c \
 $(COMM_DIR)/Src/atraso.c \
 $(COMM_DIR)/Src/HD44780.c \
 

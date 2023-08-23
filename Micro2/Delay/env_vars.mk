@@ -78,10 +78,10 @@ USER_DEFS		+= -D_DEBUG -DSTM32F103x6 -DUSE_HAL_DRIVERS
 LINKER_SCRIPT	= $(wildcard *.ld)
 
 # Optimization/debugging Flags
-OPT_F			?= -Os
 ifneq (, $(findstring -D_DEBUG, $(USER_DEFS)))
-	OPT_F		+= -g -ggdb
+	OPT_F		+= -Og -ggdb
 endif
+OPT_F			?= -Os
 FLAGS			+= -mfloat-abi=$(MCU_FLOAT_ABI)
 #=============================#
 #== Finishing Linker Flags ==#
