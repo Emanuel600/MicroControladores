@@ -49,7 +49,7 @@
 /// @brief          GPIO Pin used for Register Select
 #define LCD_RS_PIN                      GPIO_PIN_8
 /// @brief          Pin used to increase hours
-#define HOUR_PIN                        GPIO_PIN_7
+#define HOUR_PIN                        GPIO_PIN_5
 /// @brief          Pin used to increase minutes
 #define MINUTE_PIN                      GPIO_PIN_6
 /// @}
@@ -63,6 +63,7 @@
 /* Private variables ---------------------------------------------------------*/
 
 /* USER CODE BEGIN PV */
+volatile RTC_TimeTypeDef RTC_Time = {0};
 HD44780 lcd;
 /* USER CODE END PV */
 
@@ -84,7 +85,6 @@ int main (void)
 {
     /* USER CODE BEGIN 1 */
     setvbuf (stdout, NULL, _IONBF, 0);
-    RTC_TimeTypeDef RTC_Time = {0};
     /* USER CODE END 1 */
 
     /* MCU Configuration--------------------------------------------------------*/
@@ -111,13 +111,14 @@ int main (void)
     Set_Data_Port (& (lcd.HD_GPIO), LCD_DATA_PORT, LCD_FIRST_DATA_PIN, LCD_4_BITS);
     HD44780_Init (&lcd);
     HD44780_Begin (&lcd, 16, 2, LCD_5x8DOTS);
+    Set_Pin (GPIOA, HOUR_PIN | MINUTE_PIN);
     /* USER CODE END 2 */
 
     /* Infinite loop */
     /* USER CODE BEGIN WHILE */
     while (1) {
         // Testing
-        HAL_RTC_GetTime (&hrtc, &RTC_Time, RTC_FORMAT_BCD);
+        HAL_RTC_GetTime (&hrtc, (RTC_TimeTypeDef*) &RTC_Time, RTC_FORMAT_BCD);
         printf ("%02x:%02x:%02x", RTC_Time.Hours, RTC_Time.Minutes, RTC_Time.Seconds);
         delay_ms (500);
         HD44780_Clear (&lcd);
@@ -174,6 +175,21 @@ void SystemClock_Config (void)
 }
 
 /* USER CODE BEGIN 4 */
+/**
+ * @brief EXTI IRQ Handler
+ *
+ * @param GPIO_Pin  Pin that triggered the interruption
+ */
+void HAL_GPIO_EXTI_Callback (uint16_t GPIO_Pin)
+{
+    if (GPIO_Pin == HOUR_PIN) {
+        RTC_Time.Hours++;
+    } else {
+        RTC_Time.Minutes++;
+    }
+    return;
+}
+
 int _write (int fd, char* data, int len)
 {
     if (fd == fileno (stdout)) {

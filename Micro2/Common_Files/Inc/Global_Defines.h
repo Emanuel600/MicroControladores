@@ -25,6 +25,8 @@
 #define Clr_Pin(GPIOx, PINy)            HAL_GPIO_WritePin(GPIOx, PINy, GPIO_PIN_RESET)
 #define Toggle_Pin(GPIOx, PINy)         HAL_GPIO_TogglePin(GPIOx, PINy)
 #define Write_Pin(GPIOx, PINy, W)       HAL_GPIO_WritePin(GPIOx, PINy, W)
+//! Read Pin
+#define Read_Pin(GPIOx, PINy)           HAL_GPIO_ReadPin(GPIOx, PINy)
 //! Delay utils
 #define delay_ms(delay)                 HAL_Delay((uint32_t)delay)
 #define delay_s(delay)                  delay_ms(delay*1000U)
