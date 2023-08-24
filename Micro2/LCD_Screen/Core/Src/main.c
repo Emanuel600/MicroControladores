@@ -111,7 +111,6 @@ int main (void)
     Set_Data_Port (& (lcd.HD_GPIO), LCD_DATA_PORT, LCD_FIRST_DATA_PIN, LCD_4_BITS);
     HD44780_Init (&lcd);
     HD44780_Begin (&lcd, 16, 2, LCD_5x8DOTS);
-    Set_Pin (GPIOA, HOUR_PIN | MINUTE_PIN);
     /* USER CODE END 2 */
 
     /* Infinite loop */
@@ -212,8 +211,11 @@ void Error_Handler (void)
     __disable_irq();
     perrorf ("[Error] Program crashed {Code %d}\r\n", errno);
     perrorf ("      - Attempting restart\r\n");
+    Reset_Handler();
+    perrorf ("      - Restart Failed, entering sleep mode\r\n");
+    // Sleeps forever since IRQ are disabled
+    HAL_PWR_EnterSLEEPMode (PWR_MAINREGULATOR_ON, PWR_SLEEPENTRY_WFI);
     while (1) {
-        Reset_Handler();
     }
     /* USER CODE END Error_Handler_Debug */
 }

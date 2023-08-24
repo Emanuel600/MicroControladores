@@ -13,7 +13,7 @@ $(DEP_DIR)/:
 .PHONY: clean compile CleanCompile run CleanAll CleanBin decompile debug
 .PHONY: DecompileHeaders ShowHelp CleanDocs
 
-# 'compile' tracks all relevant files]
+# 'compile' tracks all relevant files
 compile: $(APP).hex
 
 $(BUILD_DIR)/%.o: %.c $(CC_HEADS) | $(BUILD_DIR)/ $(DEP_DIR)/
