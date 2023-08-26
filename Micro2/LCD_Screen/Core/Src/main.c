@@ -48,10 +48,12 @@
 #define LCD_CONTROL_PORT                GPIOA
 /// @brief          GPIO Pin used for Register Select
 #define LCD_RS_PIN                      GPIO_PIN_8
+/// @brief          GPIO Port used for timesetting
+#define TIME_BUT_PORT                   GPIOB
 /// @brief          Pin used to increase hours
-#define HOUR_PIN                        GPIO_PIN_5
+#define HOUR_PIN                        GPIO_PIN_0
 /// @brief          Pin used to increase minutes
-#define MINUTE_PIN                      GPIO_PIN_6
+#define MINUTE_PIN                      GPIO_PIN_1
 /// @}
 /* USER CODE END PD */
 
@@ -119,7 +121,7 @@ int main (void)
         // Testing
         HAL_RTC_GetTime (&hrtc, (RTC_TimeTypeDef*) &RTC_Time, RTC_FORMAT_BCD);
         printf ("%02x:%02x:%02x", RTC_Time.Hours, RTC_Time.Minutes, RTC_Time.Seconds);
-        delay_ms (500);
+        delay_s (1);
         HD44780_Clear (&lcd);
         /* USER CODE END WHILE */
 
@@ -182,11 +184,21 @@ void SystemClock_Config (void)
  */
 void HAL_GPIO_EXTI_Callback (uint16_t GPIO_Pin)
 {
+    // HAL_RTC_SetTime crashes if wrong format is inputted, I think
     if (GPIO_Pin == HOUR_PIN) {
-        RTC_Time.Hours++;
+        if (RTC_Time.Hours == 23) {
+            RTC_Time.Hours = 0;
+        } else {
+            RTC_Time.Hours++;
+        }
     } else {
-        RTC_Time.Minutes++;
+        if (RTC_Time.Minutes == 59) {
+            RTC_Time.Minutes = 0;
+        } else {
+            RTC_Time.Minutes++;
+        }
     }
+    HAL_RTC_SetTime (&hrtc, (RTC_TimeTypeDef*) &RTC_Time, RTC_FORMAT_BCD);
     pdebug ("EXTI IRQ called\r\n");
     return;
 }
