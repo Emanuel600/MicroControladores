@@ -57,6 +57,15 @@
 #define LCD_5x10DOTS            0x04
 #define LCD_5x8DOTS             0x00
 /// @}
+/// @brief  Wether to add error guards or not
+#define ENABLE_ERROR_GUARD              0
+#if (ENABLE_ERROR_GUARD == 1)
+    #define GUARD_BLOCK(BLOCK)          {BLOCK}
+#else
+    #define GUARD_BLOCK(BLOCK)          {}
+#endif
+/// @brief  Enables @ref HD44780_Scrolling_Functions
+#define HD44780_ENABLE_DISPLAY_SCROLL   1
 
 /**
  * @brief           What mode the LCD is on
@@ -72,12 +81,12 @@ typedef enum {
 /**
  * @brief           How many pins are being used to control the LCD
  *
- * @param CONTROL_2_PINS
- * @param CONTROL_3_PINS
+ * @param CONTROL_WITHOUT_RW
+ * @param CONTROL_WITH_RW
  */
 typedef enum {
-    CONTROL_2_PINS,      //!< Register Select (RS) and Enable (E)
-    CONTROL_3_PINS,     //!< RS, E, and Read/Write (RW)
+    CONTROL_WITHOUT_RW,         //!< Register Select (RS) and Enable (E)
+    CONTROL_WITH_RW,            //!< RS, E, and Read/Write (RW)
 } Control_Mode_e;
 
 /**
@@ -248,12 +257,12 @@ void HD44780_No_Cursor (HD44780* lcd);
 void HD44780_Cursor (HD44780* lcd);
 
 /**
- * @brief           Makes the cursor go left->right
+ * @brief           Scrolls to the left (no changes to RAM)
  */
 void HD44780_Scroll_Display_Left (HD44780* lcd);
 
 /**
- * @brief           Makes the cursor go right->left
+ * @brief           Scrolls to the right (no changes to RAM)
  */
 void HD44780_Scroll_Display_Right (HD44780* lcd);
 
@@ -318,5 +327,14 @@ void HD44780_Write_8bits (HD44780* lcd, char byte);
  * @brief           Pulses the enable pin
  */
 void HD44780_Pulse_Enable (HD44780* lcd);
+
+/**
+ * @brief           Creates a custom char for lcd
+ *
+ * @param lcd
+ * @param location  CGRAMADDR to store the character in
+ * @param charmap   Pixel vector, 5 LSB contain determine the pixels of their row
+ */
+void HD44780_Create_Char (HD44780* lcd, uint8_t location, uint8_t* charmap);
 
 #endif

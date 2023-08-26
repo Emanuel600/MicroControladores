@@ -1,9 +1,24 @@
+#include <stdio.h>
+
 #include "HD44780.h"
 #include "atraso.h"
 #include "main.h"
 
 void Set_Control_Port (HD44780_GPIO* Control_Pinout, GPIO_TypeDef* Port, uint16_t First_Pin, Control_Mode_e CM)
 {
+    // Error guard
+    GUARD_BLOCK (
+    if (Control_Pinout == NULL) {
+    perrorf ("[ERROR] Invalid Pinout Struct\r\n");
+        return;
+    } else if (!IS_GPIO_ALL_INSTANCE (Port)) {
+    perrorf ("[ERROR] Invalid GPIO Port\r\n");
+        return;
+    } else if (!IS_GPIO_PIN (First_Pin)) {
+    perrorf ("[ERROR] Invalid GPIO Pin For D0\r\n");
+        return;
+    }
+    )
     Control_Pinout->Control_Mode = CM;
     Control_Pinout->Control_Port = Port;
     Control_Pinout->RS_Pin = First_Pin;
@@ -12,6 +27,19 @@ void Set_Control_Port (HD44780_GPIO* Control_Pinout, GPIO_TypeDef* Port, uint16_
 
 void Set_Data_Port (HD44780_GPIO* Data_Struct, GPIO_TypeDef* Port, uint16_t First_Pin, Data_Mode_e DM)
 {
+    // Error guard
+    GUARD_BLOCK (
+    if (!Data_Struct) {
+    perrorf ("[ERROR] Invalid Pinout Struct\r\n");
+        return;
+    } else if (!IS_GPIO_ALL_INSTANCE (Port)) {
+    perrorf ("[ERROR] Invalid GPIO Port\r\n");
+        return;
+    } else if (!IS_GPIO_PIN (First_Pin)) {
+    perrorf ("[ERROR] Invalid GPIO Pin For D0\r\n");
+        return;
+    }
+    )
     Data_Struct->Data_Port = Port;
     Data_Struct->Data_Mode = DM;
     Data_Struct->First_Data_Pin = First_Pin;
@@ -20,6 +48,12 @@ void Set_Data_Port (HD44780_GPIO* Data_Struct, GPIO_TypeDef* Port, uint16_t Firs
 
 void HD44780_Init (HD44780* lcd)
 {
+    GUARD_BLOCK (
+    if (lcd == NULL) {
+    perrorf ("[ERROR] Null pointer for LCD\r\n");
+        return;
+    }
+    )
     if (lcd->HD_GPIO.Data_Mode == LCD_4_BITS) {
         lcd->Display_Function = LCD_4BITMODE | LCD_1LINE | LCD_5x8DOTS;
     } else {
@@ -31,7 +65,16 @@ void HD44780_Init (HD44780* lcd)
 
 void HD44780_Begin (HD44780* lcd, uint8_t cols, uint8_t rows, uint8_t charsize)
 {
-    if (rows > 1) {
+    GUARD_BLOCK (
+    if (lcd == NULL) {
+    perrorf ("[ERROR] Null pointer for LCD\r\n");
+        return;
+    } else if (! (cols && rows)) {
+    perrorf ("[ERROR] Columns and rows must be different from 0\r\n");
+        return;
+    }
+    )
+    if (rows - 1) {
         lcd->Display_Function |= LCD_2LINE;
     }
     lcd->lines = rows;
@@ -52,7 +95,7 @@ void HD44780_Begin (HD44780* lcd, uint8_t cols, uint8_t rows, uint8_t charsize)
     // Set all pins to low
     Clr_Pin (lcd->HD_GPIO.Control_Port, lcd->HD_GPIO.RS_Pin);
     Clr_Pin (lcd->HD_GPIO.Control_Port, lcd->HD_GPIO.RS_Pin << 1);
-    if (lcd->HD_GPIO.Control_Mode == CONTROL_3_PINS) {
+    if (lcd->HD_GPIO.Control_Mode == CONTROL_WITH_RW) {
         // Clear RW Pin
         Clr_Pin (lcd->HD_GPIO.Control_Port, lcd->HD_GPIO.RS_Pin << 2);
     }
@@ -90,25 +133,68 @@ void HD44780_Begin (HD44780* lcd, uint8_t cols, uint8_t rows, uint8_t charsize)
 
 void HD44780_Display (HD44780* lcd)
 {
+    GUARD_BLOCK (
+    if (lcd == NULL) {
+    perrorf ("[ERROR] Null pointer for LCD\r\n");
+        return;
+    }
+    )
     lcd->Display_Control |= LCD_DISPLAYON;
+    HD44780_Command (lcd, lcd->Display_Control | LCD_DISPLAYCONTROL);
+}
+
+void HD44780_No_Display (HD44780* lcd)
+{
+    GUARD_BLOCK (
+    if (lcd == NULL) {
+    perrorf ("[ERROR] Null pointer for LCD\r\n");
+        return;
+    }
+    )
+    lcd->Display_Control &= ~LCD_DISPLAYON;
     HD44780_Command (lcd, lcd->Display_Control | LCD_DISPLAYCONTROL);
 }
 
 void HD44780_Clear (HD44780* lcd)
 {
+    GUARD_BLOCK (
+    if (lcd == NULL) {
+    perrorf ("[ERROR] Null pointer for LCD\r\n");
+        return;
+    }
+    )
     HD44780_Command (lcd, LCD_CLEARDISPLAY);
+    delay_ms (2);
+    return;
+}
+
+void HD44780_Home (HD44780* lcd)
+{
+    GUARD_BLOCK (
+    if (lcd == NULL) {
+    perrorf ("[ERROR] Null pointer for LCD\r\n");
+        return;
+    }
+    )
+    HD44780_Command (lcd, LCD_RETURNHOME);
     delay_ms (2);
     return;
 }
 
 void HD44780_Send (HD44780* lcd, char byte, Register_Select_e RS)
 {
+    GUARD_BLOCK (
+    if (lcd == NULL) {
+    perrorf ("[ERROR] Null pointer for LCD\r\n");
+        return;
+    }
+    )
     const GPIO_TypeDef* Control_Port = lcd->HD_GPIO.Control_Port;
     const uint16_t RS_Pin = lcd->HD_GPIO.RS_Pin;
     // Select register
     Write_Pin ( (GPIO_TypeDef*) Control_Port, RS_Pin, (GPIO_PinState) RS);
     // Clear RW Pin to write command
-    if (lcd->HD_GPIO.Control_Mode == CONTROL_3_PINS) {
+    if (lcd->HD_GPIO.Control_Mode == CONTROL_WITH_RW) {
         Clr_Pin ( (GPIO_TypeDef*) Control_Port, RS_Pin << 2);
     }
     if (lcd->Display_Function & LCD_8_BITS) {
@@ -124,12 +210,24 @@ void HD44780_Send (HD44780* lcd, char byte, Register_Select_e RS)
 
 void HD44780_Command (HD44780* lcd, char command)
 {
+    GUARD_BLOCK (
+    if (lcd == NULL) {
+    perrorf ("[ERROR] Null pointer for LCD\r\n");
+        return;
+    }
+    )
     HD44780_Send (lcd, command, SELECT_COMMAND);
     return;
 }
 
 void HD44780_Put_Char (HD44780* lcd, char c)
 {
+    GUARD_BLOCK (
+    if (lcd == NULL) {
+    perrorf ("[ERROR] Null pointer for LCD\r\n");
+        return;
+    }
+    )
     if (c != '\n') {
         HD44780_Send (lcd, c, SELECT_CHAR);
     } else {
@@ -138,8 +236,33 @@ void HD44780_Put_Char (HD44780* lcd, char c)
     return;
 }
 
+size_t HD44780_Print (HD44780* lcd, char* str)
+{
+    GUARD_BLOCK (
+    if (lcd == NULL) {
+    perrorf ("[ERROR] Null pointer for LCD\r\n");
+        return -1;
+    } else if (str == NULL) {
+    perrorf ("[ERROR] Null pointer for const char\r\n");
+        return -1;
+    }
+    )
+    size_t len = 0;
+    while (str[len] != '\0') {
+        HD44780_Put_Char (lcd, str[len]);
+        len++;
+    }
+    return len;
+}
+
 void HD44780_Write_4bits (HD44780* lcd, uint8_t half_byte)
 {
+    GUARD_BLOCK (
+    if (lcd == NULL) {
+    perrorf ("[ERROR] Null pointer for LCD\r\n");
+        return;
+    }
+    )
     const uint16_t D0 = lcd->HD_GPIO.First_Data_Pin;
     for (uint32_t i = 0; i < 4; i++) {
         Write_Pin (lcd->HD_GPIO.Data_Port, D0 << i, (half_byte >> i) & 0x01);
@@ -151,6 +274,12 @@ void HD44780_Write_4bits (HD44780* lcd, uint8_t half_byte)
 
 void HD44780_Write_8bits (HD44780* lcd, char byte)
 {
+    GUARD_BLOCK (
+    if (lcd == NULL) {
+    perrorf ("[ERROR] Null pointer for LCD\r\n");
+        return;
+    }
+    )
     for (uint32_t i = 0; i < 8; i++) {
         Write_Pin (lcd->HD_GPIO.Data_Port, lcd->HD_GPIO.First_Data_Pin << i, (byte >> i) & 0x01);
     }
@@ -161,6 +290,12 @@ void HD44780_Write_8bits (HD44780* lcd, char byte)
 
 void HD44780_Pulse_Enable (HD44780* lcd)
 {
+    GUARD_BLOCK (
+    if (lcd == NULL) {
+    perrorf ("[ERROR] Null pointer for LCD\r\n");
+        return;
+    }
+    )
     uint16_t E_Pin = lcd->HD_GPIO.RS_Pin;
     E_Pin = E_Pin << 1;
     Clr_Pin (lcd->HD_GPIO.Control_Port, E_Pin);
@@ -170,4 +305,160 @@ void HD44780_Pulse_Enable (HD44780* lcd)
     Clr_Pin (lcd->HD_GPIO.Control_Port, E_Pin);
     atraso_us (60);
     return;
+}
+
+void HD44780_No_Cursor (HD44780* lcd)
+{
+    GUARD_BLOCK (
+    if (lcd == NULL) {
+    perrorf ("[ERROR] Null pointer for LCD\r\n");
+        return;
+    }
+    )
+    lcd->Display_Control &= ~LCD_CURSORON;
+    HD44780_Command (lcd, LCD_DISPLAYCONTROL | lcd->Display_Control);
+}
+
+void HD44780_Cursor (HD44780* lcd)
+{
+    GUARD_BLOCK (
+    if (lcd == NULL) {
+    perrorf ("[ERROR] Null pointer for LCD\r\n");
+        return;
+    }
+    )
+    lcd->Display_Control |= LCD_CURSORON;
+    HD44780_Command (lcd, LCD_DISPLAYCONTROL | lcd->Display_Control);
+}
+
+void HD44780_Set_Cursor (HD44780* lcd, uint8_t column, uint8_t row)
+{
+    GUARD_BLOCK (
+    if (lcd == NULL) {
+    perrorf ("[ERROR] Null pointer for LCD\r\n");
+        return;
+    } else if (! (column && row)) {
+    perrorf ("[ERROR] Columns and rows must be different from 0\r\n");
+        return;
+    }
+    )
+    if (row >= lcd->lines) {
+        row = lcd->lines - 1;
+    }
+    HD44780_Command (lcd, LCD_SETDDRAMADDR | (column + (20 << row)));
+}
+
+void HD44780_Blink (HD44780* lcd)
+{
+    GUARD_BLOCK (
+    if (lcd == NULL) {
+    perrorf ("[ERROR] Null pointer for LCD\r\n");
+        return;
+    }
+    )
+    lcd->Display_Control |= LCD_BLINKON;
+    HD44780_Command (lcd, LCD_DISPLAYCONTROL | lcd->Display_Control);
+}
+
+void HD44780_No_Blink (HD44780* lcd)
+{
+    GUARD_BLOCK (
+    if (lcd == NULL) {
+    perrorf ("[ERROR] Null pointer for LCD\r\n");
+        return;
+    }
+    )
+    lcd->Display_Control &= ~LCD_BLINKON;
+    HD44780_Command (lcd, LCD_DISPLAYCONTROL | lcd->Display_Control);
+}
+
+void HD44780_Left_To_Right (HD44780* lcd)
+{
+    GUARD_BLOCK (
+    if (lcd == NULL) {
+    perrorf ("[ERROR] Null pointer for LCD\r\n");
+        return;
+    }
+    )
+    lcd->Display_Mode |= LCD_ENTRYLEFT;
+    HD44780_Command (lcd, lcd->Display_Mode | LCD_ENTRYMODESET);
+}
+
+void HD44780_Right_To_Left (HD44780* lcd)
+{
+    GUARD_BLOCK (
+    if (lcd == NULL) {
+    perrorf ("[ERROR] Null pointer for LCD\r\n");
+        return;
+    }
+    )
+    lcd->Display_Mode &= ~LCD_ENTRYLEFT;
+    HD44780_Command (lcd, lcd->Display_Mode | LCD_ENTRYMODESET);
+}
+
+void HD44780_Scroll_Display_Left (HD44780* lcd)
+{
+    GUARD_BLOCK (
+    if (lcd == NULL) {
+    perrorf ("[ERROR] Null pointer for LCD\r\n");
+        return;
+    }
+    )
+    HD44780_Command (lcd, LCD_CURSORSHIFT | LCD_DISPLAYCONTROL | LCD_MOVELEFT);
+}
+
+void HD44780_Scroll_Display_Right (HD44780* lcd)
+{
+    GUARD_BLOCK (
+    if (lcd == NULL) {
+    perrorf ("[ERROR] Null pointer for LCD\r\n");
+        return;
+    }
+    )
+    HD44780_Command (lcd, LCD_CURSORSHIFT | LCD_DISPLAYCONTROL | LCD_MOVERIGHT);
+}
+
+void HD44780_Autoscroll (HD44780* lcd)
+{
+    GUARD_BLOCK (
+    if (lcd == NULL) {
+    perrorf ("[ERROR] Null pointer for LCD\r\n");
+        return;
+    }
+    )
+    lcd->Display_Mode |= LCD_ENTRYSHIFTINCREMENT;
+    HD44780_Command (lcd, lcd->Display_Mode | LCD_ENTRYMODESET);
+}
+
+void HD44780_No_Autoscroll (HD44780* lcd)
+{
+    GUARD_BLOCK (
+    if (lcd == NULL) {
+    perrorf ("[ERROR] Null pointer for LCD\r\n");
+        return;
+    }
+    )
+    lcd->Display_Mode &= ~LCD_ENTRYSHIFTINCREMENT;
+    HD44780_Command (lcd, lcd->Display_Mode | LCD_ENTRYMODESET);
+}
+
+void HD44780_Create_Char (HD44780* lcd, uint8_t location, uint8_t* charmap)
+{
+    GUARD_BLOCK (
+    if (lcd == NULL) {
+    perrorf ("[ERROR] Null pointer for LCD\r\n");
+        return;
+    } else if (charmap == NULL) {
+    perrorf ("[ERROR] Null pointer for custom character\r\n");
+        return;
+    } else if (location > 7) {
+    perrorf ("[ERROR] Maximum of 8 custom characters\r\n");
+        return;
+    }
+    )
+    location &= 0x7;
+    HD44780_Command (lcd, LCD_SETCGRAMADDR | (location << 3));
+    for (int i = 0; i < 8; i++) {
+        write (charmap[i]);
+    }
 }

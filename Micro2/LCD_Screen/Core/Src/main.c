@@ -107,7 +107,7 @@ int main (void)
     MX_GPIO_Init();
     MX_RTC_Init();
     /* USER CODE BEGIN 2 */
-    Set_Control_Port (& (lcd.HD_GPIO), LCD_CONTROL_PORT, LCD_RS_PIN, CONTROL_2_PINS);
+    Set_Control_Port (& (lcd.HD_GPIO), LCD_CONTROL_PORT, LCD_RS_PIN, CONTROL_WITHOUT_RW);
     Set_Data_Port (& (lcd.HD_GPIO), LCD_DATA_PORT, LCD_FIRST_DATA_PIN, LCD_4_BITS);
     HD44780_Init (&lcd);
     HD44780_Begin (&lcd, 16, 2, LCD_5x8DOTS);
@@ -186,17 +186,25 @@ void HAL_GPIO_EXTI_Callback (uint16_t GPIO_Pin)
     } else {
         RTC_Time.Minutes++;
     }
+    pdebug ("EXTI IRQ called\r\n");
     return;
 }
 
-int _write (int fd, char* data, int len)
+int _write (int fd, char* data, int len ATTRIBUTE (unused))
 {
-    if (fd == fileno (stdout)) {
-        while (len--) {
-            HD44780_Put_Char (&lcd, *data++);
-        }
+    if (fd == fileno (stdin)) {
+        perrorf ("[ERROR] Called '_write' function for input");
+        return 0;
+    } else if (fd == fileno (stdout)) {
+        return HD44780_Print (&lcd, data);
+    } else if (fd == fileno (stderr)) {
+        return 0;
+    } else {
+        perrorf ("[ERROR] Output file not supported");
+        return 0;
     }
-    return 1;
+    // Critical error on return
+    return -1;
 }
 /* USER CODE END 4 */
 
