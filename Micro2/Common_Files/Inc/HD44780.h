@@ -58,14 +58,12 @@
 #define LCD_5x8DOTS             0x00
 /// @}
 /// @brief  Wether to add error guards or not
-#define ENABLE_ERROR_GUARD              0
+#define ENABLE_ERROR_GUARD              1
 #if (ENABLE_ERROR_GUARD == 1)
     #define GUARD_BLOCK(BLOCK)          {BLOCK}
 #else
     #define GUARD_BLOCK(BLOCK)          {}
 #endif
-/// @brief  Enables @ref HD44780_Scrolling_Functions
-#define HD44780_ENABLE_DISPLAY_SCROLL   1
 
 /**
  * @brief           What mode the LCD is on
