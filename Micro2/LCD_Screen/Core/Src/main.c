@@ -125,6 +125,7 @@ int main (void)
 
         /* USER CODE BEGIN 3 */
     }
+    perrorf ("[ERROR] Exited main loop");
     return -1;
     /* USER CODE END 3 */
 }
