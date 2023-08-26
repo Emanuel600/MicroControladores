@@ -236,6 +236,20 @@ void HD44780_Put_Char (HD44780* lcd, char c)
     return;
 }
 
+void HD44780_Put_Custom_Char (HD44780* lcd, uint8_t location)
+{
+    GUARD_BLOCK (
+    if (lcd == NULL) {
+    perrorf ("[ERROR] Null pointer for LCD\r\n");
+        return;
+    } else if (location > 7) {
+    perrorf ("[ERROR] Invalid CGRAM address, maximum of 7 (Received %u)\r\n", location);
+        return;
+    }
+    )
+    HD44780_Send (lcd, location, SELECT_CHAR);
+}
+
 size_t HD44780_Print (HD44780* lcd, char* str)
 {
     GUARD_BLOCK (
@@ -337,15 +351,12 @@ void HD44780_Set_Cursor (HD44780* lcd, uint8_t column, uint8_t row)
     if (lcd == NULL) {
     perrorf ("[ERROR] Null pointer for LCD\r\n");
         return;
-    } else if (! (column && row)) {
-    perrorf ("[ERROR] Columns and rows must be different from 0\r\n");
-        return;
     }
     )
     if (row >= lcd->lines) {
         row = lcd->lines - 1;
     }
-    HD44780_Command (lcd, LCD_SETDDRAMADDR | (column + (20 << row)));
+    HD44780_Command (lcd, LCD_SETDDRAMADDR | (column + (0x40 * row)));
 }
 
 void HD44780_Blink (HD44780* lcd)
@@ -459,6 +470,6 @@ void HD44780_Create_Char (HD44780* lcd, uint8_t location, uint8_t* charmap)
     location &= 0x7;
     HD44780_Command (lcd, LCD_SETCGRAMADDR | (location << 3));
     for (int i = 0; i < 8; i++) {
-        write (charmap[i]);
+        HD44780_Send (lcd, charmap[i], SELECT_CHAR);
     }
 }

@@ -154,7 +154,7 @@ typedef struct {
     // Characteristics
     uint8_t         lines;              //!< Amount of lines on display
     uint8_t         colunms;            //!< Amount of columns on display
-
+    /// @todo       Use to test wether all ports and pins were added
     uint8_t         initialized;        //!< If it was initialized properly
 } HD44780;
 
@@ -192,6 +192,14 @@ void Set_Data_Port (HD44780_GPIO* Data_Struct, GPIO_TypeDef* Port, uint16_t Firs
  * @param c
  */
 void HD44780_Put_Char (HD44780* lcd, char c);
+
+/**
+ * @brief           Writes a custom char stored in <location>
+ *
+ * @param lcd
+ * @param location  Where the char is stored
+ */
+void HD44780_Put_Custom_Char (HD44780* lcd, uint8_t location);
 
 /**
  * @brief           Sends a command to *lcd
