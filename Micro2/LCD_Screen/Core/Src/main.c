@@ -114,7 +114,7 @@ int main (void)
     MX_NVIC_Init();
     /* USER CODE BEGIN 2 */
     HAL_RTC_GetTime (&hrtc, (RTC_TimeTypeDef*) &RTC_Time, RTC_FORMAT_BCD);
-    // Enable interrupt for every second
+    // Enable interrupt for every second => Doesn't work
     HAL_RTCEx_SetSecond_IT (&hrtc);
     Set_Control_Port (& (lcd.HD_GPIO), LCD_CONTROL_PORT, LCD_RS_PIN, CONTROL_WITHOUT_RW);
     Set_Data_Port (& (lcd.HD_GPIO), LCD_DATA_PORT, LCD_FIRST_DATA_PIN, LCD_4_BITS);
