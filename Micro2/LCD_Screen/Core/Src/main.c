@@ -121,7 +121,7 @@ int main (void)
     HD44780_Init (&lcd);
     HD44780_Begin (&lcd, 16, 2, LCD_5x8DOTS);
     printf ("%02x:%02x:%02x", RTC_Time.Hours, RTC_Time.Minutes, RTC_Time.Seconds);
-    HAL_SuspendTick();
+    HAL_SetTickFreq (HAL_TICK_FREQ_100HZ);
     HAL_PWR_DisableSleepOnExit();
     /* USER CODE END 2 */
 
@@ -129,7 +129,8 @@ int main (void)
     /* USER CODE BEGIN WHILE */
     while (1) {
         HAL_PWR_EnterSLEEPMode (PWR_MAINREGULATOR_ON, PWR_SLEEPENTRY_WFI);
-        HD44780_Clear (&lcd);
+        HAL_RTC_GetTime (&hrtc, (RTC_TimeTypeDef*) &RTC_Time, RTC_FORMAT_BCD);
+        HD44780_Home (&lcd);
         printf ("%02x:%02x:%02x", RTC_Time.Hours, RTC_Time.Minutes, RTC_Time.Seconds);
         /* USER CODE END WHILE */
 
@@ -224,17 +225,6 @@ void HAL_GPIO_EXTI_Callback (uint16_t GPIO_Pin)
         }
     }
     HAL_RTC_SetTime (&hrtc, (RTC_TimeTypeDef*) &RTC_Time, RTC_FORMAT_BCD);
-    return;
-}
-
-/**
- * @brief           RTC Second interrupt handler
- *
- * @param hrtc
- */
-void HAL_RTCEx_RTCEventCallback (RTC_HandleTypeDef* hrtc)
-{
-    HAL_RTC_GetTime (hrtc, (RTC_TimeTypeDef*) &RTC_Time, RTC_FORMAT_BCD);
     return;
 }
 
