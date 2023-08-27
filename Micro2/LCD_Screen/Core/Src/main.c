@@ -71,6 +71,7 @@ HD44780 lcd;
 
 /* Private function prototypes -----------------------------------------------*/
 void SystemClock_Config (void);
+static void MX_NVIC_Init (void);
 /* USER CODE BEGIN PFP */
 extern void Reset_Handler();
 /* USER CODE END PFP */
@@ -108,21 +109,28 @@ int main (void)
     /* Initialize all configured peripherals */
     MX_GPIO_Init();
     MX_RTC_Init();
+
+    /* Initialize interrupts */
+    MX_NVIC_Init();
     /* USER CODE BEGIN 2 */
+    HAL_RTC_GetTime (&hrtc, (RTC_TimeTypeDef*) &RTC_Time, RTC_FORMAT_BCD);
+    // Enable interrupt for every second
+    HAL_RTCEx_SetSecond_IT (&hrtc);
     Set_Control_Port (& (lcd.HD_GPIO), LCD_CONTROL_PORT, LCD_RS_PIN, CONTROL_WITHOUT_RW);
     Set_Data_Port (& (lcd.HD_GPIO), LCD_DATA_PORT, LCD_FIRST_DATA_PIN, LCD_4_BITS);
     HD44780_Init (&lcd);
     HD44780_Begin (&lcd, 16, 2, LCD_5x8DOTS);
+    printf ("%02x:%02x:%02x", RTC_Time.Hours, RTC_Time.Minutes, RTC_Time.Seconds);
+    HAL_SuspendTick();
+    HAL_PWR_DisableSleepOnExit();
     /* USER CODE END 2 */
 
     /* Infinite loop */
     /* USER CODE BEGIN WHILE */
     while (1) {
-        // Testing
-        HAL_RTC_GetTime (&hrtc, (RTC_TimeTypeDef*) &RTC_Time, RTC_FORMAT_BCD);
-        printf ("%02x:%02x:%02x", RTC_Time.Hours, RTC_Time.Minutes, RTC_Time.Seconds);
-        delay_s (1);
+        HAL_PWR_EnterSLEEPMode (PWR_MAINREGULATOR_ON, PWR_SLEEPENTRY_WFI);
         HD44780_Clear (&lcd);
+        printf ("%02x:%02x:%02x", RTC_Time.Hours, RTC_Time.Minutes, RTC_Time.Seconds);
         /* USER CODE END WHILE */
 
         /* USER CODE BEGIN 3 */
@@ -176,6 +184,23 @@ void SystemClock_Config (void)
     }
 }
 
+/**
+  * @brief NVIC Configuration.
+  * @retval None
+  */
+static void MX_NVIC_Init (void)
+{
+    /* RTC_IRQn interrupt configuration */
+    HAL_NVIC_SetPriority (RTC_IRQn, 0, 0);
+    HAL_NVIC_EnableIRQ (RTC_IRQn);
+    /* EXTI0_IRQn interrupt configuration */
+    HAL_NVIC_SetPriority (EXTI0_IRQn, 0, 0);
+    HAL_NVIC_EnableIRQ (EXTI0_IRQn);
+    /* EXTI1_IRQn interrupt configuration */
+    HAL_NVIC_SetPriority (EXTI1_IRQn, 0, 0);
+    HAL_NVIC_EnableIRQ (EXTI1_IRQn);
+}
+
 /* USER CODE BEGIN 4 */
 /**
  * @brief EXTI IRQ Handler
@@ -186,20 +211,30 @@ void HAL_GPIO_EXTI_Callback (uint16_t GPIO_Pin)
 {
     // HAL_RTC_SetTime crashes if wrong format is inputted, I think
     if (GPIO_Pin == HOUR_PIN) {
-        if (RTC_Time.Hours == 23) {
+        if (RTC_Time.Hours == 0x23) {
             RTC_Time.Hours = 0;
         } else {
             RTC_Time.Hours++;
         }
     } else {
-        if (RTC_Time.Minutes == 59) {
+        if (RTC_Time.Minutes == 0x59) {
             RTC_Time.Minutes = 0;
         } else {
             RTC_Time.Minutes++;
         }
     }
     HAL_RTC_SetTime (&hrtc, (RTC_TimeTypeDef*) &RTC_Time, RTC_FORMAT_BCD);
-    pdebug ("EXTI IRQ called\r\n");
+    return;
+}
+
+/**
+ * @brief           RTC Second interrupt handler
+ *
+ * @param hrtc
+ */
+void HAL_RTCEx_RTCEventCallback (RTC_HandleTypeDef* hrtc)
+{
+    HAL_RTC_GetTime (hrtc, (RTC_TimeTypeDef*) &RTC_Time, RTC_FORMAT_BCD);
     return;
 }
 
@@ -219,6 +254,7 @@ int _write (int fd, char* data, int len ATTRIBUTE (unused))
     // Critical error on return
     return -1;
 }
+
 /* USER CODE END 4 */
 
 /**
