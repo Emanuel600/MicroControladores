@@ -113,25 +113,29 @@ int main (void)
     /* Initialize interrupts */
     MX_NVIC_Init();
     /* USER CODE BEGIN 2 */
-    HAL_RTC_GetTime (&hrtc, (RTC_TimeTypeDef*) &RTC_Time, RTC_FORMAT_BCD);
-    // Enable interrupt for every second => Doesn't work
+    // Enable interrupt for every second => Doesn't work on Proteus, untested on RHW
     HAL_RTCEx_SetSecond_IT (&hrtc);
+    /* Set Pinout for LCD */
     Set_Control_Port (& (lcd.HD_GPIO), LCD_CONTROL_PORT, LCD_RS_PIN, CONTROL_WITHOUT_RW);
     Set_Data_Port (& (lcd.HD_GPIO), LCD_DATA_PORT, LCD_FIRST_DATA_PIN, LCD_4_BITS);
+    /* Configure LCD */
     HD44780_Init (&lcd);
     HD44780_Begin (&lcd, 16, 2, LCD_5x8DOTS);
-    printf ("%02x:%02x:%02x", RTC_Time.Hours, RTC_Time.Minutes, RTC_Time.Seconds);
-    HAL_SetTickFreq (HAL_TICK_FREQ_100HZ);
-    HAL_PWR_DisableSleepOnExit();
+    // Wake MCU up every 10 ms
+    /// @todo       Test on real hardware with suspended
+    HAL_SetTickFreq (HAL_TICK_FREQ_10HZ);
     /* USER CODE END 2 */
 
     /* Infinite loop */
     /* USER CODE BEGIN WHILE */
     while (1) {
-        HAL_PWR_EnterSLEEPMode (PWR_MAINREGULATOR_ON, PWR_SLEEPENTRY_WFI);
+        // Update time
         HAL_RTC_GetTime (&hrtc, (RTC_TimeTypeDef*) &RTC_Time, RTC_FORMAT_BCD);
         HD44780_Home (&lcd);
         printf ("%02x:%02x:%02x", RTC_Time.Hours, RTC_Time.Minutes, RTC_Time.Seconds);
+        // Wait for a wake-up event
+        pdebug ("Entering Sleep Mode\r\n");
+        HAL_PWR_EnterSLEEPMode (PWR_MAINREGULATOR_ON, PWR_SLEEPENTRY_WFI);
         /* USER CODE END WHILE */
 
         /* USER CODE BEGIN 3 */
@@ -228,8 +232,18 @@ void HAL_GPIO_EXTI_Callback (uint16_t GPIO_Pin)
     return;
 }
 
-int _write (int fd, char* data, int len ATTRIBUTE (unused))
+void HAL_RTCEx_RTCEventCallback (RTC_HandleTypeDef* hrtc)
 {
+    UNUSED (hrtc);
+    DEBUG_BLOCK (
+            Toggle_Pin (DEBUG_PIN_GPIO_Port, DEBUG_PIN_Pin);
+    )
+    return;
+}
+
+int _write (int fd, char* data, int len)
+{
+    UNUSED (len);
     if (fd == fileno (stdin)) {
         perrorf ("[ERROR] Called '_write' function for input");
         return 0;
