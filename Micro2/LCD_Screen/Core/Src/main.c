@@ -122,7 +122,7 @@ int main (void)
     HD44780_Init (&lcd);
     HD44780_Begin (&lcd, 16, 2, LCD_5x8DOTS);
     // Wake MCU up every 10 ms
-    /// @todo       Test on real hardware with suspended
+    /// @todo       Test on real hardware with ticks suspended
     HAL_SetTickFreq (HAL_TICK_FREQ_10HZ);
     /* USER CODE END 2 */
 
@@ -130,11 +130,11 @@ int main (void)
     /* USER CODE BEGIN WHILE */
     while (1) {
         // Update time
-        HAL_RTC_GetTime (&hrtc, (RTC_TimeTypeDef*) &RTC_Time, RTC_FORMAT_BCD);
+        HAL_RTC_GetTime (&hrtc, (RTC_TimeTypeDef*) &RTC_Time, FORMAT_BCD);
         HD44780_Home (&lcd);
         printf ("%02x:%02x:%02x", RTC_Time.Hours, RTC_Time.Minutes, RTC_Time.Seconds);
-        // Wait for a wake-up event
         pdebug ("Entering Sleep Mode\r\n");
+        // Wait for a wake-up event
         HAL_PWR_EnterSLEEPMode (PWR_MAINREGULATOR_ON, PWR_SLEEPENTRY_WFI);
         /* USER CODE END WHILE */
 
@@ -234,10 +234,12 @@ void HAL_GPIO_EXTI_Callback (uint16_t GPIO_Pin)
 
 void HAL_RTCEx_RTCEventCallback (RTC_HandleTypeDef* hrtc)
 {
+    // Does not update properly on Proteus, untested on RHW
     UNUSED (hrtc);
     DEBUG_BLOCK (
             Toggle_Pin (DEBUG_PIN_GPIO_Port, DEBUG_PIN_Pin);
     )
+    pdebug ("RTC Event callback\r\n");
     return;
 }
 
