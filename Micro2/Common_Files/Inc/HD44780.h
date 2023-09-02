@@ -161,7 +161,7 @@ typedef struct {
  *
  * @param lcd       Used screen
  */
-void HD44780_Init (HD44780* lcd);
+void HD44780_Init(HD44780* lcd);
 
 /**
  * @brief           Sets control port pins
@@ -171,7 +171,8 @@ void HD44780_Init (HD44780* lcd);
  * @param First_Pin         First pin used for control
  * @param CM                Control Mode
  */
-void Set_Control_Port (HD44780_GPIO* Control_Struct, GPIO_TypeDef* Port, uint16_t First_Pin, Control_Mode_e CM);
+void Set_Control_Port(HD44780_GPIO* Control_Struct, GPIO_TypeDef* Port, \
+        GPIO_Pin First_Pin, Control_Mode_e CM);
 
 /**
  * @brief           Set data port pins
@@ -181,7 +182,8 @@ void Set_Control_Port (HD44780_GPIO* Control_Struct, GPIO_TypeDef* Port, uint16_
  * @param First_Pin     All pins used
  * @param DM            Data Mode
  */
-void Set_Data_Port (HD44780_GPIO* Data_Struct, GPIO_TypeDef* Port, uint16_t First_Pin, Data_Mode_e DM);
+void Set_Data_Port(HD44780_GPIO* Data_Struct, GPIO_TypeDef* Port, \
+        GPIO_Pin First_Pin, Data_Mode_e DM);
 
 /**
  * @brief           Writes a single character to LCD display
@@ -189,7 +191,7 @@ void Set_Data_Port (HD44780_GPIO* Data_Struct, GPIO_TypeDef* Port, uint16_t Firs
  * @param lcd
  * @param c
  */
-void HD44780_Put_Char (HD44780* lcd, char c);
+void HD44780_Put_Char(HD44780* lcd, char c);
 
 /**
  * @brief           Writes a custom char stored in <location>
@@ -197,7 +199,7 @@ void HD44780_Put_Char (HD44780* lcd, char c);
  * @param lcd
  * @param location  Where the char is stored
  */
-void HD44780_Put_Custom_Char (HD44780* lcd, uint8_t location);
+void HD44780_Put_Custom_Char(HD44780* lcd, uint8_t location);
 
 /**
  * @brief           Sends a command to *lcd
@@ -205,7 +207,7 @@ void HD44780_Put_Custom_Char (HD44780* lcd, uint8_t location);
  * @param lcd
  * @param command
  */
-void HD44780_Command (HD44780* lcd, char command);
+void HD44780_Command(HD44780* lcd, char command);
 
 /**
  * @brief           Prints a string to the LCD
@@ -215,89 +217,89 @@ void HD44780_Command (HD44780* lcd, char command);
  *
  * @return          Number of bytes written
  */
-size_t HD44780_Print (HD44780* lcd, char* str);
+size_t HD44780_Print(HD44780* lcd, char* str);
 
 /**
  * @brief           Starts the LCD, called after init
  */
-void HD44780_Begin (HD44780* lcd, uint8_t cols, uint8_t rows, uint8_t charsize);
+void HD44780_Begin(HD44780* lcd, uint8_t cols, uint8_t rows, uint8_t charsize);
 
 /**
  * @brief           Clears Screen
  */
-void HD44780_Clear (HD44780* lcd);
+void HD44780_Clear(HD44780* lcd);
 
 /**
  * @brief           Homes Cursor
  */
-void HD44780_Home (HD44780* lcd);
+void HD44780_Home(HD44780* lcd);
 
 /**
  * @brief           Turns display off
  */
-void HD44780_No_Display (HD44780* lcd);
+void HD44780_No_Display(HD44780* lcd);
 
 /**
  * @brief           Turns display on
  */
-void HD44780_Display (HD44780* lcd);
+void HD44780_Display(HD44780* lcd);
 
 /**
  * @brief           Turns blinking off
  */
-void HD44780_No_Blink (HD44780* lcd);
+void HD44780_No_Blink(HD44780* lcd);
 
 /**
  * @brief           Turns Blinking on
  */
-void HD44780_Blink (HD44780* lcd);
+void HD44780_Blink(HD44780* lcd);
 
 /**
  * @brief           Turns cursor off
  */
-void HD44780_No_Cursor (HD44780* lcd);
+void HD44780_No_Cursor(HD44780* lcd);
 
 /**
  * @brief           Turns cursor on
  */
-void HD44780_Cursor (HD44780* lcd);
+void HD44780_Cursor(HD44780* lcd);
 
 /**
  * @brief           Scrolls to the left (no changes to RAM)
  */
-void HD44780_Scroll_Display_Left (HD44780* lcd);
+void HD44780_Scroll_Display_Left(HD44780* lcd);
 
 /**
  * @brief           Scrolls to the right (no changes to RAM)
  */
-void HD44780_Scroll_Display_Right (HD44780* lcd);
+void HD44780_Scroll_Display_Right(HD44780* lcd);
 
 /**
  * @brief           Shifts cursor to the right
  */
-void HD44780_Left_To_Right (HD44780* lcd);
+void HD44780_Left_To_Right(HD44780* lcd);
 
 /**
  * @brief           Shifts cursor to the left
  */
-void HD44780_Right_To_Left (HD44780* lcd);
+void HD44780_Right_To_Left(HD44780* lcd);
 
 /**
  * @brief           Turn on autoscroll
  */
-void HD44780_Autoscroll (HD44780* lcd);
+void HD44780_Autoscroll(HD44780* lcd);
 
 /**
  * @brief           Turn off autoscroll
  */
-void HD44780_No_Autoscroll (HD44780* lcd);
+void HD44780_No_Autoscroll(HD44780* lcd);
 
 /**
  * @brief           Sets the offset for each row
  *
  * @param rows
  */
-void HD44780_Set_Row_Offsets (HD44780* lcd, lcd_rows_offset rows);
+void HD44780_Set_Row_Offsets(HD44780* lcd, lcd_rows_offset rows);
 
 /**
  * @brief           Sets the cursor's position
@@ -305,7 +307,7 @@ void HD44780_Set_Row_Offsets (HD44780* lcd, lcd_rows_offset rows);
  * @param column
  * @param line
  */
-void HD44780_Set_Cursor (HD44780* lcd, uint8_t column, uint8_t line);
+void HD44780_Set_Cursor(HD44780* lcd, uint8_t column, uint8_t line);
 
 /**
  * @brief           Sends one byte of data to the LCD
@@ -313,26 +315,26 @@ void HD44780_Set_Cursor (HD44780* lcd, uint8_t column, uint8_t line);
  * @param byte
  * @param mode      Wether it's a command or a character
  */
-void HD44780_Send (HD44780* lcd, char byte, Register_Select_e mode);
+void HD44780_Send(HD44780* lcd, char byte, Register_Select_e mode);
 
 /**
  * @brief           Writes one half-byte on the data pins
  *
  * @param half_byte
  */
-void HD44780_Write_4bits (HD44780* lcd, uint8_t half_byte);
+void HD44780_Write_4bits(HD44780* lcd, uint8_t half_byte);
 
 /**
  * @brief           Writes one byte on the data pins
  *
  * @param byte
  */
-void HD44780_Write_8bits (HD44780* lcd, char byte);
+void HD44780_Write_8bits(HD44780* lcd, char byte);
 
 /**
  * @brief           Pulses the enable pin
  */
-void HD44780_Pulse_Enable (HD44780* lcd);
+void HD44780_Pulse_Enable(HD44780* lcd);
 
 /**
  * @brief           Creates a custom char for lcd
@@ -341,6 +343,6 @@ void HD44780_Pulse_Enable (HD44780* lcd);
  * @param location  CGRAMADDR to store the character in
  * @param charmap   Pixel vector, 5 LSB contain determine the pixels of their row
  */
-void HD44780_Create_Char (HD44780* lcd, uint8_t location, uint8_t* charmap);
+void HD44780_Create_Char(HD44780* lcd, uint8_t location, uint8_t* charmap);
 
 #endif

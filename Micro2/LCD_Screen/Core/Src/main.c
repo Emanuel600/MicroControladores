@@ -70,8 +70,8 @@ HD44780 lcd;
 /* USER CODE END PV */
 
 /* Private function prototypes -----------------------------------------------*/
-void SystemClock_Config (void);
-static void MX_NVIC_Init (void);
+void SystemClock_Config(void);
+static void MX_NVIC_Init(void);
 /* USER CODE BEGIN PFP */
 extern void Reset_Handler();
 /* USER CODE END PFP */
@@ -84,10 +84,10 @@ extern void Reset_Handler();
   * @brief  The application entry point.
   * @retval int
   */
-int main (void)
+int main(void)
 {
     /* USER CODE BEGIN 1 */
-    setvbuf (stdout, NULL, _IONBF, 0);
+    setvbuf(stdout, NULL, _IONBF, 0);
     /* USER CODE END 1 */
 
     /* MCU Configuration--------------------------------------------------------*/
@@ -114,33 +114,33 @@ int main (void)
     MX_NVIC_Init();
     /* USER CODE BEGIN 2 */
     // Enable interrupt for every second => Doesn't work on Proteus, untested on RHW
-    HAL_RTCEx_SetSecond_IT (&hrtc);
+    HAL_RTCEx_SetSecond_IT(&hrtc);
     /* Set Pinout for LCD */
-    Set_Control_Port (& (lcd.HD_GPIO), LCD_CONTROL_PORT, LCD_RS_PIN, CONTROL_WITHOUT_RW);
-    Set_Data_Port (& (lcd.HD_GPIO), LCD_DATA_PORT, LCD_FIRST_DATA_PIN, LCD_4_BITS);
+    Set_Control_Port(& (lcd.HD_GPIO), LCD_CONTROL_PORT, LCD_RS_PIN, CONTROL_WITHOUT_RW);
+    Set_Data_Port(& (lcd.HD_GPIO), LCD_DATA_PORT, LCD_FIRST_DATA_PIN, LCD_4_BITS);
     /* Configure LCD */
-    HD44780_Init (&lcd);
-    HD44780_Begin (&lcd, 16, 2, LCD_5x8DOTS);
+    HD44780_Init(&lcd);
+    HD44780_Begin(&lcd, 16, 2, LCD_5x8DOTS);
     // Wake MCU up every 10 ms
     /// @todo       Test on real hardware with ticks suspended
-    HAL_SetTickFreq (HAL_TICK_FREQ_10HZ);
+    HAL_SetTickFreq(HAL_TICK_FREQ_10HZ);
     /* USER CODE END 2 */
 
     /* Infinite loop */
     /* USER CODE BEGIN WHILE */
-    while (1) {
+    while(1) {
         // Update time
-        HAL_RTC_GetTime (&hrtc, (RTC_TimeTypeDef*) &RTC_Time, FORMAT_BCD);
-        HD44780_Home (&lcd);
-        printf ("%02x:%02x:%02x", RTC_Time.Hours, RTC_Time.Minutes, RTC_Time.Seconds);
-        pdebug ("Entering Sleep Mode\r\n");
+        HAL_RTC_GetTime(&hrtc, (RTC_TimeTypeDef*) &RTC_Time, FORMAT_BCD);
+        HD44780_Home(&lcd);
+        printf("%02x:%02x:%02x", RTC_Time.Hours, RTC_Time.Minutes, RTC_Time.Seconds);
+        pdebug("Entering Sleep Mode\r\n");
         // Wait for a wake-up event
-        HAL_PWR_EnterSLEEPMode (PWR_MAINREGULATOR_ON, PWR_SLEEPENTRY_WFI);
+        HAL_PWR_EnterSLEEPMode(PWR_MAINREGULATOR_ON, PWR_SLEEPENTRY_WFI);
         /* USER CODE END WHILE */
 
         /* USER CODE BEGIN 3 */
     }
-    perrorf ("[ERROR] Exited main loop");
+    perrorf("[ERROR] Exited main loop");
     return -1;
     /* USER CODE END 3 */
 }
@@ -149,7 +149,7 @@ int main (void)
   * @brief System Clock Configuration
   * @retval None
   */
-void SystemClock_Config (void)
+void SystemClock_Config(void)
 {
     RCC_OscInitTypeDef RCC_OscInitStruct = {0};
     RCC_ClkInitTypeDef RCC_ClkInitStruct = {0};
@@ -166,7 +166,7 @@ void SystemClock_Config (void)
     RCC_OscInitStruct.PLL.PLLState = RCC_PLL_ON;
     RCC_OscInitStruct.PLL.PLLSource = RCC_PLLSOURCE_HSE;
     RCC_OscInitStruct.PLL.PLLMUL = RCC_PLL_MUL9;
-    if (HAL_RCC_OscConfig (&RCC_OscInitStruct) != HAL_OK) {
+    if(HAL_RCC_OscConfig(&RCC_OscInitStruct) != HAL_OK) {
         Error_Handler();
     }
 
@@ -179,12 +179,12 @@ void SystemClock_Config (void)
     RCC_ClkInitStruct.APB1CLKDivider = RCC_HCLK_DIV2;
     RCC_ClkInitStruct.APB2CLKDivider = RCC_HCLK_DIV1;
 
-    if (HAL_RCC_ClockConfig (&RCC_ClkInitStruct, FLASH_LATENCY_2) != HAL_OK) {
+    if(HAL_RCC_ClockConfig(&RCC_ClkInitStruct, FLASH_LATENCY_2) != HAL_OK) {
         Error_Handler();
     }
     PeriphClkInit.PeriphClockSelection = RCC_PERIPHCLK_RTC;
     PeriphClkInit.RTCClockSelection = RCC_RTCCLKSOURCE_LSI;
-    if (HAL_RCCEx_PeriphCLKConfig (&PeriphClkInit) != HAL_OK) {
+    if(HAL_RCCEx_PeriphCLKConfig(&PeriphClkInit) != HAL_OK) {
         Error_Handler();
     }
 }
@@ -193,17 +193,17 @@ void SystemClock_Config (void)
   * @brief NVIC Configuration.
   * @retval None
   */
-static void MX_NVIC_Init (void)
+static void MX_NVIC_Init(void)
 {
     /* RTC_IRQn interrupt configuration */
-    HAL_NVIC_SetPriority (RTC_IRQn, 0, 0);
-    HAL_NVIC_EnableIRQ (RTC_IRQn);
+    HAL_NVIC_SetPriority(RTC_IRQn, 0, 0);
+    HAL_NVIC_EnableIRQ(RTC_IRQn);
     /* EXTI0_IRQn interrupt configuration */
-    HAL_NVIC_SetPriority (EXTI0_IRQn, 0, 0);
-    HAL_NVIC_EnableIRQ (EXTI0_IRQn);
+    HAL_NVIC_SetPriority(EXTI0_IRQn, 0, 0);
+    HAL_NVIC_EnableIRQ(EXTI0_IRQn);
     /* EXTI1_IRQn interrupt configuration */
-    HAL_NVIC_SetPriority (EXTI1_IRQn, 0, 0);
-    HAL_NVIC_EnableIRQ (EXTI1_IRQn);
+    HAL_NVIC_SetPriority(EXTI1_IRQn, 0, 0);
+    HAL_NVIC_EnableIRQ(EXTI1_IRQn);
 }
 
 /* USER CODE BEGIN 4 */
@@ -212,49 +212,49 @@ static void MX_NVIC_Init (void)
  *
  * @param GPIO_Pin  Pin that triggered the interruption
  */
-void HAL_GPIO_EXTI_Callback (uint16_t GPIO_Pin)
+void HAL_GPIO_EXTI_Callback(GPIO_Pin Pin)
 {
     // HAL_RTC_SetTime crashes if wrong format is inputted, I think
-    if (GPIO_Pin == HOUR_PIN) {
-        if (RTC_Time.Hours == 0x23) {
+    if(Pin == HOUR_PIN) {
+        if(RTC_Time.Hours == 0x23) {
             RTC_Time.Hours = 0;
         } else {
             RTC_Time.Hours++;
         }
     } else {
-        if (RTC_Time.Minutes == 0x59) {
+        if(RTC_Time.Minutes == 0x59) {
             RTC_Time.Minutes = 0;
         } else {
             RTC_Time.Minutes++;
         }
     }
-    HAL_RTC_SetTime (&hrtc, (RTC_TimeTypeDef*) &RTC_Time, RTC_FORMAT_BCD);
+    HAL_RTC_SetTime(&hrtc, (RTC_TimeTypeDef*) &RTC_Time, RTC_FORMAT_BCD);
     return;
 }
 
-void HAL_RTCEx_RTCEventCallback (RTC_HandleTypeDef* hrtc)
+void HAL_RTCEx_RTCEventCallback(RTC_HandleTypeDef* hrtc)
 {
     // Does not update properly on Proteus, untested on RHW
-    UNUSED (hrtc);
-    DEBUG_BLOCK (
-            Toggle_Pin (DEBUG_PIN_GPIO_Port, DEBUG_PIN_Pin);
+    UNUSED(hrtc);
+    DEBUG_BLOCK(
+            Toggle_Pin(DEBUG_PIN_GPIO_Port, DEBUG_PIN_Pin);
     )
-    pdebug ("RTC Event callback\r\n");
+    pdebug("RTC Event callback\r\n");
     return;
 }
 
-int _write (int fd, char* data, int len)
+int _write(int fd, char* data, int len)
 {
-    UNUSED (len);
-    if (fd == fileno (stdin)) {
-        perrorf ("[ERROR] Called '_write' function for input");
+    UNUSED(len);
+    if(fd == fileno(stdin)) {
+        perrorf("[ERROR] Called '_write' function for input");
         return 0;
-    } else if (fd == fileno (stdout)) {
-        return HD44780_Print (&lcd, data);
-    } else if (fd == fileno (stderr)) {
+    } else if(fd == fileno(stdout)) {
+        return HD44780_Print(&lcd, data);
+    } else if(fd == fileno(stderr)) {
         return 0;
     } else {
-        perrorf ("[ERROR] Output file not supported");
+        perrorf("[ERROR] Output file not supported");
         return 0;
     }
     // Critical error on return
@@ -267,18 +267,18 @@ int _write (int fd, char* data, int len)
   * @brief  This function is executed in case of error occurrence.
   * @retval None
   */
-void Error_Handler (void)
+void Error_Handler(void)
 {
     /* USER CODE BEGIN Error_Handler_Debug */
     /* User can add his own implementation to report the HAL error return state */
     __disable_irq();
-    perrorf ("[Error] Program crashed {Code %d}\r\n", errno);
-    perrorf ("      - Attempting restart\r\n");
+    perrorf("[Error] Program crashed {Code %d}\r\n", errno);
+    perrorf("      - Attempting restart\r\n");
     Reset_Handler();
-    perrorf ("      - Restart Failed, entering sleep mode\r\n");
+    perrorf("      - Restart Failed, entering sleep mode\r\n");
     // Sleeps forever since IRQ are disabled
-    HAL_PWR_EnterSLEEPMode (PWR_MAINREGULATOR_ON, PWR_SLEEPENTRY_WFI);
-    while (1) {
+    HAL_PWR_EnterSLEEPMode(PWR_MAINREGULATOR_ON, PWR_SLEEPENTRY_WFI);
+    while(1) {
     }
     /* USER CODE END Error_Handler_Debug */
 }
@@ -291,7 +291,7 @@ void Error_Handler (void)
   * @param  line: assert_param error line source number
   * @retval None
   */
-void assert_failed (uint8_t* file, uint32_t line)
+void assert_failed(uint8_t* file, uint32_t line)
 {
     /* USER CODE BEGIN 6 */
     /* User can add his own implementation to report the file name and line number,

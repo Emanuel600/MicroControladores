@@ -70,5 +70,9 @@
 #define ASM(instruction)                __asm__ volatile (instruction)
 /// @brief          Prints formatted to sdterr
 #define perrorf(...)                    fprintf(stderr, __VA_ARGS__)
+/// @brief          GPIO_Pin typedef
+typedef uint16_t                        GPIO_Pin;
+/// @brief          Native uint
+typedef uint32_t                        nuint;
 /** @} */
 #endif
