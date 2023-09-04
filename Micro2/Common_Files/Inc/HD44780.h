@@ -10,7 +10,7 @@
  */
 
 #ifndef HD44780_H
-#define HD44780_H    10
+#define HD44780_H    120
 
 #include <inttypes.h>
 
@@ -19,43 +19,93 @@
 
 /// @addtogroup LCD LCD_Functions
 /// @{
-// commands
-#define LCD_CLEARDISPLAY        0x01
-#define LCD_RETURNHOME          0x02
-#define LCD_ENTRYMODESET        0x04
-#define LCD_DISPLAYCONTROL      0x08
-#define LCD_CURSORSHIFT         0x10
-#define LCD_FUNCTIONSET         0x20
-#define LCD_SETCGRAMADDR        0x40
-#define LCD_SETDDRAMADDR        0x80
+/**
+ * @brief          LCD commands
+ *
+ * @param LCD_CLEAR_DISPLAY
+ * @param LCD_RETURN_HOME
+ * @param LCD_ENTRY_MODE_SET
+ * @param LCD_DISPLAY_CONTROL
+ * @param LCD_CURSOR_SHIFT
+ * @param LCD_FUNCTION_SET
+ * @param LCD_SET_CGRAM_ADDR
+ * @param LCD_SET_DDRAM_ADDR
+ */
+typedef enum {
+    LCD_CLEAR_DISPLAY           =   0x01,
+    LCD_RETURN_HOME             =   0x02,
+    LCD_ENTRY_MODE_SET          =   0x04,
+    LCD_DISPLAY_CONTROL         =   0x08,
+    LCD_CURSOR_SHIFT            =   0x10,
+    LCD_FUNCTION_SET            =   0x20,
+    LCD_SET_CGRAM_ADDR          =   0x40,
+    LCD_SET_DDRAM_ADDR          =   0x80
+} HD44780_Command_e;
 
 // flags for display entry mode
-#define LCD_ENTRYRIGHT          0x00
-#define LCD_ENTRYLEFT           0x02
-#define LCD_ENTRYSHIFTINCREMENT 0x01
-#define LCD_ENTRYSHIFTDECREMENT 0x00
+typedef enum {
+    LCD_ENTRY_RIGHT             =   0x00,
+    LCD_ENTRY_LEFT              =   0x02,
+    LCD_ENTRY_SHIFT_INCREMENT   =   0x01,
+    LCD_ENTRY_SHIFT_DECREMENT   =   0x00
+} HD44780_Display_Entry_Mode_e;
 
-// flags for display on/off control
-#define LCD_DISPLAYON           0x04
-#define LCD_DISPLAYOFF          0x00
-#define LCD_CURSORON            0x02
-#define LCD_CURSOROFF           0x00
-#define LCD_BLINKON             0x01
-#define LCD_BLINKOFF            0x00
+/**
+ * @brief           Functions for display control
+ *
+ * @param LCD_DISPLAY_ON
+ * @param LCD_DISPLAY_OFF
+ * @param LCD_CURSOR_ON
+ * @param LCD_CURSOR_OFF
+ * @param LCD_BLINK_ON
+ * @param LCD_BLINK_OFF
+ */
+typedef enum {
+    LCD_DISPLAY_ON              =   0x04,
+    LCD_DISPLAY_OFF             =   0x00,
+    LCD_CURSOR_ON               =   0x02,
+    LCD_CURSOR_OFF              =   0x00,
+    LCD_BLINK_ON                =   0x01,
+    LCD_BLINK_OFF               =   0x00
+} HD44780_Display_Control_e;
 
-// flags for display/cursor shift
-#define LCD_DISPLAYMOVE         0x08
-#define LCD_CURSORMOVE          0x00
-#define LCD_MOVERIGHT           0x04
-#define LCD_MOVELEFT            0x00
+/**
+ * @brief           Flags for display/cursor shift
+ *
+ * @param LCD_DISPLAY_MOVE
+ * @param LCD_CURSOR_MOVE
+ * @param LCD_MOVE_RIGHT
+ * @param LCD_MOVE_LEFT
+ */
+typedef enum {
+    LCD_DISPLAY_MOVE            =   0x08,
+    LCD_CURSOR_MOVE             =   0x00,
+    LCD_MOVE_RIGHT              =   0x04,
+    LCD_MOVE_LEFT               =   0x00
+} HD44780_Dispaly_Cursor_Shift_e;
 
-// flags for function set
-#define LCD_8BITMODE            0x10
-#define LCD_4BITMODE            0x00
-#define LCD_2LINE               0x08
-#define LCD_1LINE               0x00
-#define LCD_5x10DOTS            0x04
-#define LCD_5x8DOTS             0x00
+/**
+ * @brief           Size of the on-screen characters
+ *
+ * @param LCD_5x10_DOTS
+ * @param LCD_5x8_DOTS
+ */
+typedef enum {
+    LCD_5x10_DOTS               =   0x04,
+    LCD_5x8_DOTS                =   0x00
+} HD44780_Charsize_e;
+
+/**
+ * @brief           Amount of rows on the LCD
+ *
+ * @param LCD_1_Line
+ * @param LCD_2_LINES
+ */
+typedef enum {
+    LCD_1_LINE                  =   0x00,
+    LCD_2_LINES                 =   0x08
+} HD44780_Lines_e;
+
 /// @}
 /// @brief  Wether to add error guards or not
 #define ENABLE_ERROR_GUARD              1
@@ -94,26 +144,16 @@ typedef enum {
  * @param LCD_8_BITS
  */
 typedef enum {
-    LCD_4_BITS,
-    LCD_8_BITS
+    LCD_8_BITS                  =   0x00,
+    LCD_4_BITS                  =   0x10
 } Data_Mode_e;
-
-/**
- * @brief           Contains the offset for each row of the lcd
- */
-typedef struct {
-    uint8_t row0;
-    uint8_t row1;
-    uint8_t row2;
-    uint8_t row3;
-} lcd_rows_offset;
 
 /**
  * @brief           HD44780 - GPIO Definitions
  * @param Data_Port
  * @param Control_Port
- * @param First_Data_Pin    D0
- * @param RS_Pin            Register Select Pin, E = RS<<1 and RW = RS<<2
+ * @param First_Data_Pin    D0, Dx = D0 << x
+ * @param RS_Pin            Register Select Pin, E = RS << 1 and RW = RS << 2
  * @param Enable_Pin
  * @param RW_Pin            Read/Write Pin
  */
@@ -122,9 +162,8 @@ typedef struct {
     GPIO_TypeDef*   Data_Port;          //!< Data Port
     GPIO_TypeDef*   Control_Port;       //!< Control Port
     // Pins
-    uint16_t        First_Data_Pin;
-    uint16_t        RS_Pin;             //!< Register Select Pin
-    lcd_rows_offset offsets;
+    GPIO_Pin        First_Data_Pin;
+    GPIO_Pin        RS_Pin;             //!< Register Select Pin
     // Modes
     Control_Mode_e  Control_Mode;       //!< How many pins on control port
     Data_Mode_e     Data_Mode;          //!< How many pins on data port
@@ -152,8 +191,7 @@ typedef struct {
     // Characteristics
     uint8_t         lines;              //!< Amount of lines on display
     uint8_t         colunms;            //!< Amount of columns on display
-    /// @todo       Use to test wether all ports and pins were added
-    uint8_t         initialized;        //!< If it was initialized properly
+    uint8_t         new_line_offset;    //!< DDRAM address of the second line
 } HD44780;
 
 /**
@@ -207,7 +245,7 @@ void HD44780_Put_Custom_Char(HD44780* lcd, uint8_t location);
  * @param lcd
  * @param command
  */
-void HD44780_Command(HD44780* lcd, char command);
+void HD44780_Command(HD44780* lcd, HD44780_Command_e command);
 
 /**
  * @brief           Prints a string to the LCD
@@ -222,7 +260,7 @@ size_t HD44780_Print(HD44780* lcd, char* str);
 /**
  * @brief           Starts the LCD, called after init
  */
-void HD44780_Begin(HD44780* lcd, uint8_t cols, uint8_t rows, uint8_t charsize);
+void HD44780_Begin(HD44780* lcd, uint8_t cols, uint8_t rows, HD44780_Charsize_e charsize);
 
 /**
  * @brief           Clears Screen
@@ -295,13 +333,6 @@ void HD44780_Autoscroll(HD44780* lcd);
 void HD44780_No_Autoscroll(HD44780* lcd);
 
 /**
- * @brief           Sets the offset for each row
- *
- * @param rows
- */
-void HD44780_Set_Row_Offsets(HD44780* lcd, lcd_rows_offset rows);
-
-/**
  * @brief           Sets the cursor's position
  *
  * @param column
@@ -341,7 +372,7 @@ void HD44780_Pulse_Enable(HD44780* lcd);
  *
  * @param lcd
  * @param location  CGRAMADDR to store the character in
- * @param charmap   Pixel vector, 5 LSB contain determine the pixels of their row
+ * @param charmap   Pixel vector, 5 LSB determine the pixels of their row
  */
 void HD44780_Create_Char(HD44780* lcd, uint8_t location, uint8_t* charmap);
 

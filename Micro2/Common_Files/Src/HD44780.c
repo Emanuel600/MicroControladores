@@ -57,15 +57,15 @@ void HD44780_Init(HD44780* lcd)
     }
     )
     if(lcd->HD_GPIO.Data_Mode == LCD_4_BITS) {
-        lcd->Display_Function = LCD_4BITMODE | LCD_1LINE | LCD_5x8DOTS;
+        lcd->Display_Function = LCD_4_BITS | LCD_1_LINE | LCD_5x8_DOTS;
     } else {
-        lcd->Display_Function = LCD_8BITMODE | LCD_1LINE | LCD_5x8DOTS;
+        lcd->Display_Function = LCD_8_BITS | LCD_1_LINE | LCD_5x8_DOTS;
     }
 
     return;
 }
 
-void HD44780_Begin(HD44780* lcd, uint8_t cols, uint8_t rows, uint8_t charsize)
+void HD44780_Begin(HD44780* lcd, uint8_t cols, uint8_t rows, HD44780_Charsize_e charsize)
 {
     GUARD_BLOCK(
     if(lcd == NULL) {
@@ -77,19 +77,16 @@ void HD44780_Begin(HD44780* lcd, uint8_t cols, uint8_t rows, uint8_t charsize)
     }
     )
     if(rows - 1) {
-        lcd->Display_Function |= LCD_2LINE;
+        lcd->Display_Function |= LCD_2_LINES;
     }
     lcd->lines = rows;
     lcd->colunms = cols;
 
-    lcd->HD_GPIO.offsets.row0 = 0x00;
-    lcd->HD_GPIO.offsets.row1 = 0x40;
-    lcd->HD_GPIO.offsets.row2 = cols;
-    lcd->HD_GPIO.offsets.row3 = 0x40 + cols;
+    lcd->new_line_offset = 0x40;
 
 
-    if((charsize != LCD_5x8DOTS) && (rows == 1)) {
-        lcd->Display_Function |= LCD_5x10DOTS;
+    if((charsize != LCD_5x8_DOTS) && (rows == 1)) {
+        lcd->Display_Function |= LCD_5x10_DOTS;
     }
 
     // Need at least 40ms of delay
@@ -114,22 +111,23 @@ void HD44780_Begin(HD44780* lcd, uint8_t cols, uint8_t rows, uint8_t charsize)
         HD44780_Write_4bits(lcd, 0x02);
     } else {
         // Tell HD44780 to use 8 bits, needs to be done twice
-        HD44780_Command(lcd, LCD_FUNCTIONSET | lcd->Display_Function);
+        HD44780_Command(lcd, LCD_FUNCTION_SET | lcd->Display_Function);
         atraso_us(4400);
-        HD44780_Command(lcd, LCD_FUNCTIONSET | lcd->Display_Function);
+        HD44780_Command(lcd, LCD_FUNCTION_SET | lcd->Display_Function);
         atraso_us(150);
-        HD44780_Command(lcd, LCD_FUNCTIONSET | lcd->Display_Function);
+        HD44780_Command(lcd, LCD_FUNCTION_SET | lcd->Display_Function);
     }
     // Set number of lines and rows
-    HD44780_Command(lcd, LCD_FUNCTIONSET | lcd->Display_Function);
+    HD44780_Command(lcd, LCD_FUNCTION_SET | lcd->Display_Function);
     // Set cursor to default values
-    lcd->Display_Control = LCD_DISPLAYON | LCD_CURSOROFF | LCD_BLINKOFF;
+    lcd->Display_Control = LCD_DISPLAY_ON | LCD_CURSOR_OFF | LCD_BLINK_OFF;
     HD44780_Display(lcd);
     // Clear display
     HD44780_Clear(lcd);
     // Set text direction (left->right)
-    lcd->Display_Mode = LCD_ENTRYLEFT | LCD_ENTRYSHIFTDECREMENT;
-    HD44780_Command(lcd, LCD_ENTRYMODESET | lcd->Display_Mode);
+    lcd->Display_Mode = LCD_ENTRY_LEFT | LCD_ENTRY_SHIFT_DECREMENT;
+    HD44780_Command(lcd, LCD_ENTRY_MODE_SET | lcd->Display_Mode);
+
     return;
 }
 
@@ -141,8 +139,8 @@ void HD44780_Display(HD44780* lcd)
         return;
     }
     )
-    lcd->Display_Control |= LCD_DISPLAYON;
-    HD44780_Command(lcd, lcd->Display_Control | LCD_DISPLAYCONTROL);
+    lcd->Display_Control |= LCD_DISPLAY_ON;
+    HD44780_Command(lcd, lcd->Display_Control | LCD_DISPLAY_CONTROL);
 }
 
 void HD44780_No_Display(HD44780* lcd)
@@ -153,8 +151,8 @@ void HD44780_No_Display(HD44780* lcd)
         return;
     }
     )
-    lcd->Display_Control &= ~LCD_DISPLAYON;
-    HD44780_Command(lcd, lcd->Display_Control | LCD_DISPLAYCONTROL);
+    lcd->Display_Control &= ~LCD_DISPLAY_ON;
+    HD44780_Command(lcd, lcd->Display_Control | LCD_DISPLAY_CONTROL);
 }
 
 void HD44780_Clear(HD44780* lcd)
@@ -165,7 +163,7 @@ void HD44780_Clear(HD44780* lcd)
         return;
     }
     )
-    HD44780_Command(lcd, LCD_CLEARDISPLAY);
+    HD44780_Command(lcd, LCD_CLEAR_DISPLAY);
     delay_ms(2);
     return;
 }
@@ -178,21 +176,33 @@ void HD44780_Home(HD44780* lcd)
         return;
     }
     )
-    HD44780_Command(lcd, LCD_RETURNHOME);
+    HD44780_Command(lcd, LCD_RETURN_HOME);
     delay_ms(2);
     return;
 }
 
 void HD44780_Send(HD44780* lcd, char byte, Register_Select_e RS)
 {
+    const GPIO_TypeDef* Control_Port = lcd->HD_GPIO.Control_Port;
+    const GPIO_Pin RS_Pin = lcd->HD_GPIO.RS_Pin;
     GUARD_BLOCK(
     if(lcd == NULL) {
     perrorf("[ERROR] Null pointer for LCD\r\n");
         return;
     }
+    if(!(IS_GPIO_ALL_INSTANCE(Control_Port))) {
+    perrorf("[ERROR] Invalid control port\r\n");
+        return;
+    }
+    if(!(IS_GPIO_PIN(RS_Pin) || IS_GPIO_PIN(RS_Pin << 1))) {
+    perrorf("[ERROR] Invalid control pinout\r\n");
+        return;
+    }
+    if((lcd->HD_GPIO.Control_Mode == CONTROL_WITH_RW) && !(IS_GPIO_PIN(RS_Pin << 2))) {
+    perrorf("[ERROR] Invalid RW pin\r\n");
+        return;
+    }
     )
-    const GPIO_TypeDef* Control_Port = lcd->HD_GPIO.Control_Port;
-    const GPIO_Pin RS_Pin = lcd->HD_GPIO.RS_Pin;
     // Select register
     Write_Pin((GPIO_TypeDef*) Control_Port, RS_Pin, (GPIO_PinState) RS);
     // Clear RW Pin to write command
@@ -210,7 +220,7 @@ void HD44780_Send(HD44780* lcd, char byte, Register_Select_e RS)
     return;
 }
 
-void HD44780_Command(HD44780* lcd, char command)
+void HD44780_Command(HD44780* lcd, HD44780_Command_e command)
 {
     GUARD_BLOCK(
     if(lcd == NULL) {
@@ -233,7 +243,7 @@ void HD44780_Put_Char(HD44780* lcd, char c)
     if(c != '\n') {
         HD44780_Send(lcd, c, SELECT_CHAR);
     } else {
-        HD44780_Command(lcd, LCD_SETDDRAMADDR | (lcd->HD_GPIO.offsets.row1));
+        HD44780_Command(lcd, LCD_SET_DDRAM_ADDR | (lcd->new_line_offset));
     }
     return;
 }
@@ -280,9 +290,11 @@ void HD44780_Write_4bits(HD44780* lcd, uint8_t half_byte)
     }
     )
     const GPIO_Pin D0 = lcd->HD_GPIO.First_Data_Pin;
-    for(nuint i = 0; i < 4; i++) {
+    nuint i = 4;
+    do {
+        i--;
         Write_Pin(lcd->HD_GPIO.Data_Port, D0 << i, (half_byte >> i) & 0x01);
-    }
+    } while(i);
 
     HD44780_Pulse_Enable(lcd);
     return;
@@ -296,9 +308,11 @@ void HD44780_Write_8bits(HD44780* lcd, char byte)
         return;
     }
     )
-    for(nuint i = 0; i < 8; i++) {
+    nuint i = 8;
+    do {
+        i--;
         Write_Pin(lcd->HD_GPIO.Data_Port, lcd->HD_GPIO.First_Data_Pin << i, (byte >> i) & 0x01);
-    }
+    } while(i);
 
     HD44780_Pulse_Enable(lcd);
     return;
@@ -331,8 +345,8 @@ void HD44780_No_Cursor(HD44780* lcd)
         return;
     }
     )
-    lcd->Display_Control &= ~LCD_CURSORON;
-    HD44780_Command(lcd, LCD_DISPLAYCONTROL | lcd->Display_Control);
+    lcd->Display_Control &= ~LCD_CURSOR_ON;
+    HD44780_Command(lcd, LCD_DISPLAY_CONTROL | lcd->Display_Control);
 }
 
 void HD44780_Cursor(HD44780* lcd)
@@ -343,8 +357,8 @@ void HD44780_Cursor(HD44780* lcd)
         return;
     }
     )
-    lcd->Display_Control |= LCD_CURSORON;
-    HD44780_Command(lcd, LCD_DISPLAYCONTROL | lcd->Display_Control);
+    lcd->Display_Control |= LCD_CURSOR_ON;
+    HD44780_Command(lcd, LCD_DISPLAY_CONTROL | lcd->Display_Control);
 }
 
 void HD44780_Set_Cursor(HD44780* lcd, uint8_t column, uint8_t row)
@@ -358,7 +372,7 @@ void HD44780_Set_Cursor(HD44780* lcd, uint8_t column, uint8_t row)
     if(row >= lcd->lines) {
         row = lcd->lines - 1;
     }
-    HD44780_Command(lcd, LCD_SETDDRAMADDR | (column + (0x40 * row)));
+    HD44780_Command(lcd, LCD_SET_DDRAM_ADDR | (column + (0x40 * row)));
 }
 
 void HD44780_Blink(HD44780* lcd)
@@ -369,8 +383,8 @@ void HD44780_Blink(HD44780* lcd)
         return;
     }
     )
-    lcd->Display_Control |= LCD_BLINKON;
-    HD44780_Command(lcd, LCD_DISPLAYCONTROL | lcd->Display_Control);
+    lcd->Display_Control |= LCD_BLINK_ON;
+    HD44780_Command(lcd, LCD_DISPLAY_CONTROL | lcd->Display_Control);
 }
 
 void HD44780_No_Blink(HD44780* lcd)
@@ -381,8 +395,8 @@ void HD44780_No_Blink(HD44780* lcd)
         return;
     }
     )
-    lcd->Display_Control &= ~LCD_BLINKON;
-    HD44780_Command(lcd, LCD_DISPLAYCONTROL | lcd->Display_Control);
+    lcd->Display_Control &= ~LCD_BLINK_ON;
+    HD44780_Command(lcd, LCD_DISPLAY_CONTROL | lcd->Display_Control);
 }
 
 void HD44780_Left_To_Right(HD44780* lcd)
@@ -393,8 +407,8 @@ void HD44780_Left_To_Right(HD44780* lcd)
         return;
     }
     )
-    lcd->Display_Mode |= LCD_ENTRYLEFT;
-    HD44780_Command(lcd, lcd->Display_Mode | LCD_ENTRYMODESET);
+    lcd->Display_Mode |= LCD_ENTRY_LEFT;
+    HD44780_Command(lcd, lcd->Display_Mode | LCD_ENTRY_MODE_SET);
 }
 
 void HD44780_Right_To_Left(HD44780* lcd)
@@ -405,8 +419,8 @@ void HD44780_Right_To_Left(HD44780* lcd)
         return;
     }
     )
-    lcd->Display_Mode &= ~LCD_ENTRYLEFT;
-    HD44780_Command(lcd, lcd->Display_Mode | LCD_ENTRYMODESET);
+    lcd->Display_Mode &= ~LCD_ENTRY_LEFT;
+    HD44780_Command(lcd, lcd->Display_Mode | LCD_ENTRY_MODE_SET);
 }
 
 void HD44780_Scroll_Display_Left(HD44780* lcd)
@@ -417,7 +431,13 @@ void HD44780_Scroll_Display_Left(HD44780* lcd)
         return;
     }
     )
-    HD44780_Command(lcd, LCD_CURSORSHIFT | LCD_DISPLAYCONTROL | LCD_MOVELEFT);
+    // Adjust offset
+    if(lcd->new_line_offset == 0x67) {
+        lcd->new_line_offset = 0x40;
+    } else {
+        lcd->new_line_offset++;
+    }
+    HD44780_Command(lcd, LCD_CURSOR_SHIFT | LCD_DISPLAY_CONTROL | LCD_MOVE_LEFT);
 }
 
 void HD44780_Scroll_Display_Right(HD44780* lcd)
@@ -428,7 +448,13 @@ void HD44780_Scroll_Display_Right(HD44780* lcd)
         return;
     }
     )
-    HD44780_Command(lcd, LCD_CURSORSHIFT | LCD_DISPLAYCONTROL | LCD_MOVERIGHT);
+    // Adjust offset
+    if(lcd->new_line_offset == 0) {
+        lcd->new_line_offset = 0x27;
+    } else {
+        lcd->new_line_offset--;
+    }
+    HD44780_Command(lcd, LCD_CURSOR_SHIFT | LCD_DISPLAY_CONTROL | LCD_MOVE_RIGHT);
 }
 
 void HD44780_Autoscroll(HD44780* lcd)
@@ -439,8 +465,8 @@ void HD44780_Autoscroll(HD44780* lcd)
         return;
     }
     )
-    lcd->Display_Mode |= LCD_ENTRYSHIFTINCREMENT;
-    HD44780_Command(lcd, lcd->Display_Mode | LCD_ENTRYMODESET);
+    lcd->Display_Mode |= LCD_ENTRY_SHIFT_INCREMENT;
+    HD44780_Command(lcd, lcd->Display_Mode | LCD_ENTRY_MODE_SET);
 }
 
 void HD44780_No_Autoscroll(HD44780* lcd)
@@ -451,8 +477,8 @@ void HD44780_No_Autoscroll(HD44780* lcd)
         return;
     }
     )
-    lcd->Display_Mode &= ~LCD_ENTRYSHIFTINCREMENT;
-    HD44780_Command(lcd, lcd->Display_Mode | LCD_ENTRYMODESET);
+    lcd->Display_Mode &= ~LCD_ENTRY_SHIFT_INCREMENT;
+    HD44780_Command(lcd, lcd->Display_Mode | LCD_ENTRY_MODE_SET);
 }
 
 void HD44780_Create_Char(HD44780* lcd, uint8_t location, uint8_t* charmap)
@@ -470,7 +496,7 @@ void HD44780_Create_Char(HD44780* lcd, uint8_t location, uint8_t* charmap)
     }
     )
     location &= 0x7;
-    HD44780_Command(lcd, LCD_SETCGRAMADDR | (location << 3));
+    HD44780_Command(lcd, LCD_SET_CGRAM_ADDR | (location << 3));
     for(nuint i = 0; i < 8; i++) {
         HD44780_Send(lcd, charmap[i], SELECT_CHAR);
     }

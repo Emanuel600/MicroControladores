@@ -29,6 +29,7 @@
 #include "Global_Defines.h"
 #include "HD44780.h"
 #include "atraso.h"
+#include "string.h"
 /* USER CODE END Includes */
 
 /* Private typedef -----------------------------------------------------------*/
@@ -120,7 +121,7 @@ int main(void)
     Set_Data_Port(& (lcd.HD_GPIO), LCD_DATA_PORT, LCD_FIRST_DATA_PIN, LCD_4_BITS);
     /* Configure LCD */
     HD44780_Init(&lcd);
-    HD44780_Begin(&lcd, 16, 2, LCD_5x8DOTS);
+    HD44780_Begin(&lcd, 16, 2, LCD_5x8_DOTS);
     // Wake MCU up every 10 ms
     /// @todo       Test on real hardware with ticks suspended
     HAL_SetTickFreq(HAL_TICK_FREQ_10HZ);
@@ -243,7 +244,7 @@ void HAL_RTCEx_RTCEventCallback(RTC_HandleTypeDef* hrtc)
     return;
 }
 
-int _write(int fd, char* data, int len)
+size_t _write(int32_t fd, char* data, size_t len)
 {
     UNUSED(len);
     if(fd == fileno(stdin)) {
@@ -272,7 +273,7 @@ void Error_Handler(void)
     /* USER CODE BEGIN Error_Handler_Debug */
     /* User can add his own implementation to report the HAL error return state */
     __disable_irq();
-    perrorf("[Error] Program crashed {Code %d}\r\n", errno);
+    perrorf("[Error] Program crashed due to %s\r\n", strerror(errno));
     perrorf("      - Attempting restart\r\n");
     Reset_Handler();
     perrorf("      - Restart Failed, entering sleep mode\r\n");
