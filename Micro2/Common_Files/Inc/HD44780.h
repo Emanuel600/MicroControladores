@@ -144,8 +144,8 @@ typedef enum {
  * @param LCD_8_BITS
  */
 typedef enum {
-    LCD_8_BITS                  =   0x00,
-    LCD_4_BITS                  =   0x10
+    LCD_4_BITS                  =   0x00,
+    LCD_8_BITS                  =   0x10
 } Data_Mode_e;
 
 /**
