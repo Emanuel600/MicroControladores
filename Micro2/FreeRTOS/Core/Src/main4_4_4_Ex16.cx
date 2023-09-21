@@ -1,0 +1,120 @@
+#include "init_from_hal.h"
+//--------------------------------------------------------------------------------
+
+unsigned int lfsr;			// variável global para a geração de números pseudo-aleatorios
+
+xQueueHandle	xPrintQueue;
+
+void init_LFSR(unsigned int valor);
+unsigned int prng_LFSR() ;
+
+//--------------------------------------------------------------------------------
+static char *pcStringToPrint[] = 
+{
+	"Task 1 ********************************************* \n",
+	"Task 2 --------------------------------------------- \n",
+	"Message printed from the tick hook interrupt ####### \n",
+};
+//--------------------------------------------------------------------------------
+static void prvStdioGateKeeperTask(void *pvParameters)
+{
+	char *pcMessageToPrint;
+	
+	while(1)
+	{
+		xQueueReceive(xPrintQueue, &pcMessageToPrint, portMAX_DELAY);
+		printf(pcMessageToPrint);
+	}
+}
+//--------------------------------------------------------------------------------
+static void prvPrintTask(void *pvParameters)
+{
+	uint32_t uiIndexToString;
+	
+	uiIndexToString = (uint32_t)pvParameters;
+	
+	while(1)
+	{	
+		xQueueSendToBack(xPrintQueue, &(pcStringToPrint[uiIndexToString]), 0);
+		
+		vTaskDelay(prng_LFSR() & 0x000001FF); // valor entre 0 511 ms;
+	}
+}
+//--------------------------------------------------------------------------------
+void vApplicationTickHook()	
+{
+	static uint32_t uiCount = 0;
+	portBASE_TYPE xHigherPriorityTaskWoken = pdFALSE;
+	
+	uiCount++;
+	
+	if(uiCount>=200)
+	{
+		xQueueSendToFrontFromISR(xPrintQueue, &(pcStringToPrint[2]), &xHigherPriorityTaskWoken);
+		uiCount=0;
+	}
+}
+//--------------------------------------------------------------------------------
+//--------------------------------------------------------------------------------
+int main (void)
+{
+	HAL_Init();
+
+	SystemClock_Config();
+
+	MX_GPIO_Init();
+
+	MX_USART3_UART_Init();
+
+	
+	/* semente para o PRNG (deve ser gerada automaticamente em cada reinicialização do uC)
+	 * pode ser empregado o ADC com algum entrada flutuante para gerar a aleatóriedade desse nr.
+	 */
+	init_LFSR(13);		// valor de semente fixo para efeito de teste.
+
+	
+	//RTOS
+	
+	xPrintQueue = xQueueCreate(5, sizeof(char *));
+	
+	if(xPrintQueue != NULL)
+	{
+		xTaskCreate(prvPrintTask, "Print1", 100, (void *) 0, 1, NULL);
+		xTaskCreate(prvPrintTask, "Print2", 100, (void *) 1, 2, NULL);
+		xTaskCreate(prvStdioGateKeeperTask, "GateKeeper", 100, NULL, 0, NULL);		
+		
+		vTaskStartScheduler();
+	}
+		
+	while (1);
+}
+//--------------------------------------------------------------------------------
+/*
+ * Função que passa o valor "semente" para a variavel utilizada na função prng_LFSR()
+ */
+void init_LFSR(unsigned int valor)
+{
+	lfsr = valor;
+}
+//--------------------------------------------------------------------------------
+/*
+ * Função PRNG - toda vez que for chamada, um novo número é gerado e salvo em lfsr.
+ * 	O primeiro valor de lfsr deve ser diferente de zero e deve ser gerado como semente
+ */
+unsigned int prng_LFSR() 	// Galois LFSRs, Liner-Feedback Shift Register, (PRNG)
+{
+	unsigned int lsb;
+
+	if (lfsr==0)		// garantia para que valor nao seja zero
+	    lfsr = 1;
+
+	lsb = lfsr & 0x00000001;
+	lfsr = lfsr >> 1;
+
+	if (lsb)
+	    lfsr = lfsr ^ 0x80000057;	//polinomio retirado de http://users.ece.cmu.edu/~koopman/lfsr/
+
+	return lfsr;
+}
+//--------------------------------------------------------------------------------
+

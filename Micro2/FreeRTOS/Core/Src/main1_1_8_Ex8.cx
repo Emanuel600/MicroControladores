@@ -1,0 +1,52 @@
+#include "init_from_hal.h"
+
+
+xTaskHandle xTask2Handle;
+
+void vTask1( void *pvParameters )
+{
+	unsigned portBASE_TYPE uxPriority;
+	uxPriority = uxTaskPriorityGet(NULL);
+	
+	while(1)
+	{
+		printf("Task1 is running.\n");
+		printf("About to raise the Task2 priority.\n");
+		vTaskPrioritySet(xTask2Handle,(uxPriority + 1));
+	}
+}
+// ---------------------------------------------------------------------------------
+void vTask2( void *pvParameters )
+{
+	unsigned portBASE_TYPE uxPriority;
+	uxPriority = uxTaskPriorityGet(NULL);
+	
+	while(1)
+	{
+		printf( "Task2 is running\r\n");
+		printf("About to lower the Task2 priority.\n");
+		vTaskPrioritySet(NULL,(uxPriority - 2));
+	}
+}
+//--------------------------------------------------------------------------------
+// -------------------------------------------------------------------------------
+int main(void)
+{
+	HAL_Init();
+
+	SystemClock_Config();
+
+	MX_GPIO_Init();
+
+	MX_USART3_UART_Init();
+
+	//RTOS
+	
+	xTaskCreate( vTask1, "Task 1", 100, NULL, 2, NULL );
+	xTaskCreate( vTask2, "Task 2", 100, NULL, 1, &xTask2Handle );
+	
+	vTaskStartScheduler();
+
+    while (1) 
+    {}
+}

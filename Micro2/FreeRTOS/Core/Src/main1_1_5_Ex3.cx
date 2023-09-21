@@ -1,0 +1,41 @@
+#include "init_from_hal.h"
+#include <stdint.h>
+#include "atraso.h"
+
+const char *pcTextForTask1 = "Task 1 is running.\n";
+const char *pcTextForTask2 = "Task 2 is running.\n";
+	
+//--------------------------------------------------------------------------------
+static void vTaskFunction(void *pvParameters)
+{
+	char *pcTaskName;
+	
+	pcTaskName = (char *) pvParameters;
+	
+	while(1)
+	{
+		printf(pcTaskName);
+		atraso_ms(200);
+	}
+}
+//--------------------------------------------------------------------------------
+int main (void)
+{
+	HAL_Init();
+
+	SystemClock_Config();
+
+	MX_GPIO_Init();
+
+	MX_USART3_UART_Init();
+
+	//RTOS
+
+	xTaskCreate(vTaskFunction,"Task 1", 100, (void *) pcTextForTask1, 1, NULL);
+	xTaskCreate(vTaskFunction,"Task 2", 100, (void *) pcTextForTask2, 2, NULL);
+	
+	vTaskStartScheduler();	// apos este comando o RTOS passa a executar as tarefas
+
+	while (1);
+}
+//--------------------------------------------------------------------------------

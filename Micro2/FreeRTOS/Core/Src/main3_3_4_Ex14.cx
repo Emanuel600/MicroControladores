@@ -1,0 +1,127 @@
+#include "init_from_hal.h"
+//--------------------------------------------------------------------------------
+
+xSemaphoreHandle xMutexUART;
+xQueueHandle	 xIntegerQueue;
+xQueueHandle	 xStringQueue;
+
+//--------------------------------------------------------------------------------
+static void vIntegerGeneration(void *pvParameters)
+{
+	portTickType xLastExecutionTime;
+	unsigned int ulValueToSend = 0;
+	unsigned int i;
+	
+	while(1)
+	{	
+		vTaskDelayUntil(&xLastExecutionTime, 200/portTICK_RATE_MS);
+		
+		for(i=0; i<5; i++)
+		{
+			xQueueSendToBack( xIntegerQueue, &ulValueToSend, 0);
+			ulValueToSend++;
+		}
+		
+		xSemaphoreTake(xMutexUART,portMAX_DELAY);
+		printf("Periodic task - About to generate an interrupt.\n");
+		xSemaphoreGive(xMutexUART);
+		
+		NVIC_SetPendingIRQ((IRQn_Type) EXTI0_IRQn);	// ativa interrupção por software
+		
+		xSemaphoreTake(xMutexUART,portMAX_DELAY);
+		printf("Periodic task - Interrupt generated.\n\n");
+		xSemaphoreGive(xMutexUART);
+	}
+}
+//--------------------------------------------------------------------------------
+static void vStringPrinter(void *pvParameters)
+{
+	char *pcString;
+	
+	while(1)
+	{
+		xQueueReceive(xStringQueue, &pcString, portMAX_DELAY);
+		
+		xSemaphoreTake(xMutexUART,portMAX_DELAY);
+		printf(pcString);
+		xSemaphoreGive(xMutexUART);
+	}
+}
+//--------------------------------------------------------------------------------
+// Interrupção ativa por software - Emprego do TC0 canal 0
+//--------------------------------------------------------------------------------
+void EXTI0_IRQHandler()
+{
+	static portBASE_TYPE xHigherPriorityTaskWoken;
+	static uint32_t ulReceivedNumber;
+	
+	static const char *pcStrings[]=
+	{
+		"String 0\n",
+		"String 1\n",
+		"String 2\n",
+		"String 3\n",
+	};
+	
+	xHigherPriorityTaskWoken = pdFALSE;
+	
+	while(xQueueReceiveFromISR(xIntegerQueue, &ulReceivedNumber, &xHigherPriorityTaskWoken) != errQUEUE_EMPTY)
+	{
+		ulReceivedNumber &= 0x03;
+		xQueueSendToBackFromISR(xStringQueue, &pcStrings[ulReceivedNumber], &xHigherPriorityTaskWoken);
+	}
+			
+	if(xHigherPriorityTaskWoken == pdTRUE)
+	{
+		//printf("xHigherPriorityTaskWoken == pdTRUE.\n");
+	}
+	//use to force a context switch from an ISR
+	portEND_SWITCHING_ISR(xHigherPriorityTaskWoken);
+	/* Giving the semaphore unblocked a task, and the priority of the
+	unblocked task is higher than the currently running task - force
+	a context switch to ensure that the interrupt returns directly to
+	the unblocked (higher priority) task.*/
+}
+//--------------------------------------------------------------------------------
+//--------------------------------------------------------------------------------
+int main (void)
+{
+	HAL_Init();
+
+	SystemClock_Config();
+
+	MX_GPIO_Init();
+
+	MX_USART3_UART_Init();
+
+	//---------------------------------------------------------------------------------------------
+	// Habilitar interrupção por SW
+	//---------------------------------------------------------------------------------------------
+	NVIC_EnableIRQ((IRQn_Type) EXTI0_IRQn);		// usa EXTI0 para gerar interrupção por software
+
+	/* configura Preempt Priority and Subpriority interrupt para o valor default (no STM32 é diferente!)*/
+	NVIC_SetPriorityGrouping(0);
+
+	/*IMPORTANTISSIMO
+    	The priority of the interrupt has to be set to below configMAX_SYSCALL_INTERRUPT_PRIORITY
+    	(FreeRTOSConfig.h), caso contrario a ISR que chama API do FreeRTOS vai travar!
+    	Cuidado, pois há uma inversão, no ARM quando menor o nr, maior a prioridade!*/
+
+	NVIC_SetPriority(EXTI0_IRQn, 6);	// ajusta prioridade para nivel 6, com 	configMAX_SYSCALL_INTERRUPT_PRIORITY = 5
+	//---------------------------------------------------------------------------------------------
+
+	//RTOS
+
+	xMutexUART = xSemaphoreCreateMutex();
+	
+	xIntegerQueue = xQueueCreate(10, sizeof(uint32_t));
+	xStringQueue  = xQueueCreate(10, sizeof(char *));	
+	
+	xTaskCreate(vIntegerGeneration, "IntGen",100, NULL, 1, NULL);
+	xTaskCreate(vStringPrinter, "String", 100, NULL, 2, NULL);
+		
+	vTaskStartScheduler();
+		
+	while (1);
+}
+//--------------------------------------------------------------------------------
