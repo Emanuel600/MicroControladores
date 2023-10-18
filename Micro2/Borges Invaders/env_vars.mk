@@ -20,7 +20,7 @@ CC_HEADS		= $(wildcard $(INCLUDE_DIR)/*.h)
 CC_HEADS		+= $(wildcard $(COMM_DIR)/Inc/*.h)
 CC_HEADS		+= $(wildcard $(ST_USB_Lib)/Class/CDC/Inc/*.h)
 CC_HEADS		+= $(wildcard $(ST_USB_Lib)/Core/Inc/*.h)
-CC_HEADS		+= $(wildcard $(Third_Party)/CMSIS_RTOS/*.h)
+CC_HEADS		+= $(wildcard $(Third_Party)/CMSIS_RTOS_V2/*.h)
 CC_HEADS		+= $(wildcard $(Third_Party)/include/*.h)
 CC_HEADS		+= $(wildcard $(Third_Party)/portable/GCC/ARM_CM3/*.h)
 CC_HEADS		+= $(wildcard USB_DEVICE/App/*.h)
@@ -51,7 +51,6 @@ $(HAL_DRIVERS)/Src/stm32f1xx_hal_flash_ex.c \
 $(HAL_DRIVERS)/Src/stm32f1xx_hal_exti.c \
 $(HAL_DRIVERS)/Src/stm32f1xx_hal_pcd.c \
 $(HAL_DRIVERS)/Src/stm32f1xx_hal_pcd_ex.c \
-$(HAL_DRIVERS)/Src/stm32f1xx_ll_usb.c \
 $(Third_Party)/CMSIS_RTOS/cmsis_os.c \
 $(Third_Party)/croutine.c \
 $(Third_Party)/event_groups.c \
@@ -62,15 +61,6 @@ $(Third_Party)/tasks.c \
 $(Third_Party)/timers.c \
 $(Third_Party)/portable/GCC/ARM_CM3/port.c \
 $(Third_Party)/portable/MemMang/heap_4.c \
-$(ST_USB_Lib)/Core/Src/usbd_core.c \
-$(ST_USB_Lib)/Core/Src/usbd_ctlreq.c \
-$(ST_USB_Lib)/Core/Src/usbd_ioreq.c \
-$(ST_USB_Lib)/Class/CDC/Src/usbd_cdc.c \
-$(COMM_DIR)/Src/atraso.c \
-USB_DEVICE/App/usb_device.c \
-USB_DEVICE/App/usbd_desc.c \
-USB_DEVICE/App/usbd_cdc_if.c \
-USB_DEVICE/Target/usbd_conf.c \
 
 # Add dir to search
 vpath %.c $(sort $(dir $(CC_SRCS)))
@@ -116,9 +106,7 @@ OPT_F			?= -Os
 ifneq (, $(findstring -D_DEBUG, $(USER_DEFS)))
 	OPT_F		+= -g -ggdb
 endif
-FLAGS			+= -mfloat-abi=$(MCU_FLOAT_ABI) \
-					-IUSB_DEVICE/App/ \
-					-IUSB_DEVICE/Target
+FLAGS			+= -mfloat-abi=$(MCU_FLOAT_ABI)
 #=============================#
 #== Finishing Linker Flags ==#
 LDSCRIPTS		= -L. $(LINKER_DIR) -T$(LINKER_SCRIPT)

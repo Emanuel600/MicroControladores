@@ -15,7 +15,7 @@
  * @{
  */
 //! CPU Details
-#ifdef STM32F103x6
+#ifdef STM32F103xB
     #define FCPU        72000000
     #define FCPUk       72000
     #define FCPUM       72

@@ -71,14 +71,5 @@ void desenha_fig(struct  pontos_t* p, const struct figura_t* figura);
 
 void escreve_Nr_Peq(uint32_t x, uint32_t y, int32_t valor, uint32_t quant2Print);
 
-// Funções do Staub
-/**
- * @brief           Apaga uma figura do LCD, sem apagar a tela inteira
- *
- * @param p         Ponto aonde a figura se encontra
- * @param figura    Figura a ser apagada, importa somente WxH
- */
-void Apaga_Figura(struct  pontos_t* p, const struct figura_t* figura);
-
 //-------------------------------------------------------------------------------------
 #endif /* NOKIA5110_H_ */
