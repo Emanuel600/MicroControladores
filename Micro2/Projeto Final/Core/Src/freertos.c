@@ -199,7 +199,7 @@ void Move_Rect(void* param)
         }
         // Atualiza Buffer da LCD
         desenha_fig(&p, &Cursor);
-        osDelay(150);
+        osDelay(100);
     }
 }
 
