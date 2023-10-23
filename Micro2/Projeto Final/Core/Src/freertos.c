@@ -172,11 +172,13 @@ void Move_Rect(void* param)
 {
     struct pontos_t p = {
         .x1 = 10,
-        .y1 = 10
+        .y1 = 10,
+        .x2 = 00,
+        .y2 = 00
     };
 
     while(1) {
-        Apaga_Figura(&p, &Cursor);
+        Apaga_Figura(&p, &Character);
         // Eixo 'x'
         if(Axis[0] < -200) {
             if(p.x1 > 0) {
@@ -198,7 +200,7 @@ void Move_Rect(void* param)
             }
         }
         // Atualiza Buffer da LCD
-        desenha_fig(&p, &Cursor);
+        desenha_fig(&p, &Character);
         osDelay(100);
     }
 }
