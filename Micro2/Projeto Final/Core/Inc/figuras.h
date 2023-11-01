@@ -10,13 +10,9 @@
  * @param height:   The height of the image
  * @param pixels:   Array of bools containing the image
  */
-typedef struct {
-    uint8_t width;
-    uint8_t height;
-    uint8_t* pixels;
-} figure_s;
+typedef struct figura_t figura_s;
 
-const struct figura_t block_5x5 = {
+const figura_s block_5x5 = {
     5,
     5,
     {
@@ -28,7 +24,7 @@ const struct figura_t block_5x5 = {
     }
 };
 
-const struct figura_t Cursor = {
+const figura_s Cursor = {
     5,
     5,
     {
@@ -40,46 +36,42 @@ const struct figura_t Cursor = {
     }
 };
 
-const struct figura_t Character = {
-    .largura = 16,
-    .altura =  16,
+const figura_s Character = {
+    .largura = 14,
+    .altura  = 16,
     .pixels = {
-        0b01010101,
-        0b10101010,
-        0b01010101,
-        0b10101010,
-        0b01010101,
-        0b10101010,
-        0b01010101,
-        0b10101010,
-        0b01010101,
-        0b10101010,
-        0b01010101,
-        0b10101010,
-        0b01010101,
-        0b10101010,
-        0b01010101,
-        0b10101010,
-        0b01010101,
-        0b10101010,
-        0b01010101,
-        0b10101010,
-        0b01010101,
-        0b10101010,
-        0b01010101,
-        0b10101010,
-        0b01010101,
-        0b10101010,
-        0b01010101,
-        0b10101010,
-        0b01010101,
-        0b10101010,
-        0b01010101,
-        0b10101010
+        0b00000000,
+        0b01111100,
+        0b11110000,
+        0b11111110,
+        0b11111111,
+        0b11111111,
+        0b11111111,
+        0b11111111,
+        0b11111111,
+        0b11111111,
+        0b11111110,
+        0b11110000,
+        0b01111100,
+        0b00000000, // Closes first block
+        0b00001111, // Opens second block
+        0b00011111,
+        0b00011111,
+        0b01111111,
+        0b01111111,
+        0b01111111,
+        0b00111111,
+        0b00111111,
+        0b11111111,
+        0b11111111,
+        0b11111111,
+        0b00011111,
+        0b00011111,
+        0b00001111
     }
 };
 
-const struct figura_t nave0f = {
+const figura_s nave0f = {
     4,							// largura em pixels = numero de colunas da matriz
     24,							// altura em pixels = cada 8 pixels corresponte a uma linha da matriz
     {
