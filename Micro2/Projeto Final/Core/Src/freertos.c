@@ -179,6 +179,8 @@ void Move_Char(void* param)
         .y2 = 00
     };
     struct pontos_t p = hitbox;
+    p.x2 = p.x1 + Char_fig.largura;
+    p.y2 = p.y1 + Char_fig.altura;
 
     while(1) {
         Apaga_Figura(&p, &Char_fig);
@@ -186,27 +188,34 @@ void Move_Char(void* param)
         if(Axis[0] < -200) {
             if(p.x1 > 0) {
                 p.x1--;
+                p.x2--;
             }
         } else if(Axis[0] > 200) { // 50 = Delta de tolerancia no deslocamento do eixo
             if(p.x1 < 75) {
                 p.x1++;
+                p.x2++;
             }
         }
         // Eixo 'y'
         if(Axis[1] < -200) {
             if(p.y1 < 40) {
                 p.y1++;
+                p.y2++;
             }
         } else if(Axis[1] > 200) {
             if(p.y1 > 0) {
                 p.y1--;
+                p.y2--;
             }
         }
         // Verifica se a nova localização colide com algo
         if(!Check_Collision(&p)) {
-            hitbox = p;
+            hitbox.x1 = p.x1;
+            hitbox.y1 = p.y1;
         } else {
             p = hitbox;
+            p.x2 = p.x1 + Char_fig.largura;
+            p.y2 = p.y1 + Char_fig.altura;
         }
         // Atualiza Buffer da LCD
         desenha_fig(&p, &Char_fig);

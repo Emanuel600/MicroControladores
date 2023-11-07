@@ -4,6 +4,12 @@
 #include "NOKIA5110_fb.h"
 
 typedef struct pontos_t pontos_t;
+// Dimensões do Display
+#define DISPLAY_W       83U // Width
+#define DISPLAY_H       47U // Height
+// Espessura das fronteiras
+#define UPPER_BORDER    05U
+#define LEFT_BORDER     10U
 
 /**
  * @brief           Contains game entities, used for indexing
@@ -74,9 +80,6 @@ Entity_s Entity(General_Status_e status, Entity_e type, \
 
 uint32_t Remove_Entity(Entity_s* Entity);
 
-uint32_t Check_Collision(pontos_t* hitbox)
-{
-    return 0;
-}
+uint32_t Check_Collision(pontos_t* hitbox);
 
 #endif
