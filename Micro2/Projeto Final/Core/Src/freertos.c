@@ -25,6 +25,7 @@
 
 /* Private includes ----------------------------------------------------------*/
 /* USER CODE BEGIN Includes */
+#include "logic_handler.h"
 #include "NOKIA5110_fb.h"
 #include "figuras.h"
 /* USER CODE END Includes */
@@ -57,6 +58,7 @@ extern uint32_t ADC_Buffer[2];
 static int32_t Axis[2];
 osThreadId MoveTaskHandle;
 osThreadId RefreshTaskHandle;
+SemaphoreHandle_t Display_Mutex;
 /* USER CODE END Variables */
 osThreadId defaultTaskHandle;
 
@@ -68,7 +70,7 @@ osThreadId defaultTaskHandle;
  * @param pvParameters  struct containing destination and figure
  */
 void Task_Move_Figure(void* pvParameters);
-void Move_Rect(void* pvParamaters);
+void Move_Char(void* pvParamaters);
 /**
  * @brief               Refreshes screen periodically (17ms or ~59 Hz)
  *
@@ -117,7 +119,7 @@ void MX_FREERTOS_Init(void)
     /* USER CODE END Init */
 
     /* USER CODE BEGIN RTOS_MUTEX */
-    /* add mutexes, ... */
+    Display_Mutex = xSemaphoreCreateMutex();
     /* USER CODE END RTOS_MUTEX */
 
     /* USER CODE BEGIN RTOS_SEMAPHORES */
@@ -138,8 +140,8 @@ void MX_FREERTOS_Init(void)
     defaultTaskHandle = osThreadCreate(osThread(defaultTask), NULL);
 
     /* USER CODE BEGIN RTOS_THREADS */
-    osThreadDef(Move_Thread, Move_Rect, osPriorityNormal, 0, 128);
-    MoveTaskHandle = osThreadCreate(osThread(Move_Thread), &q);
+    osThreadDef(Move_Thread, Move_Char, osPriorityNormal, 0, 128);
+    MoveTaskHandle = osThreadCreate(osThread(Move_Thread), NULL);
 
     osThreadDef(Refresh_Thread, Refresh_Screen, osPriorityNormal, 0, 128);
     RefreshTaskHandle = osThreadCreate(osThread(Refresh_Thread), NULL);
@@ -168,17 +170,18 @@ void StartDefaultTask(void const* argument)
 
 /* Private application code --------------------------------------------------*/
 /* USER CODE BEGIN Application */
-void Move_Rect(void* param)
+void Move_Char(void* param)
 {
-    struct pontos_t p = {
+    struct pontos_t hitbox = {
         .x1 = 10,
         .y1 = 10,
         .x2 = 00,
         .y2 = 00
     };
+    struct pontos_t p = hitbox;
 
     while(1) {
-        Apaga_Figura(&p, &Character);
+        Apaga_Figura(&p, &Char_fig);
         // Eixo 'x'
         if(Axis[0] < -200) {
             if(p.x1 > 0) {
@@ -199,8 +202,14 @@ void Move_Rect(void* param)
                 p.y1--;
             }
         }
+        // Verifica se a nova localização colide com algo
+        if(!Check_Collision(&p)) {
+            hitbox = p;
+        } else {
+            p = hitbox;
+        }
         // Atualiza Buffer da LCD
-        desenha_fig(&p, &Character);
+        desenha_fig(&p, &Char_fig);
         osDelay(100);
     }
 }

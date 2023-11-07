@@ -3,14 +3,16 @@
 
 #include "NOKIA5110_fb.h"
 
+typedef struct pontos_t pontos_t;
+
 /**
  * @brief           Contains game entities, used for indexing
  *
- * @param Character - Player Character
- * @param Octupus   - Octupus, Enemy
- * @param Enemy     - Enemy
- * @param Object    - Rocks, trees, doors, stair, etc.
- * @param Item      - Health, Sword, Shield, etc.
+ * @param Character Player Character
+ * @param Octupus   Octupus, Enemy
+ * @param Enemy     Enemy
+ * @param Object    Rocks, trees, doors, stair, etc.
+ * @param Item      Health, Sword, Shield, etc.
  */
 typedef enum {
     Character,
@@ -36,31 +38,45 @@ typedef enum {
 } General_Status_e;
 
 /**
- * @brief           Identifies what grid an entity is in, helps with collision detection
+ * @brief           Facing directions of an object
  *
- * @param Grid_None
- * @param Grid_Right
- * @param Grid_Up
- * @param Grid_Up_Right
+ * @param Up
+ * @param Down
+ * @param Left
+ * @param Right
  */
 typedef enum {
-    Grid_None       = 0,
-    Grid_Right      = 1,
-    Grid_Up         = 2,
-    Grid_Up_Right   = 3  // = Right + Up
-} In_Grid_e;
+    Up      = 0,
+    Down    = 1,
+    Left    = 2,
+    Right   = 4
+} Direction_e;
 
 /**
  * @brief
  *
- * @param type      - What entity it is
- * @param grids     - What grids it's in
- * @param q         - Where it is
+ * @param status    The status of the entity
+ * @param direction Facing direction
+ * @param type      What entity it is
+ * @param hitbox    Hitbox (x1, y1), (x2, y2) rectangle
  */
 typedef struct {
+    General_Status_e status;
+    Direction_e direction;
     Entity_e  type;
-    In_Grid_e grids;
-    pontos_t* q;
+    pontos_t* hitbox;
 } Entity_s;
+
+extern volatile Entity_s* Active_Entities[10];
+
+Entity_s Entity(General_Status_e status, Entity_e type, \
+        pontos_t* hitbox);
+
+uint32_t Remove_Entity(Entity_s* Entity);
+
+uint32_t Check_Collision(pontos_t* hitbox)
+{
+    return 0;
+}
 
 #endif

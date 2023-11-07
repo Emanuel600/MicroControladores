@@ -12,18 +12,6 @@
  */
 typedef struct figura_t figura_s;
 
-const figura_s block_5x5 = {
-    5,
-    5,
-    {
-        0b11111,
-        0b11111,
-        0b11111,
-        0b11111,
-        0b11111
-    }
-};
-
 const figura_s Cursor = {
     5,
     5,
@@ -36,7 +24,7 @@ const figura_s Cursor = {
     }
 };
 
-const figura_s Character = {
+const figura_s Char_fig = {
     .largura = 14,
     .altura  = 16,
     .pixels = {
