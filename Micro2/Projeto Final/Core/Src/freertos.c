@@ -58,7 +58,6 @@ extern uint32_t ADC_Buffer[2];
 static int32_t Axis[2];
 osThreadId MoveTaskHandle;
 osThreadId RefreshTaskHandle;
-SemaphoreHandle_t Display_Mutex;
 /* USER CODE END Variables */
 osThreadId defaultTaskHandle;
 
@@ -110,16 +109,14 @@ void vApplicationGetIdleTaskMemory(StaticTask_t** ppxIdleTaskTCBBuffer, StackTyp
 void MX_FREERTOS_Init(void)
 {
     /* USER CODE BEGIN Init */
-    static struct pontos_t q = {
-        .x1 = 40,
-        .y1 = 20,
-        .x2 = 45,
-        .y2 = 25
+    pontos_t q1 = {
+        .x1 = 0,
+        .y1 = 0
     };
+    desenha_fig(&q1, &BackGround);
     /* USER CODE END Init */
 
     /* USER CODE BEGIN RTOS_MUTEX */
-    Display_Mutex = xSemaphoreCreateMutex();
     /* USER CODE END RTOS_MUTEX */
 
     /* USER CODE BEGIN RTOS_SEMAPHORES */
@@ -161,6 +158,7 @@ void StartDefaultTask(void const* argument)
     /* init code for USB_DEVICE */
     MX_USB_DEVICE_Init();
     /* USER CODE BEGIN StartDefaultTask */
+    UNUSED(argument);
     /* Infinite loop */
     for(;;) {
         osDelay(1);
@@ -209,11 +207,21 @@ void Move_Char(void* param)
             }
         }
         // Verifica se a nova localização colide com algo
-        if(!Check_Collision(&p)) {
+        Collision_e coll = Check_Collision(&p);
+        if(!coll) { // Não colidiu
             hitbox.x1 = p.x1;
             hitbox.y1 = p.y1;
-        } else {
-            p = hitbox;
+        } else { // Colidiu
+            // Em X e Y
+            if(coll == XY_COLLISION) {
+                p = hitbox;
+            } else if(coll == Y_COLLISION) { // Apenas em Y
+                hitbox.x1 = p.x1;
+                p.y1 = hitbox.y1;
+            } else { // Apenas em X
+                hitbox.y1 = p.y1;
+                p.x1 = hitbox.x1;
+            }
             p.x2 = p.x1 + Char_fig.largura;
             p.y2 = p.y1 + Char_fig.altura;
         }

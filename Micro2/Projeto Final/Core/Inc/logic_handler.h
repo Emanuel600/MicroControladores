@@ -59,6 +59,18 @@ typedef enum {
 } Direction_e;
 
 /**
+ * @brief               Directions of a collision
+ *
+ * @param NO_COLLISION
+ */
+typedef enum {
+    NO_COLLISION,
+    X_COLLISION,
+    Y_COLLISION,
+    XY_COLLISION
+} Collision_e;
+
+/**
  * @brief
  *
  * @param status    The status of the entity
@@ -80,6 +92,8 @@ Entity_s Entity(General_Status_e status, Entity_e type, \
 
 uint32_t Remove_Entity(Entity_s* Entity);
 
-uint32_t Check_Collision(pontos_t* hitbox);
+Collision_e Check_Collision(pontos_t* hitbox);
+
+void Draw_Borders();
 
 #endif
