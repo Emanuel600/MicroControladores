@@ -63,6 +63,78 @@ const figura_s BackGround = {
     }
 };
 
+const figura_s Brick = {
+    12,
+    12,
+    {
+        0xF9,
+        0xCF,
+        0xC9,
+        0xC9,
+        0xF9,
+        0xCF,
+        0xC9,
+        0xC9,
+        0xF9,
+        0xCF,
+        0xC9,
+        0xC9
+    }
+};
+
+const figura_s Left_Wall_Brick = {
+    12,
+    12,
+    {
+        0xFF,
+        0xFF,
+        0xFF,
+        0x44,
+        0x44,
+        0xFF,
+        0x11,
+        0x11,
+        0xFF,
+        0x88,
+        0x88,
+        0xFF
+    }
+};
+
+const figura_s Upper_Left_Brick = {
+    12,
+    12,
+    {
+        0xFF,
+        0xFF,
+        0xFF,
+        0x23,
+        0x23,
+        0xFF,
+        0x9F,
+        0x93,
+        0x93,
+        0xF3,
+        0x9F,
+        0x9F,
+        0x00,
+        0x00,
+        0x00,
+        0x00,
+        0x00,
+        0x00,
+        0x00,
+        0x00,
+        0x00,
+        0x00,
+        0x00,
+        0x00,
+        0x00,
+        0x00,
+        0x00
+    }
+};
+
 const figura_s Char_fig = {
     .largura = 14,
     .altura  = 16,

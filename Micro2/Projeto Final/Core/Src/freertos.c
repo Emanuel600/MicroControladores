@@ -110,10 +110,15 @@ void MX_FREERTOS_Init(void)
 {
     /* USER CODE BEGIN Init */
     pontos_t q1 = {
-        .x1 = 0,
-        .y1 = 0
+        .x1 = 38,
+        .y1 = 18
     };
-    desenha_fig(&q1, &BackGround);
+    desenha_fig(&q1, &Upper_Left_Brick);
+    q1.x1 += 14;
+    //desenha_fig(&q1, &Brick);
+    //q1.x1 -= 12;
+    //q1.y1 += 12;
+    //desenha_fig(&q1, &Left_Wall_Brick);
     /* USER CODE END Init */
 
     /* USER CODE BEGIN RTOS_MUTEX */
@@ -137,8 +142,8 @@ void MX_FREERTOS_Init(void)
     defaultTaskHandle = osThreadCreate(osThread(defaultTask), NULL);
 
     /* USER CODE BEGIN RTOS_THREADS */
-    osThreadDef(Move_Thread, Move_Char, osPriorityNormal, 0, 128);
-    MoveTaskHandle = osThreadCreate(osThread(Move_Thread), NULL);
+    // osThreadDef(Move_Thread, Move_Char, osPriorityNormal, 0, 128);
+    // MoveTaskHandle = osThreadCreate(osThread(Move_Thread), NULL);
 
     osThreadDef(Refresh_Thread, Refresh_Screen, osPriorityNormal, 0, 128);
     RefreshTaskHandle = osThreadCreate(osThread(Refresh_Thread), NULL);
@@ -171,8 +176,8 @@ void StartDefaultTask(void const* argument)
 void Move_Char(void* param)
 {
     struct pontos_t hitbox = {
-        .x1 = 10,
-        .y1 = 10,
+        .x1 = 44,
+        .y1 = 22,
         .x2 = 00,
         .y2 = 00
     };
