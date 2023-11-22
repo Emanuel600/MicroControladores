@@ -32,7 +32,19 @@
 
 /* Private typedef -----------------------------------------------------------*/
 /* USER CODE BEGIN PTD */
-
+const figura_s tijolinho = {
+    8,
+    7,
+    .pixels = {
+        0x9F,
+        0xF3,
+        0x93,
+        0x93,
+        0x9F,
+        0xF3,
+        0x93
+    }
+};
 /* USER CODE END PTD */
 
 /* Private define ------------------------------------------------------------*/
@@ -110,15 +122,17 @@ void MX_FREERTOS_Init(void)
 {
     /* USER CODE BEGIN Init */
     pontos_t q1 = {
-        .x1 = 38,
-        .y1 = 18
+        .x1 = 0,
+        .y1 = 0
     };
-    desenha_fig(&q1, &Upper_Left_Brick);
-    q1.x1 += 14;
-    //desenha_fig(&q1, &Brick);
-    //q1.x1 -= 12;
-    //q1.y1 += 12;
-    //desenha_fig(&q1, &Left_Wall_Brick);
+    //desenha_fig(&q1, &Char_fig);
+    desenha_fig(&q1, &tijolinho);
+    q1.y1 += 8;
+    desenha_fig(&q1, &tijolinho);
+    q1.y1 += 8;
+    desenha_fig(&q1, &tijolinho);
+    q1.y1 += 8;
+    desenha_fig(&q1, &tijolinho);
     /* USER CODE END Init */
 
     /* USER CODE BEGIN RTOS_MUTEX */
@@ -176,8 +190,8 @@ void StartDefaultTask(void const* argument)
 void Move_Char(void* param)
 {
     struct pontos_t hitbox = {
-        .x1 = 44,
-        .y1 = 22,
+        .x1 = 38,
+        .y1 = 10,
         .x2 = 00,
         .y2 = 00
     };
