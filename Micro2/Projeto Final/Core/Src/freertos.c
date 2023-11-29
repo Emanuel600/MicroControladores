@@ -30,22 +30,10 @@
 #include "figuras.h"
 /* USER CODE END Includes */
 
-/* Private typedef -----------------------------------------------------------*/
-/* USER CODE BEGIN PTD */
-/* USER CODE END PTD */
-
 /* Private define ------------------------------------------------------------*/
 /* USER CODE BEGIN PD */
-
+SemaphoreHandle_t Shooter_Semaphore;
 /* USER CODE END PD */
-
-/* Private macro -------------------------------------------------------------*/
-/* USER CODE BEGIN PM */
-
-/* USER CODE END PM */
-
-/* Private variables ---------------------------------------------------------*/
-/* USER CODE BEGIN Variables */
 
 extern uint32_t ADC_Buffer[2];
 /**
@@ -58,23 +46,21 @@ static int32_t Axis[2];
 osThreadId MoveTaskHandle;
 osThreadId ShooterTaskHandle;
 osThreadId RefreshTaskHandle;
+osThreadId Projectile_Handle;
 /* USER CODE END Variables */
 osThreadId defaultTaskHandle;
 
 /* Private function prototypes -----------------------------------------------*/
 /* USER CODE BEGIN FunctionPrototypes */
-/**
- * @brief               Moves Figure by (x,y)
- *
- * @param pvParameters  struct containing destination and figure
- */
+
+/// @brief          Moves Shooter
 void Move_Shooter(void* pvParameters);
+/// @brief          Moves MC
 void Move_Char(void* pvParamaters);
-/**
- * @brief               Refreshes screen periodically (17ms or ~59 Hz)
- *
- * @param pvParameters  NULL
- */
+
+
+
+/// @brief               Refreshes screen periodically (100ms or 10 Hz)
 void Refresh_Screen(void* pvParameters);
 /* USER CODE END FunctionPrototypes */
 
@@ -109,6 +95,8 @@ void vApplicationGetIdleTaskMemory(StaticTask_t** ppxIdleTaskTCBBuffer, StackTyp
 void MX_FREERTOS_Init(void)
 {
     /* USER CODE BEGIN Init */
+    Shooter_Semaphore = xSemaphoreCreateBinary();
+
     pontos_t q1 = {
         .x1 = 0,
         .y1 = 0
@@ -126,12 +114,19 @@ void MX_FREERTOS_Init(void)
     defaultTaskHandle = osThreadCreate(osThread(defaultTask), NULL);
 
     /* USER CODE BEGIN RTOS_THREADS */
+    // Input Handler Handles Input
+    // Moves MC
     osThreadDef(Move_Thread, Move_Char, osPriorityNormal, 0, 128);
     MoveTaskHandle = osThreadCreate(osThread(Move_Thread), NULL);
-
+    /* Handles Shooter */
+    // Movement
     osThreadDef(Shooter_Thread, Move_Shooter, osPriorityNormal, 0, 128);
     ShooterTaskHandle = osThreadCreate(osThread(Shooter_Thread), NULL);
-
+    // Projectiles
+    osThreadDef(Shooter_Thread, Move_Shooter, osPriorityNormal, 0, 128);
+    ShooterTaskHandle = osThreadCreate(osThread(Shooter_Thread), NULL);
+    /* Handles 'Thing' */
+    /* Handles Slime */
     osThreadDef(Refresh_Thread, Refresh_Screen, osPriorityNormal, 0, 128);
     RefreshTaskHandle = osThreadCreate(osThread(Refresh_Thread), NULL);
     /* USER CODE END RTOS_THREADS */
@@ -234,6 +229,7 @@ void Move_Shooter(void* parm)
     hitbox.x2 = hitbox.x1 + Shooter.largura;
     hitbox.y2 = hitbox.y1 + Shooter.altura;
     int32_t direction = 1;
+    uint32_t cycle = 0;
 
     while(1) {
         Apaga_Figura(&p, &Shooter);
@@ -247,6 +243,11 @@ void Move_Shooter(void* parm)
             hitbox.y2 -= direction;
             direction *= -1;
         }
+        if(!(cycle - 4)) {
+            // Shoots
+            xSemaphoreGive(Shooter_Semaphore);
+        }
+        cycle++;
         desenha_fig(&p, &Shooter);
         osDelay(150);
     }
