@@ -11,7 +11,7 @@ Collision_e Check_Collision(pontos_t* hitbox)
     Collision_e collision_type;
 
     if(y1 > UPPER_BORDER) { // Acima da fronteira inferior
-        if(y2 < (DISPLAY_H - UPPER_BORDER * 2)) { // Abaixo da fronteira superior
+        if(y2 < (DISPLAY_H - UPPER_BORDER)) { // Abaixo da fronteira superior
             collision_type = NO_COLLISION;
         } else {
             collision_type = Y_COLLISION;
@@ -22,12 +22,12 @@ Collision_e Check_Collision(pontos_t* hitbox)
     // X_COLLISION + Y_COLLISION = XY_COLLISION
     if(x1 > LEFT_BORDER) { // Acima da fronteira inferior
         if(x2 < (DISPLAY_W - LEFT_BORDER)) { // Abaixo da fronteira superior
-            collision_type + NO_COLLISION;
+            collision_type += NO_COLLISION;
         } else {
-            collision_type + X_COLLISION;
+            collision_type += X_COLLISION;
         }
     } else {
-        collision_type + X_COLLISION;
+        collision_type += X_COLLISION;
     }
 
     return collision_type;

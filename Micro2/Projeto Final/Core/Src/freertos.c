@@ -32,19 +32,6 @@
 
 /* Private typedef -----------------------------------------------------------*/
 /* USER CODE BEGIN PTD */
-const figura_s tijolinho = {
-    8,
-    7,
-    .pixels = {
-        0x9F,
-        0xF3,
-        0x93,
-        0x93,
-        0x9F,
-        0xF3,
-        0x93
-    }
-};
 /* USER CODE END PTD */
 
 /* Private define ------------------------------------------------------------*/
@@ -125,14 +112,14 @@ void MX_FREERTOS_Init(void)
         .x1 = 0,
         .y1 = 0
     };
-    //desenha_fig(&q1, &Char_fig);
-    desenha_fig(&q1, &tijolinho);
+    desenha_fig(&q1, &Background_Top);
     q1.y1 += 8;
-    desenha_fig(&q1, &tijolinho);
-    q1.y1 += 8;
-    desenha_fig(&q1, &tijolinho);
-    q1.y1 += 8;
-    desenha_fig(&q1, &tijolinho);
+    desenha_fig(&q1, &Background_Left);
+    q1.y1 += 32;
+    desenha_fig(&q1, &Background_Bottom);
+    q1.y1 = 8;
+    q1.x1 = 77;
+    desenha_fig(&q1, &Background_Right);
     /* USER CODE END Init */
 
     /* USER CODE BEGIN RTOS_MUTEX */
@@ -156,8 +143,8 @@ void MX_FREERTOS_Init(void)
     defaultTaskHandle = osThreadCreate(osThread(defaultTask), NULL);
 
     /* USER CODE BEGIN RTOS_THREADS */
-    // osThreadDef(Move_Thread, Move_Char, osPriorityNormal, 0, 128);
-    // MoveTaskHandle = osThreadCreate(osThread(Move_Thread), NULL);
+    osThreadDef(Move_Thread, Move_Char, osPriorityNormal, 0, 128);
+    MoveTaskHandle = osThreadCreate(osThread(Move_Thread), NULL);
 
     osThreadDef(Refresh_Thread, Refresh_Screen, osPriorityNormal, 0, 128);
     RefreshTaskHandle = osThreadCreate(osThread(Refresh_Thread), NULL);

@@ -320,4 +320,68 @@ const figura_s Slime_Ball = {
         0x1E
     }
 };
+// Going Left
+const figura_s Slime_Left = {
+    11,
+    4,
+    {
+        0x06,
+        0x0F,
+        0x0F,
+        0x0F,
+        0x0F,
+        0x0F,
+        0x0F,
+        0x0E,
+        0x0E,
+        0x0C,
+        0x08
+    }
+};
+// Going Right
+const figura_s Slime_Right = {
+    11,
+    4,
+    {
+        0x08,
+        0x0C,
+        0x0E,
+        0x0E,
+        0x0F,
+        0x0F,
+        0x0F,
+        0x0F,
+        0x0F,
+        0x0F,
+        0x06
+    }
+};
+/* Thing */
+const figura_s Thing = {
+    5,
+    6,
+    {
+        0x37,
+        0x0D,
+        0x3F,
+        0x0D,
+        0x37
+    }
+};
+/* Main Character */
+const figura_s Char_fig = {
+    8,
+    8,
+    {
+        0x3C,
+        0x7E,
+        0xD3,
+        0xBF,
+        0xBF,
+        0xD3,
+        0x7E,
+        0x3C
+    }
+};
+
 #endif

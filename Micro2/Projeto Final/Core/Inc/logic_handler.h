@@ -8,8 +8,8 @@ typedef struct pontos_t pontos_t;
 #define DISPLAY_W       83U // Width
 #define DISPLAY_H       47U // Height
 // Espessura das fronteiras
-#define UPPER_BORDER    05U
-#define LEFT_BORDER     10U
+#define UPPER_BORDER    8U
+#define LEFT_BORDER     7U
 
 /**
  * @brief           Contains game entities, used for indexing
