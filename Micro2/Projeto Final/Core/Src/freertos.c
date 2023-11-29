@@ -56,6 +56,7 @@ extern uint32_t ADC_Buffer[2];
  */
 static int32_t Axis[2];
 osThreadId MoveTaskHandle;
+osThreadId ShooterTaskHandle;
 osThreadId RefreshTaskHandle;
 /* USER CODE END Variables */
 osThreadId defaultTaskHandle;
@@ -67,7 +68,7 @@ osThreadId defaultTaskHandle;
  *
  * @param pvParameters  struct containing destination and figure
  */
-void Task_Move_Figure(void* pvParameters);
+void Move_Shooter(void* pvParameters);
 void Move_Char(void* pvParamaters);
 /**
  * @brief               Refreshes screen periodically (17ms or ~59 Hz)
@@ -121,24 +122,6 @@ void MX_FREERTOS_Init(void)
     q1.x1 = 77;
     desenha_fig(&q1, &Background_Right);
     /* USER CODE END Init */
-
-    /* USER CODE BEGIN RTOS_MUTEX */
-    /* USER CODE END RTOS_MUTEX */
-
-    /* USER CODE BEGIN RTOS_SEMAPHORES */
-    /* add semaphores, ... */
-    /* USER CODE END RTOS_SEMAPHORES */
-
-    /* USER CODE BEGIN RTOS_TIMERS */
-    /* start timers, add new ones, ... */
-    /* USER CODE END RTOS_TIMERS */
-
-    /* USER CODE BEGIN RTOS_QUEUES */
-    /* add queues, ... */
-    /* USER CODE END RTOS_QUEUES */
-
-    /* Create the thread(s) */
-    /* definition and creation of defaultTask */
     osThreadDef(defaultTask, StartDefaultTask, osPriorityNormal, 0, 128);
     defaultTaskHandle = osThreadCreate(osThread(defaultTask), NULL);
 
@@ -146,10 +129,12 @@ void MX_FREERTOS_Init(void)
     osThreadDef(Move_Thread, Move_Char, osPriorityNormal, 0, 128);
     MoveTaskHandle = osThreadCreate(osThread(Move_Thread), NULL);
 
+    osThreadDef(Shooter_Thread, Move_Shooter, osPriorityNormal, 0, 128);
+    ShooterTaskHandle = osThreadCreate(osThread(Shooter_Thread), NULL);
+
     osThreadDef(Refresh_Thread, Refresh_Screen, osPriorityNormal, 0, 128);
     RefreshTaskHandle = osThreadCreate(osThread(Refresh_Thread), NULL);
     /* USER CODE END RTOS_THREADS */
-
 }
 
 /* USER CODE BEGIN Header_StartDefaultTask */
@@ -174,69 +159,98 @@ void StartDefaultTask(void const* argument)
 
 /* Private application code --------------------------------------------------*/
 /* USER CODE BEGIN Application */
+// Move Personagem
 void Move_Char(void* param)
 {
-    struct pontos_t hitbox = {
+    UNUSED(param);
+    struct pontos_t p = {
         .x1 = 38,
         .y1 = 10,
         .x2 = 00,
         .y2 = 00
     };
-    struct pontos_t p = hitbox;
-    p.x2 = p.x1 + Char_fig.largura;
-    p.y2 = p.y1 + Char_fig.altura;
+    struct pontos_t hitbox = p;
+    hitbox.x2 = hitbox.x1 + Char_fig.largura;
+    hitbox.y2 = hitbox.y1 + Char_fig.altura;
 
     while(1) {
         Apaga_Figura(&p, &Char_fig);
         // Eixo 'x'
         if(Axis[0] < -200) {
-            if(p.x1 > 0) {
-                p.x1--;
-                p.x2--;
+            if(hitbox.x1 > 0) {
+                hitbox.x1--;
+                hitbox.x2--;
             }
         } else if(Axis[0] > 200) { // 50 = Delta de tolerancia no deslocamento do eixo
-            if(p.x1 < 75) {
-                p.x1++;
-                p.x2++;
+            if(hitbox.x1 < 75) {
+                hitbox.x1++;
+                hitbox.x2++;
             }
         }
         // Eixo 'y'
         if(Axis[1] < -200) {
-            if(p.y1 < 40) {
-                p.y1++;
-                p.y2++;
+            if(hitbox.y1 < 40) {
+                hitbox.y1++;
+                hitbox.y2++;
             }
         } else if(Axis[1] > 200) {
-            if(p.y1 > 0) {
-                p.y1--;
-                p.y2--;
+            if(hitbox.y1 > 0) {
+                hitbox.y1--;
+                hitbox.y2--;
             }
         }
         // Verifica se a nova localização colide com algo
-        Collision_e coll = Check_Collision(&p);
+        Collision_e coll = Check_Collision(&hitbox);
         if(!coll) { // Não colidiu
-            hitbox.x1 = p.x1;
-            hitbox.y1 = p.y1;
+            p.x1 = hitbox.x1;
+            p.y1 = hitbox.y1;
         } else { // Colidiu
             // Em X e Y
             if(coll == XY_COLLISION) {
-                p = hitbox;
+                hitbox = p;
             } else if(coll == Y_COLLISION) { // Apenas em Y
-                hitbox.x1 = p.x1;
-                p.y1 = hitbox.y1;
-            } else { // Apenas em X
-                hitbox.y1 = p.y1;
                 p.x1 = hitbox.x1;
+                hitbox.y1 = p.y1;
+            } else if(coll == X_COLLISION) { // Apenas em X
+                p.y1 = hitbox.y1;
+                hitbox.x1 = p.x1;
             }
-            p.x2 = p.x1 + Char_fig.largura;
-            p.y2 = p.y1 + Char_fig.altura;
+            hitbox.x2 = hitbox.x1 + Char_fig.largura;
+            hitbox.y2 = hitbox.y1 + Char_fig.altura;
         }
         // Atualiza Buffer da LCD
-        desenha_fig(&p, &Char_fig);
+        desenha_fig(&hitbox, &Char_fig);
         osDelay(100);
     }
 }
+// Move "Shooter"
+void Move_Shooter(void* parm)
+{
+    struct pontos_t p = {
+        .x1 = 20,
+        .y1 = 15
+    };
+    struct pontos_t hitbox = p;
+    hitbox.x2 = hitbox.x1 + Shooter.largura;
+    hitbox.y2 = hitbox.y1 + Shooter.altura;
+    int32_t direction = 1;
 
+    while(1) {
+        Apaga_Figura(&p, &Shooter);
+        hitbox.y1 += direction;
+        hitbox.y2 += direction;
+        Collision_e coll = Check_Collision(&hitbox);
+        if(coll == NO_COLLISION) {
+            p.y1 = hitbox.y1;
+        } else if(coll == Y_COLLISION) {
+            hitbox.y1 = p.y1;
+            hitbox.y2 -= direction;
+            direction *= -1;
+        }
+        desenha_fig(&p, &Shooter);
+        osDelay(150);
+    }
+}
 void Refresh_Screen(void* pvParam)
 {
     portTickType Last_Wake = xTaskGetTickCount();
@@ -249,8 +263,8 @@ void Refresh_Screen(void* pvParam)
 void HAL_ADC_ConvCpltCallback(ADC_HandleTypeDef* hadc)
 {
     if(hadc->Instance == ADC1) {
-        Axis[1] = 2048 - ADC_Buffer[0];
-        Axis[0] = 2048 - ADC_Buffer[1];
+        Axis[0] = 2048 - ADC_Buffer[0];
+        Axis[1] = 2048 - ADC_Buffer[1];
     }
 }
 
