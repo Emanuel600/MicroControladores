@@ -43,25 +43,21 @@ extern uint32_t ADC_Buffer[2];
  * @param 2:        Eixo y
  */
 static int32_t Axis[2];
+/* Task Handles */
 osThreadId MoveTaskHandle;
 osThreadId ShooterTaskHandle;
 osThreadId RefreshTaskHandle;
 osThreadId Projectile_Handle;
+/* Queue Handles */
+QueueHandle_t Shooter_Pos;
+QueueHandle_t User_Pos;
+QueueHandle_t User_In;
 /* USER CODE END Variables */
 osThreadId defaultTaskHandle;
 
 /* Private function prototypes -----------------------------------------------*/
 /* USER CODE BEGIN FunctionPrototypes */
-
-/// @brief          Moves Shooter
-void Move_Shooter(void* pvParameters);
-/// @brief          Moves MC
-void Move_Char(void* pvParamaters);
-
-
-
-/// @brief               Refreshes screen periodically (100ms or 10 Hz)
-void Refresh_Screen(void* pvParameters);
+// => In main.h
 /* USER CODE END FunctionPrototypes */
 
 void StartDefaultTask(void const* argument);
@@ -95,20 +91,10 @@ void vApplicationGetIdleTaskMemory(StaticTask_t** ppxIdleTaskTCBBuffer, StackTyp
 void MX_FREERTOS_Init(void)
 {
     /* USER CODE BEGIN Init */
-    Shooter_Semaphore = xSemaphoreCreateBinary();
-
-    pontos_t q1 = {
-        .x1 = 0,
-        .y1 = 0
-    };
-    desenha_fig(&q1, &Background_Top);
-    q1.y1 += 8;
-    desenha_fig(&q1, &Background_Left);
-    q1.y1 += 32;
-    desenha_fig(&q1, &Background_Bottom);
-    q1.y1 = 8;
-    q1.x1 = 77;
-    desenha_fig(&q1, &Background_Right);
+    Shooter_Pos = xQueueCreate(1, sizeof(uint32_t));
+    if(!Shooter_Pos) {
+        //INVERTE_PIXELS();
+    }
     /* USER CODE END Init */
     osThreadDef(defaultTask, StartDefaultTask, osPriorityNormal, 0, 128);
     defaultTaskHandle = osThreadCreate(osThread(defaultTask), NULL);
@@ -123,8 +109,8 @@ void MX_FREERTOS_Init(void)
     osThreadDef(Shooter_Thread, Move_Shooter, osPriorityNormal, 0, 128);
     ShooterTaskHandle = osThreadCreate(osThread(Shooter_Thread), NULL);
     // Projectiles
-    osThreadDef(Shooter_Thread, Move_Shooter, osPriorityNormal, 0, 128);
-    ShooterTaskHandle = osThreadCreate(osThread(Shooter_Thread), NULL);
+    // osThreadDef(Shot_Thread, Shots_Fired, osPriorityNormal, 0, 128);
+    // ShooterTaskHandle = osThreadCreate(osThread(Shot_Thread), NULL);
     /* Handles 'Thing' */
     /* Handles Slime */
     osThreadDef(Refresh_Thread, Refresh_Screen, osPriorityNormal, 0, 128);
@@ -145,6 +131,18 @@ void StartDefaultTask(void const* argument)
     MX_USB_DEVICE_Init();
     /* USER CODE BEGIN StartDefaultTask */
     UNUSED(argument);
+    pontos_t q1 = {
+        .x1 = 0,
+        .y1 = 0
+    };
+    desenha_fig(&q1, &Background_Top);
+    q1.y1 += 8;
+    desenha_fig(&q1, &Background_Left);
+    q1.y1 += 32;
+    desenha_fig(&q1, &Background_Bottom);
+    q1.y1 = 8;
+    q1.x1 = 77;
+    desenha_fig(&q1, &Background_Right);
     /* Infinite loop */
     for(;;) {
         osDelay(1);
@@ -243,17 +241,31 @@ void Move_Shooter(void* parm)
             hitbox.y2 -= direction;
             direction *= -1;
         }
-        if(!(cycle - 4)) {
+        if(!(cycle - 6)) {
             // Shoots
-            xSemaphoreGive(Shooter_Semaphore);
+            uint32_t y = p.y1;
+            xQueueSendToBack(Shooter_Pos, &y, 10 * portTICK_RATE_MS);
+            cycle = 0;
         }
         cycle++;
         desenha_fig(&p, &Shooter);
         osDelay(150);
     }
 }
+
+void Shots_Fired(void* Param)
+{
+    UNUSED(Param);
+    uint32_t x;
+    while(1) {
+        //xQueueReceive(Shooter_Pos, &x, portMAX_DELAY);
+        //INVERTE_PIXELS();
+    }
+}
+
 void Refresh_Screen(void* pvParam)
 {
+    UNUSED(pvParam);
     portTickType Last_Wake = xTaskGetTickCount();
     while(1) {
         imprime_LCD();

@@ -30,36 +30,25 @@ extern "C" {
 #include "stm32f1xx_hal.h"
 
 /* Private includes ----------------------------------------------------------*/
-/* USER CODE BEGIN Includes */
-
-/* USER CODE END Includes */
-
-/* Exported types ------------------------------------------------------------*/
-/* USER CODE BEGIN ET */
-
-/* USER CODE END ET */
-
-/* Exported constants --------------------------------------------------------*/
-/* USER CODE BEGIN EC */
-
-/* USER CODE END EC */
-
-/* Exported macro ------------------------------------------------------------*/
-/* USER CODE BEGIN EM */
-
-/* USER CODE END EM */
-
 /* Exported functions prototypes ---------------------------------------------*/
 void Error_Handler(void);
 
 /* USER CODE BEGIN EFP */
+/* RTOS Tasks */
+/// @brief          Moves Shooter
+void Move_Shooter(void* pvParameters);
+/// @brief          Moves MC
+void Move_Char(void* pvParamaters);
+/// @brief          Fires a Shot
+void Shots_Fired(void* pvParamaters);
 
+/// @brief               Refreshes screen periodically (100ms or 10 Hz)
+void Refresh_Screen(void* pvParameters);
 /* USER CODE END EFP */
 
 /* Private defines -----------------------------------------------------------*/
 
 /* USER CODE BEGIN Private defines */
-
 /* USER CODE END Private defines */
 
 #ifdef __cplusplus
