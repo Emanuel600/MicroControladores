@@ -28,6 +28,7 @@
 #include "logic_handler.h"
 #include "NOKIA5110_fb.h"
 #include "figuras.h"
+#include "queue.h"
 /* USER CODE END Includes */
 
 /* Private define ------------------------------------------------------------*/
@@ -135,6 +136,7 @@ void StartDefaultTask(void const* argument)
         .x1 = 0,
         .y1 = 0
     };
+    // Draws Background
     desenha_fig(&q1, &Background_Top);
     q1.y1 += 8;
     desenha_fig(&q1, &Background_Left);
@@ -256,10 +258,12 @@ void Move_Shooter(void* parm)
 void Shots_Fired(void* Param)
 {
     UNUSED(Param);
-    uint32_t x;
+    uint32_t y;
     while(1) {
-        //xQueueReceive(Shooter_Pos, &x, portMAX_DELAY);
-        //INVERTE_PIXELS();
+        xQueueReceive(Shooter_Pos, &y, 5);
+        if(y != NULL) {
+            // Call Draw_Shot task
+        }
     }
 }
 
