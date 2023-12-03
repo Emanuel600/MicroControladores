@@ -95,4 +95,8 @@ pontos_t get_player_hitbox(void);
 
 void set_player_hitbox(pontos_t* h);
 
+uint32_t get_player_health(void);
+
+void dec_player_health(void);
+
 #endif

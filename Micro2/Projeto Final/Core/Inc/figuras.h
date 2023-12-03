@@ -384,4 +384,19 @@ const figura_s Char_fig = {
     }
 };
 
+const figura_s Char_fig1 = {
+    8,
+    8,
+    {
+
+    }
+}
+const figura_s Char_fig2 = {
+    8,
+    8,
+    {
+
+    }
+}
+
 #endif

@@ -160,8 +160,10 @@ void Move_Char(void* param)
     player_hitbox.y2 = player_hitbox.y1 + Char_fig.altura;
     set_player_hitbox(&player_hitbox);
 
+    const figura_s* player[3] = {&Char_fig, &Char_fig, &Char_fig};
+
     while(1) {
-        Apaga_Figura(&p, &Char_fig);
+        Apaga_Figura(&p, &player[get_player_status()]);
         // Eixo 'x'
         if(Axis[0] < -200) {
             if(player_hitbox.x1 > 0) {
@@ -206,7 +208,7 @@ void Move_Char(void* param)
             player_hitbox.y2 = player_hitbox.y1 + Char_fig.altura;
         }
         // Atualiza Buffer da LCD
-        desenha_fig(&player_hitbox, &Char_fig);
+        desenha_fig(&player_hitbox, &player[get_player_status()]);
         set_player_hitbox(&player_hitbox);
         osDelay(100);
     }

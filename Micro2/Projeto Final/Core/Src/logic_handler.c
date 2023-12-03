@@ -2,7 +2,7 @@
 
 static volatile pontos_t player_hitbox;
 
-static uint32_t player_status;
+static uint32_t player_status = 2;
 
 Collision_e Check_Collision(pontos_t* hitbox)
 {
@@ -83,4 +83,17 @@ void set_player_hitbox(pontos_t* h)
 pontos_t get_player_hitbox(void)
 {
     return player_hitbox;
+}
+
+void dec_player_status(pontos_t* h)
+{
+    if(!player_status) {
+        Game_Over();
+    }
+    player_status--;
+}
+
+uint32_t get_player_status(void)
+{
+    return player_status;
 }
