@@ -149,74 +149,77 @@ void StartDefaultTask(void const* argument)
 void Move_Char(void* param)
 {
     UNUSED(param);
-    struct pontos_t p = {
+    pontos_t p = {
         .x1 = 38,
         .y1 = 10,
         .x2 = 00,
         .y2 = 00
     };
-    struct pontos_t hitbox = p;
-    hitbox.x2 = hitbox.x1 + Char_fig.largura;
-    hitbox.y2 = hitbox.y1 + Char_fig.altura;
+    pontos_t player_hitbox = p;
+    player_hitbox.x2 = player_hitbox.x1 + Char_fig.largura;
+    player_hitbox.y2 = player_hitbox.y1 + Char_fig.altura;
+    set_player_hitbox(&player_hitbox);
 
     while(1) {
         Apaga_Figura(&p, &Char_fig);
         // Eixo 'x'
         if(Axis[0] < -200) {
-            if(hitbox.x1 > 0) {
-                hitbox.x1--;
-                hitbox.x2--;
+            if(player_hitbox.x1 > 0) {
+                player_hitbox.x1--;
+                player_hitbox.x2--;
             }
         } else if(Axis[0] > 200) { // 50 = Delta de tolerancia no deslocamento do eixo
-            if(hitbox.x1 < 75) {
-                hitbox.x1++;
-                hitbox.x2++;
+            if(player_hitbox.x1 < 75) {
+                player_hitbox.x1++;
+                player_hitbox.x2++;
             }
         }
         // Eixo 'y'
         if(Axis[1] < -200) {
-            if(hitbox.y1 < 40) {
-                hitbox.y1++;
-                hitbox.y2++;
+            if(player_hitbox.y1 < 40) {
+                player_hitbox.y1++;
+                player_hitbox.y2++;
             }
         } else if(Axis[1] > 200) {
-            if(hitbox.y1 > 0) {
-                hitbox.y1--;
-                hitbox.y2--;
+            if(player_hitbox.y1 > 0) {
+                player_hitbox.y1--;
+                player_hitbox.y2--;
             }
         }
         // Verifica se a nova localização colide com algo
-        Collision_e coll = Check_Collision(&hitbox);
+        Collision_e coll = Check_Collision(&player_hitbox);
         if(!coll) { // Não colidiu
-            p.x1 = hitbox.x1;
-            p.y1 = hitbox.y1;
+            p.x1 = player_hitbox.x1;
+            p.y1 = player_hitbox.y1;
         } else { // Colidiu
             // Em X e Y
             if(coll == XY_COLLISION) {
-                hitbox = p;
+                player_hitbox = p;
             } else if(coll == Y_COLLISION) { // Apenas em Y
-                p.x1 = hitbox.x1;
-                hitbox.y1 = p.y1;
+                p.x1 = player_hitbox.x1;
+                player_hitbox.y1 = p.y1;
             } else if(coll == X_COLLISION) { // Apenas em X
-                p.y1 = hitbox.y1;
-                hitbox.x1 = p.x1;
+                p.y1 = player_hitbox.y1;
+                player_hitbox.x1 = p.x1;
             }
-            hitbox.x2 = hitbox.x1 + Char_fig.largura;
-            hitbox.y2 = hitbox.y1 + Char_fig.altura;
+            player_hitbox.x2 = player_hitbox.x1 + Char_fig.largura;
+            player_hitbox.y2 = player_hitbox.y1 + Char_fig.altura;
         }
         // Atualiza Buffer da LCD
-        desenha_fig(&hitbox, &Char_fig);
+        desenha_fig(&player_hitbox, &Char_fig);
+        set_player_hitbox(&player_hitbox);
         osDelay(100);
     }
 }
 // Move "Shooter"
 void Move_Shooter(void* parm)
 {
-    struct pontos_t p = {
+    UNUSED(parm);
+    pontos_t p = {
         .x1 = 20,
         .y1 = 15
     };
-    struct pontos_t hitbox = p;
+    pontos_t hitbox = p;
     hitbox.x2 = hitbox.x1 + Shooter.largura;
     hitbox.y2 = hitbox.y1 + Shooter.altura;
     int32_t direction = 1;
@@ -231,7 +234,7 @@ void Move_Shooter(void* parm)
         Collision_e coll = Check_Collision(&hitbox);
         if(coll == NO_COLLISION) {
             p.y1 = hitbox.y1;
-        } else if(coll == Y_COLLISION) {
+        } else {
             hitbox.y1 = p.y1;
             hitbox.y2 -= direction;
             direction *= -1;
@@ -259,8 +262,8 @@ void Refresh_Screen(void* pvParam)
 
 void Shots_Fired(void* param)
 {
-    struct pontos_t hitbox;
-    struct pontos_t p;
+    pontos_t hitbox;
+    pontos_t p;
 
     uint32_t y = *((uint32_t*) param);
 
@@ -281,7 +284,8 @@ void Shots_Fired(void* param)
         hitbox.x1++;
         hitbox.x2--;
         Collision_e coll = Check_Collision(&hitbox);
-        while(coll == NO_COLLISION) {
+        Collision_e pcoll = Check_For_Player(&hitbox);
+        while((coll + pcoll) == NO_COLLISION) {
             desenha_pixel(p.x1, p.y1, 0);
             desenha_pixel(p.x1 + 3, p.y1, 1);
             p.x1 = hitbox.x1;
@@ -289,24 +293,19 @@ void Shots_Fired(void* param)
             hitbox.x1++;
             hitbox.x2++;
             coll = Check_Collision(&hitbox);
+            pcoll = Check_For_Player(&hitbox);
         }
         desenha_pixel(p.x1, p.y1, 0);
         desenha_pixel(p.x1 + 1, p.y1, 0);
         desenha_pixel(p.x1 + 2, p.y1, 0);
         active_projectiles++;
+        if(pcoll == Player_Collision) {
+            ASM("nop");
+        }
         vTaskDelete(NULL);
     }
 }
-/*
-void vApplicationIdleHook(void* param)
-{
-    UNUSED(param);
-    while(1) {
-        // Frees Memory
-        ASM("nop");
-    }
-}
-*/
+
 void HAL_ADC_ConvCpltCallback(ADC_HandleTypeDef* hadc)
 {
     if(hadc->Instance == ADC1) {

@@ -1,5 +1,9 @@
 #include "logic_handler.h"
 
+static volatile pontos_t player_hitbox;
+
+static uint32_t player_status;
+
 Collision_e Check_Collision(pontos_t* hitbox)
 {
     uint32_t x1 = hitbox->x1;
@@ -31,4 +35,52 @@ Collision_e Check_Collision(pontos_t* hitbox)
     }
 
     return collision_type;
+}
+/**
+ * @brief
+ *
+ * @param hitbox
+ * @return Collision_e
+ *
+ * X*************
+ * *            * => X = (x1, y1), Y = (x2, y2)
+ * *************Y
+ */
+Collision_e Check_For_Player(pontos_t* hitbox)
+{
+    uint32_t px1 = player_hitbox.x1;
+    uint32_t py1 = player_hitbox.y1;
+
+    uint32_t px2 = player_hitbox.x2;
+    uint32_t py2 = player_hitbox.y2;
+
+    uint32_t x1 = hitbox->x1;
+    uint32_t y1 = hitbox->y1;
+
+    uint32_t x2 = hitbox->x2;
+    uint32_t y2 = hitbox->y2;
+
+    if(y2 < py1) { // hitbox acima do player
+        return NO_COLLISION;
+    }
+    if(y1 > py2) { // hitbox abaixo do player
+        return NO_COLLISION;
+    }
+
+    if(x2 < px1) { // hitbox à esquerda do player
+        return NO_COLLISION;
+    } if(x1 > px2) {// hitbox à direita do player
+        return NO_COLLISION;
+    }
+    return Player_Collision;
+}
+
+void set_player_hitbox(pontos_t* h)
+{
+    player_hitbox = *h;
+}
+
+pontos_t get_player_hitbox(void)
+{
+    return player_hitbox;
 }

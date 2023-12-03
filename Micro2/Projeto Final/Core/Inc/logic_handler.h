@@ -67,7 +67,9 @@ typedef enum {
     NO_COLLISION,
     X_COLLISION,
     Y_COLLISION,
-    XY_COLLISION
+    XY_COLLISION,
+    Player_Collision,
+    Weapon_Collision
 } Collision_e;
 
 /**
@@ -85,15 +87,12 @@ typedef struct {
     pontos_t* hitbox;
 } Entity_s;
 
-extern volatile Entity_s* Active_Entities[10];
-
-Entity_s Entity(General_Status_e status, Entity_e type, \
-        pontos_t* hitbox);
-
-uint32_t Remove_Entity(Entity_s* Entity);
-
 Collision_e Check_Collision(pontos_t* hitbox);
 
-void Draw_Borders();
+Collision_e Check_For_Player(pontos_t* hitbox);
+
+pontos_t get_player_hitbox(void);
+
+void set_player_hitbox(pontos_t* h);
 
 #endif
