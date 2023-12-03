@@ -369,7 +369,7 @@ const figura_s Thing = {
     }
 };
 /* Main Character */
-const figura_s Char_fig = {
+const figura_s Char_Full = {
     8,
     8,
     {
@@ -384,19 +384,69 @@ const figura_s Char_fig = {
     }
 };
 
-const figura_s Char_fig1 = {
+const figura_s Char_Half = {
     8,
     8,
     {
-
+        0x3C,
+        0x7E,
+        0xD3,
+        0xDF,
+        0xDF,
+        0xD3,
+        0x7E,
+        0x3C
     }
-}
-const figura_s Char_fig2 = {
+};
+const figura_s Char_Empty = {
     8,
     8,
     {
-
+        0x3C,
+        0x7E,
+        0xB3,
+        0xDF,
+        0xDF,
+        0xB3,
+        0x7E,
+        0x3C
     }
-}
+};
+
+const figura_s Health_Full = {
+    5,
+    5,
+    {
+        0x06,
+        0x0F,
+        0x1E,
+        0x0F,
+        0x06
+    }
+};
+
+const figura_s Health_Half = {
+    5,
+    5,
+    {
+        0x06,
+        0x09,
+        0x1E,
+        0x0F,
+        0x06
+    }
+};
+
+const figura_s Health_Empty = {
+    5,
+    5,
+    {
+        0x06,
+        0x09,
+        0x12,
+        0x09,
+        0x06
+    }
+};
 
 #endif

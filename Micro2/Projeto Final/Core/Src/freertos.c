@@ -50,7 +50,7 @@ osThreadId ShotFiredHandle;
 osThreadId ShooterTaskHandle;
 osThreadId RefreshTaskHandle;
 // Total number of active projectiles that can still be created
-volatile uint32_t active_projectiles = 3;
+volatile uint32_t remaining_projectiles = 3;
 /* USER CODE END Variables */
 osThreadId defaultTaskHandle;
 
@@ -156,14 +156,16 @@ void Move_Char(void* param)
         .y2 = 00
     };
     pontos_t player_hitbox = p;
-    player_hitbox.x2 = player_hitbox.x1 + Char_fig.largura;
-    player_hitbox.y2 = player_hitbox.y1 + Char_fig.altura;
+    player_hitbox.x2 = player_hitbox.x1 + Char_Full.largura;
+    player_hitbox.y2 = player_hitbox.y1 + Char_Full.altura;
     set_player_hitbox(&player_hitbox);
+    uint32_t health = 2;
 
-    const figura_s* player[3] = {&Char_fig, &Char_fig, &Char_fig};
+    const figura_s* player[3] = {&Char_Empty, &Char_Half, &Char_Full};
 
-    while(1) {
-        Apaga_Figura(&p, &player[get_player_status()]);
+    while(health + 1) {
+        Apaga_Figura(&p, player[health]);
+        health = get_player_health();
         // Eixo 'x'
         if(Axis[0] < -200) {
             if(player_hitbox.x1 > 0) {
@@ -204,21 +206,30 @@ void Move_Char(void* param)
                 p.y1 = player_hitbox.y1;
                 player_hitbox.x1 = p.x1;
             }
-            player_hitbox.x2 = player_hitbox.x1 + Char_fig.largura;
-            player_hitbox.y2 = player_hitbox.y1 + Char_fig.altura;
+            player_hitbox.x2 = player_hitbox.x1 + Char_Full.largura;
+            player_hitbox.y2 = player_hitbox.y1 + Char_Full.altura;
         }
         // Atualiza Buffer da LCD
-        desenha_fig(&player_hitbox, &player[get_player_status()]);
+        desenha_fig(&player_hitbox, player[health]);
         set_player_hitbox(&player_hitbox);
         osDelay(100);
     }
+    vTaskDelete(defaultTaskHandle);
+    vTaskDelete(ShotFiredHandle);
+    vTaskDelete(ShooterTaskHandle);
+    limpa_LCD();
+    goto_XY(25, 1);
+    string_LCD("GAME");
+    goto_XY(25, 3);
+    string_LCD("OVER");
+    imprime_LCD();
 }
 // Move "Shooter"
 void Move_Shooter(void* parm)
 {
     UNUSED(parm);
     pontos_t p = {
-        .x1 = 20,
+        .x1 = 8,
         .y1 = 15
     };
     pontos_t hitbox = p;
@@ -240,6 +251,19 @@ void Move_Shooter(void* parm)
             hitbox.y1 = p.y1;
             hitbox.y2 -= direction;
             direction *= -1;
+        }
+        coll = Check_For_Player(&hitbox);
+        if(coll) {
+            vTaskDelete(defaultTaskHandle);
+            vTaskDelete(ShotFiredHandle);
+            vTaskDelete(MoveTaskHandle);
+            limpa_LCD();
+            goto_XY(25, 1);
+            string_LCD("GAME");
+            goto_XY(25, 3);
+            string_LCD("OVER");
+            imprime_LCD();
+            vTaskDelete(NULL);
         }
         if(!(cycle - 6)) {
             // Shoots
@@ -269,13 +293,13 @@ void Shots_Fired(void* param)
 
     uint32_t y = *((uint32_t*) param);
 
-    if(!active_projectiles) {
+    if(!remaining_projectiles) {
         vTaskDelete(NULL);
     }
     while(1) {
-        active_projectiles--;
+        remaining_projectiles--;
         p.y1 = y + 5;
-        p.x1 = 20 + 3;
+        p.x1 = 8 + 3;
         hitbox = p;
         hitbox.x2 = p.x1 + 3;
         hitbox.y2 = p.y1;
@@ -300,9 +324,9 @@ void Shots_Fired(void* param)
         desenha_pixel(p.x1, p.y1, 0);
         desenha_pixel(p.x1 + 1, p.y1, 0);
         desenha_pixel(p.x1 + 2, p.y1, 0);
-        active_projectiles++;
+        remaining_projectiles++;
         if(pcoll == Player_Collision) {
-            ASM("nop");
+            dec_player_health();
         }
         vTaskDelete(NULL);
     }

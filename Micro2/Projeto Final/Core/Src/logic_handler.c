@@ -1,4 +1,5 @@
 #include "logic_handler.h"
+#include "NOKIA5110_fb.h"
 
 static volatile pontos_t player_hitbox;
 
@@ -85,15 +86,13 @@ pontos_t get_player_hitbox(void)
     return player_hitbox;
 }
 
-void dec_player_status(pontos_t* h)
+uint32_t dec_player_health(void)
 {
-    if(!player_status) {
-        Game_Over();
-    }
     player_status--;
+    return player_status;
 }
 
-uint32_t get_player_status(void)
+uint32_t get_player_health(void)
 {
     return player_status;
 }
