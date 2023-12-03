@@ -33,9 +33,9 @@
 
 /* Private define ------------------------------------------------------------*/
 /* USER CODE BEGIN PD */
-SemaphoreHandle_t Shooter_Semaphore;
 /* USER CODE END PD */
 
+/* USER CODE BEGIN Variables */
 extern uint32_t ADC_Buffer[2];
 /**
  * @brief           Valor do "joystick"
@@ -46,13 +46,11 @@ extern uint32_t ADC_Buffer[2];
 static int32_t Axis[2];
 /* Task Handles */
 osThreadId MoveTaskHandle;
+osThreadId ShotFiredHandle;
 osThreadId ShooterTaskHandle;
 osThreadId RefreshTaskHandle;
-osThreadId Projectile_Handle;
-/* Queue Handles */
-QueueHandle_t Shooter_Pos;
-QueueHandle_t User_Pos;
-QueueHandle_t User_In;
+// Total number of active projectiles that can still be created
+volatile uint32_t active_projectiles = 3;
 /* USER CODE END Variables */
 osThreadId defaultTaskHandle;
 
@@ -92,16 +90,12 @@ void vApplicationGetIdleTaskMemory(StaticTask_t** ppxIdleTaskTCBBuffer, StackTyp
 void MX_FREERTOS_Init(void)
 {
     /* USER CODE BEGIN Init */
-    Shooter_Pos = xQueueCreate(1, sizeof(uint32_t));
-    if(!Shooter_Pos) {
-        //INVERTE_PIXELS();
-    }
     /* USER CODE END Init */
+    // Refreshes Screen
     osThreadDef(defaultTask, StartDefaultTask, osPriorityNormal, 0, 128);
     defaultTaskHandle = osThreadCreate(osThread(defaultTask), NULL);
 
     /* USER CODE BEGIN RTOS_THREADS */
-    // Input Handler Handles Input
     // Moves MC
     osThreadDef(Move_Thread, Move_Char, osPriorityNormal, 0, 128);
     MoveTaskHandle = osThreadCreate(osThread(Move_Thread), NULL);
@@ -109,13 +103,8 @@ void MX_FREERTOS_Init(void)
     // Movement
     osThreadDef(Shooter_Thread, Move_Shooter, osPriorityNormal, 0, 128);
     ShooterTaskHandle = osThreadCreate(osThread(Shooter_Thread), NULL);
-    // Projectiles
-    // osThreadDef(Shot_Thread, Shots_Fired, osPriorityNormal, 0, 128);
-    // ShooterTaskHandle = osThreadCreate(osThread(Shot_Thread), NULL);
     /* Handles 'Thing' */
     /* Handles Slime */
-    osThreadDef(Refresh_Thread, Refresh_Screen, osPriorityNormal, 0, 128);
-    RefreshTaskHandle = osThreadCreate(osThread(Refresh_Thread), NULL);
     /* USER CODE END RTOS_THREADS */
 }
 
@@ -145,9 +134,11 @@ void StartDefaultTask(void const* argument)
     q1.y1 = 8;
     q1.x1 = 77;
     desenha_fig(&q1, &Background_Right);
+    portTickType Last_Wake = xTaskGetTickCount();
     /* Infinite loop */
     for(;;) {
-        osDelay(1);
+        imprime_LCD();
+        osDelayUntil(&Last_Wake, 100 * portTICK_PERIOD_MS);
     }
     /* USER CODE END StartDefaultTask */
 }
@@ -231,6 +222,8 @@ void Move_Shooter(void* parm)
     int32_t direction = 1;
     uint32_t cycle = 0;
 
+    osThreadDef(Shot_Thread, Shots_Fired, osPriorityNormal, 0, 128);
+
     while(1) {
         Apaga_Figura(&p, &Shooter);
         hitbox.y1 += direction;
@@ -245,25 +238,12 @@ void Move_Shooter(void* parm)
         }
         if(!(cycle - 6)) {
             // Shoots
-            uint32_t y = p.y1;
-            xQueueSendToBack(Shooter_Pos, &y, 10 * portTICK_RATE_MS);
+            ShotFiredHandle = osThreadCreate(osThread(Shot_Thread), &(p.y1));
             cycle = 0;
         }
         cycle++;
         desenha_fig(&p, &Shooter);
-        osDelay(150);
-    }
-}
-
-void Shots_Fired(void* Param)
-{
-    UNUSED(Param);
-    uint32_t y;
-    while(1) {
-        xQueueReceive(Shooter_Pos, &y, 5);
-        if(y != NULL) {
-            // Call Draw_Shot task
-        }
+        osDelay(250);
     }
 }
 
@@ -277,6 +257,56 @@ void Refresh_Screen(void* pvParam)
     }
 }
 
+void Shots_Fired(void* param)
+{
+    struct pontos_t hitbox;
+    struct pontos_t p;
+
+    uint32_t y = *((uint32_t*) param);
+
+    if(!active_projectiles) {
+        vTaskDelete(NULL);
+    }
+    while(1) {
+        active_projectiles--;
+        p.y1 = y + 5;
+        p.x1 = 20 + 3;
+        hitbox = p;
+        hitbox.x2 = p.x1 + 3;
+        hitbox.y2 = p.y1;
+        desenha_pixel(p.x1, p.y1, 1);
+        desenha_pixel(p.x1 + 1, p.y1, 1);
+        desenha_pixel(p.x1 + 2, p.y1, 1);
+        osDelay(150);
+        hitbox.x1++;
+        hitbox.x2--;
+        Collision_e coll = Check_Collision(&hitbox);
+        while(coll == NO_COLLISION) {
+            desenha_pixel(p.x1, p.y1, 0);
+            desenha_pixel(p.x1 + 3, p.y1, 1);
+            p.x1 = hitbox.x1;
+            osDelay(150);
+            hitbox.x1++;
+            hitbox.x2++;
+            coll = Check_Collision(&hitbox);
+        }
+        desenha_pixel(p.x1, p.y1, 0);
+        desenha_pixel(p.x1 + 1, p.y1, 0);
+        desenha_pixel(p.x1 + 2, p.y1, 0);
+        active_projectiles++;
+        vTaskDelete(NULL);
+    }
+}
+/*
+void vApplicationIdleHook(void* param)
+{
+    UNUSED(param);
+    while(1) {
+        // Frees Memory
+        ASM("nop");
+    }
+}
+*/
 void HAL_ADC_ConvCpltCallback(ADC_HandleTypeDef* hadc)
 {
     if(hadc->Instance == ADC1) {
